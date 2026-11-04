@@ -1854,7 +1854,6 @@ cbshflg1:
             break;
         case 0xCB:			/* CB prefix */
             adr = IX + (signed char) GetBYTE_pp(PC);
-            adr = adr;
             switch ((op = GetBYTE(PC)) & 7) {
             case 0:
                 ++PC;
@@ -2993,7 +2992,6 @@ cbshflg2:
             break;
         case 0xCB:			/* CB prefix */
             adr = IY + (signed char) GetBYTE_pp(PC);
-            adr = adr;
             switch ((op = GetBYTE(PC)) & 7) {
             case 0:
                 ++PC;
