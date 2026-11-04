@@ -1,0 +1,14 @@
+*.bas   text eol=lf
+*.bmp   binary
+*.c     text eol=lf
+*.cpp   text eol=lf
+*.h     text eol=lf
+*.md    text eol=lf
+*.p     binary
+*.pdf   binary
+*.t     text eol=lf
+*.vcxproj text eol=crlf
+*.vcxproj.filters text eol=crlf
+LICENSE* text eol=lf
+Makefile text eol=lf
+README* text eol=lf

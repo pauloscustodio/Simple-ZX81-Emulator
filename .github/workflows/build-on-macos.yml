@@ -1,0 +1,33 @@
+name: build-on-macos
+
+on:
+  push:
+  pull_request:
+    branches: [ master ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v5
+      with: 
+        submodules: 'true'
+    - name: Install homebrew dependencies
+      run: |
+        brew install sdl12-compat cpanminus perl dos2unix
+    - name: Install perl prerequisites
+      run: |
+        export PATH=/usr/local/bin:$PATH
+        cpanm --local-lib=~/perl5 local::lib
+        cpanm --local-lib=~/perl5 Modern::Perl Path::Tiny Test::HexDifferences ZX81::Tape
+    - name: Build
+      run: |
+        make
+    - name: Run tests
+      run: |
+        eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
+        make test

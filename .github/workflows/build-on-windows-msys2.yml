@@ -1,0 +1,54 @@
+name: build-on-windows-msys2
+
+on:
+  push:
+  pull_request:
+    branches: [ master ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    env:
+      LANG: C
+      LC_ALL: C
+    steps:
+    - name: Configure git
+      run: |
+        git config --global core.autocrlf input
+      shell: cmd
+    - name: Checkout from git
+      uses: actions/checkout@v5
+      with:
+        submodules: 'true'
+    - name: Install MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        release: false
+        install: >
+            base-devel
+            git
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-SDL
+            mingw-w64-x86_64-pkgconf
+            mingw-w64-x86_64-make
+            mingw-w64-x86_64-perl
+    - name: Install CPAN modules
+      run: |
+        perl -S cpan App::cpanminus
+        perl -S cpanm -f Path::Tiny
+        perl -S cpanm Modern::Perl Test::HexDifferences ZX81::Tape
+    - name: Build
+      run: |
+        make
+    - name: Run tests
+      run: |
+        make test

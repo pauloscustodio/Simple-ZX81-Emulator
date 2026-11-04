@@ -11,15 +11,16 @@ else
   EXESUFFIX	?=
 endif
 
-CFLAGS 	:= -O3 -MMD -Wall -Werror
-LDFLAGS	:= `pkg-config --cflags --libs sdl | sed -e 's/-Dmain=SDL_main//' -e 's/-lSDLmain//'`
+CFLAGS 	:= -O3 -MMD -Wall -Werror \
+			`pkg-config --cflags sdl | sed 's/-Dmain=SDL_main//'`
+LDFLAGS	:=  `pkg-config --libs sdl | sed 's/-lSDLmain//'`
 
 ZX81_OBJS = zx81.o simz80.o utils.o
 FILE2C_OBJS = file2c.o
 DEPS = $(ZX81_OBJS:.o=.d) $(FILE2C_OBJS:.o=.d)
 
 .c.o:
-	gcc $(CFLAGS) -c $< $(LDFLAGS)
+	gcc $(CFLAGS) -c $<
 
 all: zx81$(EXESUFFIX) file2c$(EXESUFFIX)
 
@@ -56,3 +57,7 @@ tidy:
 	find . \( -name '*.pl' -o -name '*.pm' -o -name '*.t' \) \
 		-newer $(TIDY_STAMP) -exec $(PERLTIDY) {} +
 	touch $(TIDY_STAMP)
+
+# test
+test: zx81$(EXESUFFIX)
+	perl -S prove t/*.t

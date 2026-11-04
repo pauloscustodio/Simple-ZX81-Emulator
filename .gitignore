@@ -1,8 +1,10 @@
 **/.vs/
 **/x64/
+*.bak
 *.d
 *.exe
 *.o
 *.orig
-*.tidy-stamp
 *.user
+.prove
+.tidy-stamp
