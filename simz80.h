@@ -1,7 +1,7 @@
 /* Header file for the instruction set simulator.
    Copyright (C) 1995  Frank D. Cringle.
    Modifications for MMU and CP/M 3.1 Copyright (C) 2000/2003 by Andreas Gerlich
-   
+
 
 This file is part of yaze-ag - yet another Z80 emulator by ag.
 
@@ -51,27 +51,25 @@ typedef unsigned int	FASTWORK;
 typedef unsigned long	FASTWORK;
 #endif
 
-struct ddregs
-{
-	WORD bc;
-	WORD de;
-	WORD hl;
+struct ddregs {
+    WORD bc;
+    WORD de;
+    WORD hl;
 };
 
-struct z80
-{
-  WORD af[ 2 ];
-  int  af_sel;
+struct z80 {
+    WORD af[ 2 ];
+    int  af_sel;
 
-  struct ddregs regs[ 2 ];
-  int    regs_sel;
+    struct ddregs regs[ 2 ];
+    int    regs_sel;
 
-  WORD ir;
-  WORD ix;
-  WORD iy;
-  WORD sp;
-  WORD pc;
-  WORD iff;
+    WORD ir;
+    WORD ix;
+    WORD iy;
+    WORD sp;
+    WORD pc;
+    WORD iff;
 };
 
 extern void z80_step( struct z80* z80 );
