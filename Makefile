@@ -1,21 +1,41 @@
-all: zx81
+#------------------------------------------------------------------------------
+# Simple-ZX81-Emulator
+# Based on https://leiradel.github.io/2011/06/11/How-to-Emulate.html
+# Modifications Copyright (C) Paulo Custodio, 2026
+# License: GPL
+#------------------------------------------------------------------------------
 
-zx81: zx81.o simz80.o
-	gcc -o zx81 zx81.o simz80.o `pkg-config --cflags --libs sdl` 
-zx81.o: zx81.c zx81rom.h
-	gcc -O3 -c zx81.c `pkg-config --cflags --libs sdl`
+ifeq ($(OS),Windows_NT)
+  EXESUFFIX	:= .exe
+else
+  EXESUFFIX	?=
+endif
 
-simz80.o: simz80.c simz80.h
-	gcc -O3 -c simz80.c
+CFLAGS 	:= -O3 -MMD -Wall -Werror
+LDFLAGS	:= `pkg-config --cflags --libs sdl | sed -e 's/-Dmain=SDL_main//' -e 's/-lSDLmain//'`
 
-zx81rom.h: zx81.rom file2c
-	./file2c zx81.rom rom > zx81rom.h
+ZX81_OBJS = zx81.o simz80.o
+FILE2C_OBJS = file2c.o
+DEPS = $(ZX81_OBJS:.o=.d) $(FILE2C_OBJS:.o=.d)
 
-file2c: file2c.o
-	gcc -o file2c file2c.o
+.c.o:
+	gcc $(CFLAGS) -c $< $(LDFLAGS)
 
-file2c.o: file2c.c
-	gcc -O3 -c file2c.c
+all: zx81$(EXESUFFIX) file2c$(EXESUFFIX)
+
+zx81$(EXESUFFIX): $(ZX81_OBJS)
+	gcc $(CFLAGS) -o zx81$(EXESUFFIX) $(ZX81_OBJS) $(LDFLAGS)
+
+zx81.o: zx81rom.h
+
+zx81rom.h: zx81.rom file2c$(EXESUFFIX)
+	./file2c$(EXESUFFIX) zx81.rom rom > zx81rom.h
+	dos2unix zx81rom.h
+
+file2c$(EXESUFFIX): $(FILE2C_OBJS)
+	gcc $(CFLAGS) -o file2c$(EXESUFFIX) $(FILE2C_OBJS)
 
 clean:
-	rm -f zx81 zx81.o simz80.o zx81rom.h file2c file2c.o
+	rm -f zx81$(EXESUFFIX) $(ZX81_OBJS) file2c$(EXESUFFIX) $(FILE2C_OBJS) $(DEPS)
+
+-include $(DEPS)
