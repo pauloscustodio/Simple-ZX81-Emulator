@@ -14,7 +14,7 @@ endif
 CFLAGS 	:= -O3 -MMD -Wall -Werror
 LDFLAGS	:= `pkg-config --cflags --libs sdl | sed -e 's/-Dmain=SDL_main//' -e 's/-lSDLmain//'`
 
-ZX81_OBJS = zx81.o simz80.o
+ZX81_OBJS = zx81.o simz80.o utils.o
 FILE2C_OBJS = file2c.o
 DEPS = $(ZX81_OBJS:.o=.d) $(FILE2C_OBJS:.o=.d)
 
@@ -36,7 +36,7 @@ file2c$(EXESUFFIX): $(FILE2C_OBJS)
 	gcc $(CFLAGS) -o file2c$(EXESUFFIX) $(FILE2C_OBJS)
 
 clean:
-	rm -f zx81$(EXESUFFIX) $(ZX81_OBJS) file2c$(EXESUFFIX) $(FILE2C_OBJS) $(DEPS)
+	rm -f zx81$(EXESUFFIX) $(ZX81_OBJS) file2c$(EXESUFFIX) $(FILE2C_OBJS) $(DEPS) *.o *.orig *.bak
 
 -include $(DEPS)
 

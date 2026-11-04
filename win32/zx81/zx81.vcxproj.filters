@@ -21,12 +21,18 @@
     <ClCompile Include="..\..\zx81.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\utils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\simz80.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\zx81rom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

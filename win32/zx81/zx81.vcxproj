@@ -146,10 +146,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\simz80.c" />
+    <ClCompile Include="..\..\utils.c" />
     <ClCompile Include="..\..\zx81.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\simz80.h" />
+    <ClInclude Include="..\..\utils.h" />
     <ClInclude Include="..\..\zx81rom.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

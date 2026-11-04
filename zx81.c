@@ -5,11 +5,11 @@
 // License: GPL
 //-----------------------------------------------------------------------------
 
+#include "simz80.h"
+#include "utils.h"
+#include "zx81rom.h"
 #include <SDL.h>
 #undef main   // keep our own main(); we don't need SDLmain.lib's WinMain shim
-
-#include "simz80.h"
-#include "zx81rom.h"
 
 /* address of the pointer to the beginning of the display file */
 #define D_FILE 0x400c
@@ -274,7 +274,10 @@ void save_mem() {
 void load_mem() {
     fptr = fopen(MEM_NAME, "rb"); // r for read, b for binary
     if (fptr != NULL) {
-        fread(memory, MEMSIZE, 1, fptr);
+        size_t count = fread(memory, 1, MEMSIZE, fptr);
+        if (count != MEMSIZE) {
+            die("Error reading memory file: %s\n", MEM_NAME);
+        }
         fclose(fptr);
     }
 }
@@ -294,7 +297,10 @@ void load_16k() {
             memory[0x407b]); /* 0x407b=16507 make 16k file name 0-255.16k */
     fptr = fopen(k16_NAME, "rb"); // r for read, b for binary
     if (fptr != NULL) {
-        fread(memory + 0x4009, 0x4000, 1, fptr);
+        size_t count = fread(memory + 0x4009, 1, 0x4000, fptr);
+        if (count != 0x4000) {
+            die("Error reading 16k file: %s\n", k16_NAME);
+        }
         fclose(fptr);
     }
 }
