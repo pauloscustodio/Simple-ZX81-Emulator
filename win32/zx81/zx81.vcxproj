@@ -152,6 +152,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\simz80.h" />
     <ClInclude Include="..\..\utils.h" />
+    <ClInclude Include="..\..\zx81.h" />
     <ClInclude Include="..\..\zx81rom.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -7,15 +7,10 @@
 
 #include "simz80.h"
 #include "utils.h"
+#include "zx81.h"
 #include "zx81rom.h"
 #include <SDL.h>
 #undef main   // keep our own main(); we don't need SDLmain.lib's WinMain shim
-
-/* address of the pointer to the beginning of the display file */
-#define D_FILE 0x400c
-
-/* Memory Size */
-#define MEMSIZE 65535
 
 #define MEM_NAME "memory.img"
 char k16_NAME[8] = "000.16k";
