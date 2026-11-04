@@ -1,3 +1,10 @@
+//-----------------------------------------------------------------------------
+// Simple-ZX81-Emulator
+// Based on https://leiradel.github.io/2011/06/11/How-to-Emulate.html
+// Modifications Copyright (C) Paulo Custodio, 2026
+// License: GPL
+//-----------------------------------------------------------------------------
+
 #include <SDL.h>
 #undef main   // keep our own main(); we don't need SDLmain.lib's WinMain shim
 
@@ -84,6 +91,7 @@ BYTE z80_in( struct z80* z80, WORD a )
       a >>= 1;
     }
   }
+  return 0;
 }
 
 /* writes to a port */
