@@ -1,4 +1,5 @@
 #include <SDL.h>
+#undef main   // keep our own main(); we don't need SDLmain.lib's WinMain shim
 
 #include "simz80.h"
 #include "zx81rom.h"
