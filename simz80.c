@@ -120,8 +120,8 @@ static const unsigned char partab[256] = {
 
 void z80_step( struct z80* z80 )
 {
-  FASTWORK temp, acu, sum, cbits;
-  FASTWORK op, adr;
+  FASTWORK temp=0, acu=0, sum=0, cbits=0;
+  FASTWORK op=0, adr=0;
   
   switch( z80_fetch( z80, PC++ ) ) {
 	case 0x00:			/* NOP */
