@@ -26,7 +26,6 @@ BYTE memory[MEMSIZE] = { 0 };
 bool do_exit = false;
 
 // static variables
-#define MEM_NAME "memory.img"
 static char k16_NAME[8] = "000.16k";
 static FILE* fptr;
 static bool trace = false;
@@ -203,6 +202,9 @@ static void run_some( void ) {
             do_exit = true;
             return;
         }
+        else if (z80.pc == DUMP_HOOK) { // dump memory and z80 state to a file
+            write_state(DUMP_NAME, &z80, memory);
+        }
         else if (z80.pc == NEXT_PROG) { // LOAD routine after file name was parsed
             next_prog_hook(&z80);
         }
@@ -223,25 +225,6 @@ static void run_some( void ) {
         if (trace) {
             show_regs(&z80);
         }
-    }
-}
-
-void save_mem() {
-    fptr = fopen(MEM_NAME, "wb"); // w for write, b for binary
-    if (fptr != NULL) {
-        fwrite(memory, MEMSIZE, 1, fptr);
-        fclose(fptr);
-    }
-}
-
-void load_mem() {
-    fptr = fopen(MEM_NAME, "rb"); // r for read, b for binary
-    if (fptr != NULL) {
-        size_t count = fread(memory, 1, MEMSIZE, fptr);
-        if (count != MEMSIZE) {
-            die("Error reading memory file: %s\n", MEM_NAME);
-        }
-        fclose(fptr);
     }
 }
 
@@ -289,10 +272,10 @@ static void consume_events( void ) {
                 load_16k();
             }
             if ( event.key.keysym.sym == SDLK_F6 ) {
-                save_mem();
+                write_state(DUMP_NAME, &z80, memory);
             }
             if ( event.key.keysym.sym == SDLK_F7 ) {
-                load_mem();
+                read_state(DUMP_NAME, &z80, memory);
             }
             break;
 
@@ -346,13 +329,13 @@ static void update_screen( void ) {
 }
 
 static void exit_usage(void) {
-    fprintf(stderr, "Usage: zx81 [-t] file.p\n");
+    fprintf(stderr, "Usage: zx81 [-t] [file.p|file.dump]\n");
     exit(EXIT_FAILURE);
 }
 
 
 int main( int argc, char* argv[] ) {
-    const char* p_file = NULL;
+    const char* filename = NULL;
 
     // check command line arguments for a .p file to load
     while (true) {
@@ -370,10 +353,7 @@ int main( int argc, char* argv[] ) {
     }
 
     if (argc == optind + 1) {
-        p_file = argv[optind];
-        if (!str_ends_with(p_file, ".p")) {
-            exit_usage();
-        }
+        filename = argv[optind];
     }
     else if (argc != optind) {
         exit_usage();
@@ -398,8 +378,16 @@ int main( int argc, char* argv[] ) {
 
     // initialize the state
     setup_emulation();
-    if (p_file != NULL) {
-        push_load_file(p_file);
+    if (filename != NULL) {
+        if (str_ends_with(filename, ".p")) {
+            push_load_file(filename);
+        }
+        else if (str_ends_with(filename, ".dump")) {
+            read_state(filename, &z80, memory);
+        }
+        else {
+            die("Invalid file extension: %s\n", filename);
+        }
     }
 
     // emulate!

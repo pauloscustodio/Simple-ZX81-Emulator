@@ -9,3 +9,4 @@
 .prove
 .tidy-stamp
 *.p
+*.dump

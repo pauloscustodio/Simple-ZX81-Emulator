@@ -17,3 +17,7 @@ void next_prog_hook(Z80* z80);
 
 // save a program to a .p file, hook for SAVE1, routine in SAVE after file name was parsed
 void save_prog_hook(Z80* z80);
+
+// dump memory and z80 state to a file; read it back
+void write_state(const char* filename, Z80* z80, BYTE* memory);
+void read_state(const char* filename, Z80* z80, BYTE* memory);

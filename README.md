@@ -14,22 +14,24 @@ Released under GPL.
 
 # Command line
 
-    zx81 [-t] [file.p]
+    zx81 [-t] [file.p|file.dump]
 
 - with the '-t' option the emulator dumps a trace of Z80 execution to stdout.
 - with a file.p argument, that file is loaded on startup, as if LOAD "" was typed.
+- with a file.dump argument, the memory and Z80 state are read from the file
 
 # Emulator hooks
 
 - USR 1 : exits the emulator
+- USR 3 : dumps memory and Z80 state to the file zx81.dump
 
 # Features
-- Simple save (F6) and restore (F7) complete 64k memory to/from file memory.img
+- Simple save (F6) and restore (F7) memory and Z80 state to the file zx81.dump
 - Simple save (F8) and restore (F9) 16k memory chunk to/from file nnn.16k
   (nnn = value at memory location 16507; so POKE 16507,4, will save to/read from file: 4.16k)
 - ESC exits.
 - -t option traces Z80 execution.
-- Load a file.p on startup
+- Load a file.p or file.dump on startup
 - SAVE "X" in BASIC creates a file x.p
 
 # Possible further extensions
