@@ -26,8 +26,6 @@ BYTE memory[MEMSIZE] = { 0 };
 bool do_exit = false;
 
 // static variables
-static char k16_NAME[8] = "000.16k";
-static FILE* fptr;
 static bool trace = false;
 
 // the screen surface
@@ -228,29 +226,6 @@ static void run_some( void ) {
     }
 }
 
-void save_16k() {
-    sprintf(k16_NAME, "%d.16k",
-            memory[0x407b]); // 0x407b=16507 make 16k file name 0-255.16k
-    fptr = fopen(k16_NAME, "wb"); // w for write, b for binary
-    if (fptr != NULL) {
-        fwrite(memory + SAVE_ADDR, 0x4000, 1, fptr);
-        fclose(fptr);
-    }
-}
-
-void load_16k() {
-    sprintf(k16_NAME, "%d.16k",
-            memory[0x407b]); // 0x407b=16507 make 16k file name 0-255.16k
-    fptr = fopen(k16_NAME, "rb"); // r for read, b for binary
-    if (fptr != NULL) {
-        size_t count = fread(memory + SAVE_ADDR, 1, 0x4000, fptr);
-        if (count != 0x4000) {
-            die("Error reading 16k file: %s\n", k16_NAME);
-        }
-        fclose(fptr);
-    }
-}
-
 static void consume_events( void ) {
     // the event to process the window manager events
     SDL_Event event;
@@ -262,19 +237,10 @@ static void consume_events( void ) {
             kbd_handle_sdl_event(&event);
 
             // key pressed, reset the corresponding bit in the keyboard state
-            if ( event.key.keysym.sym == SDLK_ESCAPE ) {
-                do_exit = true;
-            }
-            if ( event.key.keysym.sym == SDLK_F8 ) {
-                save_16k();
-            }
-            if ( event.key.keysym.sym == SDLK_F9 ) {
-                load_16k();
-            }
             if ( event.key.keysym.sym == SDLK_F6 ) {
                 write_state(DUMP_NAME, &z80, memory);
             }
-            if ( event.key.keysym.sym == SDLK_F7 ) {
+            else if ( event.key.keysym.sym == SDLK_F7 ) {
                 read_state(DUMP_NAME, &z80, memory);
             }
             break;
