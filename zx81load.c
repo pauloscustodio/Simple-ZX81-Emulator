@@ -9,7 +9,6 @@
 #include "zx81.h"
 #include "zx81kbd.h"
 #include "zx81load.h"
-#include <malloc.h>
 #include <stdio.h>
 
 static char* pending_load_file = NULL;
