@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------------
 
 #include "utils.h"
+#include <ctype.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,6 +66,13 @@ void xfread(void* ptr, size_t size, size_t count, FILE* stream) {
     }
 }
 
+void xfwrite(const void* ptr, size_t size, size_t count, FILE* stream) {
+    size_t result = fwrite(ptr, size, count, stream);
+    if (result != count) {
+        die("Error writing file\n");
+    }
+}
+
 bool str_ends_with(const char* str, const char* end) {
     size_t str_len = strlen(str);
     size_t end_len = strlen(end);
@@ -72,4 +80,11 @@ bool str_ends_with(const char* str, const char* end) {
         return true;
     }
     return false;
+}
+
+char* str_tolower(char* str) {
+    for(char* p = str; *p; p++) {
+        *p = tolower((unsigned char) * p);
+    }
+    return str;
 }

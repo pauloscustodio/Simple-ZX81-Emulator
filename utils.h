@@ -22,4 +22,6 @@ int xstat(const char* path, struct stat* buf);
 FILE* xfopen(const char* path, const char* mode);
 int xfclose(FILE* stream);
 void xfread(void* ptr, size_t size, size_t count, FILE* stream);
+void xfwrite(const void* ptr, size_t size, size_t count, FILE* stream);
 bool str_ends_with(const char* str, const char* end);
+char* str_tolower(char* str);

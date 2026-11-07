@@ -6,10 +6,13 @@
 //-----------------------------------------------------------------------------
 
 #include "utils.h"
+#include "utstring.h"
 #include "zx81.h"
+#include "zx81chars.h"
 #include "zx81kbd.h"
 #include "zx81load.h"
 #include <stdio.h>
+#include <string.h>
 
 static char* pending_load_file = NULL;
 
@@ -47,4 +50,33 @@ void next_prog_hook(Z80* z80) {
 
     // jump to RET
     z80->pc = RET_ADDR;
+}
+
+void save_prog_hook(Z80* z80) {
+    UT_string* filename;
+    utstring_new(filename);
+
+    // collect file name
+    WORD hl = z80->regs[z80->regs_sel].hl;  // address of the program to save
+    for (int i = 0; ; i++) {
+        BYTE b = PEEK(hl + i);
+        utstring_printf(filename, "%s",
+                        zx81chars[b & 0x7f]);  // convert to string using zx81chars
+        if ((b & 0x80) != 0) {
+            break;
+        }
+    }
+    str_tolower(utstring_body(filename));
+    utstring_printf(filename, ".p");
+
+    // save the program to a .p file
+    size_t size = PEEKW(E_LINE) - SAVE_ADDR;
+    FILE* fp = xfopen(utstring_body(filename), "wb");
+    xfwrite(&memory[SAVE_ADDR], 1, size, fp);
+    xfclose(fp);
+
+    // jump to RET
+    z80->pc = RET_ADDR;
+
+    utstring_free(filename);
 }

@@ -206,6 +206,9 @@ static void run_some( void ) {
         else if (z80.pc == NEXT_PROG) { // LOAD routine after file name was parsed
             next_prog_hook(&z80);
         }
+        else if (z80.pc == SAVE1) {     // SAVE routine after file name was parsed
+            save_prog_hook(&z80);
+        }
 
         // show the trace if requested
         if (trace) {

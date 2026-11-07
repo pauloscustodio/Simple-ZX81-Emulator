@@ -20,6 +20,7 @@
 // ROM routines
 #define RET_ADDR  0x002f    // any ret instruction in ROM
 #define DISPLAY_5 0x02b5
+#define SAVE1     0x02fc    // SAVE "FILE" after name has been parsed
 #define NEXT_PROG 0x0347
 #define DISPLAY_6 0x04c1
 #define SLOW_DISP 0x04cf

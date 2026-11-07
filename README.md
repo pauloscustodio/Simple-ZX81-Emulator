@@ -30,6 +30,7 @@ Released under GPL.
 - ESC exits.
 - -t option traces Z80 execution.
 - Load a file.p on startup
+- SAVE "X" in BASIC creates a file x.p
 
 # Possible further extensions
 See Issues
