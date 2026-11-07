@@ -23,6 +23,7 @@
 // global variables
 Z80 z80;
 BYTE memory[MEMSIZE] = { 0 };
+bool do_exit = false;
 
 // static variables
 #define MEM_NAME "memory.img"
@@ -198,7 +199,11 @@ static void run_some( void ) {
     // keyboard gets
     for ( count = 0; count < 100000; count++ ) {
         // hooks
-        if (z80.pc == NEXT_PROG) {      // LOAD routine after file name was parsed
+        if (z80.pc == EXIT_HOOK) {      // EXIT routine
+            do_exit = true;
+            return;
+        }
+        else if (z80.pc == NEXT_PROG) { // LOAD routine after file name was parsed
             next_prog_hook(&z80);
         }
 
@@ -260,7 +265,7 @@ void load_16k() {
     }
 }
 
-static bool consume_events( void ) {
+static void consume_events( void ) {
     // the event to process the window manager events
     SDL_Event event;
 
@@ -272,7 +277,7 @@ static bool consume_events( void ) {
 
             // key pressed, reset the corresponding bit in the keyboard state
             if ( event.key.keysym.sym == SDLK_ESCAPE ) {
-                return false;
+                do_exit = true;
             }
             if ( event.key.keysym.sym == SDLK_F8 ) {
                 save_16k();
@@ -294,11 +299,10 @@ static bool consume_events( void ) {
 
         case SDL_QUIT:
             // quit the emulation
-            return false;
+            do_exit = true;
+            break;
         }
     }
-
-    return true;
 }
 
 static void update_screen( void ) {
@@ -396,10 +400,9 @@ int main( int argc, char* argv[] ) {
     }
 
     // emulate!
-    bool dont_quit = true;
-    while(dont_quit) {
+    while(!do_exit) {
         run_some();
-        dont_quit = consume_events();
+        consume_events();
         update_screen();
     }
 

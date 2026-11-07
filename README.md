@@ -19,6 +19,10 @@ Released under GPL.
 - with the '-t' option the emulator dumps a trace of Z80 execution to stdout.
 - with a file.p argument, that file is loaded on startup, as if LOAD "" was typed.
 
+# Emulator hooks
+
+- USR 1 : exits the emulator
+
 # Features
 - Simple save (F6) and restore (F7) complete 64k memory to/from file memory.img
 - Simple save (F8) and restore (F9) 16k memory chunk to/from file nnn.16k

@@ -8,10 +8,14 @@
 #pragma once
 
 #include "simz80.h"
+#include <stdbool.h>
 
 // Memory Size
 #define RAM_START 0x2000
 #define MEMSIZE   0x10000
+
+// Emulator HOOKS
+#define EXIT_HOOK 0x0001    // exit the emulator
 
 // ROM routines
 #define RET_ADDR  0x002f    // any ret instruction in ROM
@@ -71,6 +75,7 @@
 // global variables
 extern Z80 z80;          		// the z80 state
 extern BYTE memory[];           // the memory
+extern bool do_exit;            // true to exit the emulator
 
 // memory access macros
 #define PEEK(x) memory[x]
