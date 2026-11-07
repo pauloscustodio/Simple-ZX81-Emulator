@@ -9,6 +9,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 
 void die(const char* msg, ...) {
@@ -21,6 +22,14 @@ void die(const char* msg, ...) {
 
 void* xmalloc(size_t size) {
     void* p = malloc(size);
+    if (!p) {
+        die("Out of memory\n");
+    }
+    return p;
+}
+
+char* xstrdup(const char* str) {
+    char* p = strdup(str);
     if (!p) {
         die("Out of memory\n");
     }
@@ -54,4 +63,13 @@ void xfread(void* ptr, size_t size, size_t count, FILE* stream) {
     if (result != count) {
         die("Error reading file\n");
     }
+}
+
+bool str_ends_with(const char* str, const char* end) {
+    size_t str_len = strlen(str);
+    size_t end_len = strlen(end);
+    if (str_len >= end_len && strcmp(str + str_len - end_len, end) == 0) {
+        return true;
+    }
+    return false;
 }

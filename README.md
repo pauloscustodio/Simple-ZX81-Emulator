@@ -12,12 +12,20 @@ Released under GPL.
 - Improvements out of scope: hardware emulation of the display system, so only
   the default text based screen can be emulated. 
 
+# Command line
+
+    zx81 [-t] [file.p]
+
+- with the '-t' option the emulator dumps a trace of Z80 execution to stdout.
+- with a file.p argument, that file is loaded on startup, as if LOAD "" was typed.
+
 # Features
 - Simple save (F6) and restore (F7) complete 64k memory to/from file memory.img
 - Simple save (F8) and restore (F9) 16k memory chunk to/from file nnn.16k
   (nnn = value at memory location 16507; so POKE 16507,4, will save to/read from file: 4.16k)
 - ESC exits.
 - -t option traces Z80 execution.
+- Load a file.p on startup
 
 # Possible further extensions
 See Issues

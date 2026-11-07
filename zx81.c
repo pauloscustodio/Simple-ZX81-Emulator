@@ -11,11 +11,11 @@
 #include "utils.h"
 #include "zx81.h"
 #include "zx81kbd.h"
+#include "zx81load.h"
 #include "zx81rom.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 
 #include <SDL.h>
 #undef main   // keep our own main(); we don't need SDLmain.lib's WinMain shim
@@ -28,7 +28,6 @@ BYTE memory[MEMSIZE] = { 0 };
 #define MEM_NAME "memory.img"
 static char k16_NAME[8] = "000.16k";
 static FILE* fptr;
-static const char* load_file_name = NULL;
 static bool trace = false;
 
 // the screen surface
@@ -160,87 +159,6 @@ static int create_charset( void ) {
     return 1;
 }
 
-/*
-// handler to load a command line .p file into memory
-static void load_p_file_handler(const char* p_file) {
-    if (!p_file) {
-        return;
-    }
-
-    // find the size of the .p file
-    struct stat st;
-    xstat(p_file, &st);
-
-    // load the .p file into memory starting at address SAVE_ADDR
-    FILE* fp = xfopen(p_file, "rb");
-    xfread(&memory[SAVE_ADDR], 1, st.st_size, fp);
-    xfclose(fp);
-
-    // patch CDFLAG so that the mode is set to SLOW and the dsiplay routines are not called
-    POKE(CDFLAG, PEEK(CDFLAG) | 0xc0);
-
-    // patch the screen variables after E_LINE
-    WORD addr = PEEKW(E_LINE);
-    POKE(addr++, 0x7F);    // cursor
-    POKE(addr++, 0x76);    // newline
-    POKEW(STKBOT, addr);
-    POKEW(STKEND, addr);
-
-    // check if program had autostart
-    WORD nxtlin = PEEKW(NXTLIN);
-    WORD d_file = PEEKW(D_FILE);
-    bool autostart = false;
-    WORD ppc = 0;
-    if (nxtlin < d_file) {
-        autostart = true;
-        ppc = PEEKW_BE(nxtlin);
-    }
-
-    // if it has autostart, push keys to GOTO <line>, otherwise push to LIST
-    if (autostart) {
-        xpush_key('G', false);  // GOTO
-
-        char line_number[6];
-        sprintf(line_number, "%d", ppc);
-        for (int i = 0; line_number[i] != '\0'; i++)
-        {
-            xpush_key(line_number[i], false);
-        }
-
-        xpush_key('\n', false);
-    }
-    else {
-        xpush_key('K', false);  // LIST
-        xpush_key('\n', false);
-    }
-}
-
-// hook handler on wait key by SLOW_DISP
-static void SLOW_DISP_hook(Z80* z80) {
-    // load command line .p file into memory if specified
-    if (load_file_name) {
-        load_p_file_handler(load_file_name);
-        load_file_name = NULL;  // clear the load file name so we don't load again
-        return;
-    }
-
-    // push a key from the keyboard queue if it is not empty
-    if (!intq_is_empty(keyboard_queue)) {
-        WORD zx81scan = xpop_key();
-
-        // set key available flag
-        POKE(CDFLAG, PEEK(CDFLAG) | 0x01);
-        POKEW(LAST_K, zx81scan);
-
-        // emulate what happens in DISPLAY_6 until the jump point SLOW_DISP
-        POKEW(X_PTR, 0);
-        z80->regs[z80->regs_sel].hl = CDFLAG;
-        z80->pc = SLOW_DISP;
-        return;
-    }
-}
-*/
-
 // setup the emulation state
 static void setup_emulation( void ) {
     kbd_init();
@@ -279,6 +197,11 @@ static void run_some( void ) {
     // slower the emulation gets, the more we execute the less responsive the
     // keyboard gets
     for ( count = 0; count < 100000; count++ ) {
+        // hooks
+        if (z80.pc == NEXT_PROG) {      // LOAD routine after file name was parsed
+            next_prog_hook(&z80);
+        }
+
         // show the trace if requested
         if (trace) {
             printf("\n");
@@ -422,6 +345,8 @@ static void exit_usage(void) {
 
 
 int main( int argc, char* argv[] ) {
+    const char* p_file = NULL;
+
     // check command line arguments for a .p file to load
     while (true) {
         int c = getopt(argc, argv, "t");
@@ -438,8 +363,8 @@ int main( int argc, char* argv[] ) {
     }
 
     if (argc == optind + 1) {
-        load_file_name = argv[optind];
-        if (strcmp(load_file_name + strlen(load_file_name) - 2, ".p") != 0) {
+        p_file = argv[optind];
+        if (!str_ends_with(p_file, ".p")) {
             exit_usage();
         }
     }
@@ -466,6 +391,9 @@ int main( int argc, char* argv[] ) {
 
     // initialize the state
     setup_emulation();
+    if (p_file != NULL) {
+        push_load_file(p_file);
+    }
 
     // emulate!
     bool dont_quit = true;

@@ -14,7 +14,9 @@
 #define MEMSIZE   0x10000
 
 // ROM routines
+#define RET_ADDR  0x002f    // any ret instruction in ROM
 #define DISPLAY_5 0x02b5
+#define NEXT_PROG 0x0347
 #define DISPLAY_6 0x04c1
 #define SLOW_DISP 0x04cf
 #define SCROLL    0x0c0e
@@ -77,5 +79,3 @@ extern BYTE memory[];           // the memory
 #define POKE(x,v) memory[x] = (v)
 #define POKEW(x,v) do { memory[x] = (v)&0xff; memory[(x)+1] = ((v)>>8)&0xff; } while (0)
 #define POKEW_BE(x,v) do { memory[x] = ((v)>>8)&0xff; memory[(x)+1] = (v)&0xff; } while (0)
-
-
