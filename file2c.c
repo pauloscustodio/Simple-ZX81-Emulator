@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
     unsigned char byte;
     while (fread(&byte, 1, 1, in) == 1) {
         if (col == 0) {
-            printf("\n\t");
+            printf("\n    ");
         }
         printf("0x%.2x, ", byte);
         if (++col == 16) {

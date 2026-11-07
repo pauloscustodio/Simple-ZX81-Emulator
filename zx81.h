@@ -7,13 +7,27 @@
 
 #pragma once
 
+#include "simz80.h"
+
 // Memory Size
-#define MEMSIZE 0x10000
+#define RAM_START 0x2000
+#define MEMSIZE   0x10000
 
 // ROM routines
+#define DISPLAY_5 0x02b5
 #define DISPLAY_6 0x04c1
+#define SLOW_DISP 0x04cf
+#define SCROLL    0x0c0e
 
 // system variables
+#define SAVE_ADDR 0x4009
+
+#define ERR_NO  0x4000
+#define FLAGS   0x4001
+#define ERR_SP  0x4002
+#define RAMTOP  0x4004
+#define MODE    0x4006
+#define PPC     0x4007
 #define VERSN   0x4009
 #define E_PPC   0x400a
 #define D_FILE  0x400c
@@ -51,3 +65,17 @@
 #define PRBUFF  0x403c
 #define MEMBOT  0x405d
 #define FREE2   0x407b
+
+// global variables
+extern Z80 z80;          		// the z80 state
+extern BYTE memory[];           // the memory
+
+// memory access macros
+#define PEEK(x) memory[x]
+#define PEEKW(x) (memory[x] | (memory[(x)+1]<<8))
+#define PEEKW_BE(x) ((memory[x]<<8) | memory[(x)+1])
+#define POKE(x,v) memory[x] = (v)
+#define POKEW(x,v) do { memory[x] = (v)&0xff; memory[(x)+1] = ((v)>>8)&0xff; } while (0)
+#define POKEW_BE(x,v) do { memory[x] = ((v)>>8)&0xff; memory[(x)+1] = (v)&0xff; } while (0)
+
+

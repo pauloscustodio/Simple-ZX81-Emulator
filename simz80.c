@@ -118,7 +118,7 @@ static const unsigned char partab[256] = {
 #define IFF ( z80->iff )
 #define IR  ( z80->ir )
 
-void z80_step( struct z80* z80 ) {
+void z80_step( Z80* z80 ) {
     FASTWORK temp = 0, acu = 0, sum = 0, cbits = 0;
     FASTWORK op = 0, adr = 0;
 

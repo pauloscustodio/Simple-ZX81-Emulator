@@ -5,96 +5,88 @@
 // License: GPL
 //-----------------------------------------------------------------------------
 
+#include "disasm.h"
+#include "getopt.h"
 #include "simz80.h"
 #include "utils.h"
 #include "zx81.h"
+#include "zx81kbd.h"
 #include "zx81rom.h"
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+
 #include <SDL.h>
 #undef main   // keep our own main(); we don't need SDLmain.lib's WinMain shim
 
+// global variables
+Z80 z80;
+BYTE memory[MEMSIZE] = { 0 };
+
+// static variables
 #define MEM_NAME "memory.img"
-char k16_NAME[8] = "000.16k";
-FILE* fptr;
+static char k16_NAME[8] = "000.16k";
+static FILE* fptr;
+static const char* load_file_name = NULL;
+static bool trace = false;
 
-/* the z80 state */
-static struct z80 z80;
-
-/* the keyboard state and the memory */
-static BYTE keyboard[ 9 ];
-static BYTE memory[ MEMSIZE ];
-
-/* array to covert SDLK_* constants to row/col zx81 keyboard bits */
-static BYTE sdlk2scan[ SDLK_LAST ];
-
-/* the screen surface */
+// the screen surface
 static SDL_Surface* screen;
-/* the surface that holds the zx81 charset */
+// the surface that holds the zx81 charset
 static SDL_Surface* charset;
 
-/* fetches an opcode from memory */
-BYTE z80_fetch( struct z80* z80, WORD a ) {
-    /* opcodes fetched below 0x8000 are just read */
+// fetches an opcode from memory
+BYTE z80_fetch( Z80* z80, WORD a ) {
+    // opcodes fetched below 0x8000 are just read
     if ( a < 0x8000 ) {
         return memory[ a ];
     }
 
-    /*
-    opcodes fetched above 0x7fff are read modulo 0x8000 and as 0 if the 6th bit
-    is reset
-    */
+    // opcodes fetched above 0x7fff are read modulo 0x8000 and as 0 if the 6th bit
+    // is reset
     BYTE b = memory[ a & 0x7fff ];
     return ( b & 64 ) ? b : 0;
 }
 
-/* reads from memory */
-BYTE z80_read( struct z80* z80, WORD a ) {
+// reads from memory
+BYTE z80_read( Z80* z80, WORD a ) {
     return memory[ a ];
 }
 
-/* writes to memory */
-void z80_write( struct z80* z80, WORD a, BYTE b ) {
-    /* don't write to rom */
-    if ( a >= 0x4000 ) {
+// writes to memory
+void z80_write( Z80* z80, WORD a, BYTE b ) {
+    // don't write to rom
+    if ( a >= RAM_START ) {
         memory[ a ] = b;
     }
 }
 
-/* reads from a port */
-BYTE z80_in( struct z80* z80, WORD a ) {
-    int i;
-
-    /* any read where the 0th bit of the port is zero reads from the keyboard */
-    if ( ( a & 1 ) == 0 ) {
-        /* get the keyboard row */
-        a >>= 8;
-
-        for ( i = 0; i < 8; i++ ) {
-            /* check the first zeroed bit to select the row */
-            if ( ( a & 1 ) == 0 ) {
-                /* return the keyboard state for the row */
-                return keyboard[ i ];
-            }
-            a >>= 1;
-        }
+// reads from a port
+BYTE z80_in( Z80* z80, WORD addr ) {
+    // any read where the 0th bit of the port is zero reads from the keyboard
+    if ((addr & 1) == 0) {
+        return kbd_input_isr(z80, addr);
     }
-    return 0;
+
+    return 0xff;
 }
 
-/* writes to a port */
-void z80_out( struct z80* z80, WORD a, BYTE b ) {
+// writes to a port
+void z80_out( Z80* z80, WORD a, BYTE b ) {
     (void)z80;
     (void)a;
     (void)b;
 }
 
-/* creates a sdl surface with the zx81 character set */
+// creates a sdl surface with the zx81 character set
 static int create_charset( void ) {
     SDL_Surface* charset_rgb;
     Uint32 rmask, gmask, bmask, black, white;
     int i, addr, row, col, b;
     Uint32* pixel;
 
-    /* create a rgb surface to hold 256 8x8 characters */
+    // create a rgb surface to hold 256 8x8 characters
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     rmask = 0xff000000;
     gmask = 0x00ff0000;
@@ -111,18 +103,18 @@ static int create_charset( void ) {
         return 0;
     }
 
-    /* map black and white colors */
+    // map black and white colors
     black = SDL_MapRGB( charset_rgb->format, 0, 0, 0 );
     white = SDL_MapRGB( charset_rgb->format, 255, 255, 255 );
 
-    /* pixel points to the top-left pixel of the surface */
+    // pixel points to the top-left pixel of the surface
     pixel = (Uint32*)charset_rgb->pixels;
-    /* addr points to the start of the characters bits */
+    // addr points to the start of the characters bits
     addr = 0x1e00;
-    /* the ammount of uint32s to add to go up/down on line */
+    // the ammount of uint32s to add to go up/down on line
     int pitch = charset_rgb->pitch / 4;
 
-    /* create the 128 characters (64 normal + 64 inverted) */
+    // create the 128 characters (64 normal + 64 inverted)
     for ( i = 0; i < 64; i++ ) {
         for ( row = 0; row < 8; row++ ) {
             b = rom[ addr++ ];
@@ -150,111 +142,156 @@ static int create_charset( void ) {
                     pixel[ pitch + 2048 ] = black;
                     pixel[ pitch + 2049 ] = black;
                 }
-                /* advance pixel to the right */
+                // advance pixel to the right
                 pixel += 2;
                 b <<= 1;
             }
-            /* advance pixel to the start of the next line */
+            // advance pixel to the start of the next line
             pixel += pitch * 2 - 16;
         }
-        /* advance pixel to the top-left of the next character */
+        // advance pixel to the top-left of the next character
         pixel -= pitch * 16 - 16;
     }
 
-    /* convert the rgb surface to a surface the same format of the screen */
+    // convert the rgb surface to a surface the same format of the screen
     charset = SDL_DisplayFormat( charset_rgb );
     SDL_FreeSurface( charset_rgb );
 
     return 1;
 }
 
-/* setup the emulation state */
+/*
+// handler to load a command line .p file into memory
+static void load_p_file_handler(const char* p_file) {
+    if (!p_file) {
+        return;
+    }
+
+    // find the size of the .p file
+    struct stat st;
+    xstat(p_file, &st);
+
+    // load the .p file into memory starting at address SAVE_ADDR
+    FILE* fp = xfopen(p_file, "rb");
+    xfread(&memory[SAVE_ADDR], 1, st.st_size, fp);
+    xfclose(fp);
+
+    // patch CDFLAG so that the mode is set to SLOW and the dsiplay routines are not called
+    POKE(CDFLAG, PEEK(CDFLAG) | 0xc0);
+
+    // patch the screen variables after E_LINE
+    WORD addr = PEEKW(E_LINE);
+    POKE(addr++, 0x7F);    // cursor
+    POKE(addr++, 0x76);    // newline
+    POKEW(STKBOT, addr);
+    POKEW(STKEND, addr);
+
+    // check if program had autostart
+    WORD nxtlin = PEEKW(NXTLIN);
+    WORD d_file = PEEKW(D_FILE);
+    bool autostart = false;
+    WORD ppc = 0;
+    if (nxtlin < d_file) {
+        autostart = true;
+        ppc = PEEKW_BE(nxtlin);
+    }
+
+    // if it has autostart, push keys to GOTO <line>, otherwise push to LIST
+    if (autostart) {
+        xpush_key('G', false);  // GOTO
+
+        char line_number[6];
+        sprintf(line_number, "%d", ppc);
+        for (int i = 0; line_number[i] != '\0'; i++)
+        {
+            xpush_key(line_number[i], false);
+        }
+
+        xpush_key('\n', false);
+    }
+    else {
+        xpush_key('K', false);  // LIST
+        xpush_key('\n', false);
+    }
+}
+
+// hook handler on wait key by SLOW_DISP
+static void SLOW_DISP_hook(Z80* z80) {
+    // load command line .p file into memory if specified
+    if (load_file_name) {
+        load_p_file_handler(load_file_name);
+        load_file_name = NULL;  // clear the load file name so we don't load again
+        return;
+    }
+
+    // push a key from the keyboard queue if it is not empty
+    if (!intq_is_empty(keyboard_queue)) {
+        WORD zx81scan = xpop_key();
+
+        // set key available flag
+        POKE(CDFLAG, PEEK(CDFLAG) | 0x01);
+        POKEW(LAST_K, zx81scan);
+
+        // emulate what happens in DISPLAY_6 until the jump point SLOW_DISP
+        POKEW(X_PTR, 0);
+        z80->regs[z80->regs_sel].hl = CDFLAG;
+        z80->pc = SLOW_DISP;
+        return;
+    }
+}
+*/
+
+// setup the emulation state
 static void setup_emulation( void ) {
+    kbd_init();
+
+    // init memory and z80 state
     memset( &z80, 0, sizeof( z80 ) );
+    memset(memory, 0, sizeof(memory));
 
-    /* load rom with ghosting at 0x2000 */
-    memcpy( memory + 0x0000, rom, 0x2000  );
-    memcpy( memory + 0x2000, rom, 0x2000 );
+    // load rom
+    memcpy(&memory[0x0000], rom, 0x2000);
 
-    /* patch DISPLAY-5 to a return */
-    memory[ 0x02b5 + 0x0000 ] = 0xc9;
-    memory[ 0x02b5 + 0x2000 ] = 0xc9;
+    // patch DISPLAY-5 to a return so that it does not execute the display file
+    POKE(DISPLAY_5, 0xc9);
 
-    /* patch SCROLL to a return, since it doesn't work correctly here */
-    memory[ 0x0c0e + 0x0000 ] = 0xc9;
-    memory[ 0x0c0e + 0x2000 ] = 0xc9;
+    // patch SCROLL to a return, since it doesn't work correctly here
+    POKE(SCROLL, 0xc9);
 
-    /* zero unnused 0x407b - used for p file name*/
-    memory[ 0x407b ] = 0;
+    // add the breakpoint to SLOW_DISP for keyboard queue handling
+    //hook_handlers[DISPLAY_6] = SLOW_DISP_hook;
+    //hook_handlers[SLOW_DISP] = SLOW_DISP_hook;
 
-    /* setup the registers */
+    // zero unnused 0x407b - used for p file name
+    POKE(FREE2, 0);
+
+    // setup the registers
     z80.pc  = 0;
     z80.iff = 0;
     z80.af_sel = z80.regs_sel = 0;
 
-    /* reset the keyboard state */
-    memset( keyboard, 255, sizeof( keyboard ) );
-
-    /* setup the key conversion table, 8 makes unsupported keys go to limbo */
-    memset( sdlk2scan, 8 << 5, sizeof( sdlk2scan ) / sizeof( sdlk2scan[ 0 ] ) );
-
-    /*
-    for each supported key, set the row on the 3 most significant bits and the
-    column on the 5 least significant ones
-    */
-    sdlk2scan[ SDLK_LSHIFT ] = 0 << 5 |  1;
-    sdlk2scan[ SDLK_RSHIFT ] = 0 << 5 |  1;
-    sdlk2scan[ SDLK_z ]      = 0 << 5 |  2;
-    sdlk2scan[ SDLK_x ]      = 0 << 5 |  4;
-    sdlk2scan[ SDLK_c ]      = 0 << 5 |  8;
-    sdlk2scan[ SDLK_v ]      = 0 << 5 | 16;
-    sdlk2scan[ SDLK_a ]      = 1 << 5 |  1;
-    sdlk2scan[ SDLK_s ]      = 1 << 5 |  2;
-    sdlk2scan[ SDLK_d ]      = 1 << 5 |  4;
-    sdlk2scan[ SDLK_f ]      = 1 << 5 |  8;
-    sdlk2scan[ SDLK_g ]      = 1 << 5 | 16;
-    sdlk2scan[ SDLK_q ]      = 2 << 5 |  1;
-    sdlk2scan[ SDLK_w ]      = 2 << 5 |  2;
-    sdlk2scan[ SDLK_e ]      = 2 << 5 |  4;
-    sdlk2scan[ SDLK_r ]      = 2 << 5 |  8;
-    sdlk2scan[ SDLK_t ]      = 2 << 5 | 16;
-    sdlk2scan[ SDLK_1 ]      = 3 << 5 |  1;
-    sdlk2scan[ SDLK_2 ]      = 3 << 5 |  2;
-    sdlk2scan[ SDLK_3 ]      = 3 << 5 |  4;
-    sdlk2scan[ SDLK_4 ]      = 3 << 5 |  8;
-    sdlk2scan[ SDLK_5 ]      = 3 << 5 | 16;
-    sdlk2scan[ SDLK_0 ]      = 4 << 5 |  1;
-    sdlk2scan[ SDLK_9 ]      = 4 << 5 |  2;
-    sdlk2scan[ SDLK_8 ]      = 4 << 5 |  4;
-    sdlk2scan[ SDLK_7 ]      = 4 << 5 |  8;
-    sdlk2scan[ SDLK_6 ]      = 4 << 5 | 16;
-    sdlk2scan[ SDLK_p ]      = 5 << 5 |  1;
-    sdlk2scan[ SDLK_o ]      = 5 << 5 |  2;
-    sdlk2scan[ SDLK_i ]      = 5 << 5 |  4;
-    sdlk2scan[ SDLK_u ]      = 5 << 5 |  8;
-    sdlk2scan[ SDLK_y ]      = 5 << 5 | 16;
-    sdlk2scan[ SDLK_RETURN ] = 6 << 5 |  1;
-    sdlk2scan[ SDLK_l ]      = 6 << 5 |  2;
-    sdlk2scan[ SDLK_k ]      = 6 << 5 |  4;
-    sdlk2scan[ SDLK_j ]      = 6 << 5 |  8;
-    sdlk2scan[ SDLK_h ]      = 6 << 5 | 16;
-    sdlk2scan[ SDLK_SPACE ]  = 7 << 5 |  1;
-    sdlk2scan[ SDLK_PERIOD ] = 7 << 5 |  2;
-    sdlk2scan[ SDLK_m ]      = 7 << 5 |  4;
-    sdlk2scan[ SDLK_n ]      = 7 << 5 |  8;
-    sdlk2scan[ SDLK_b ]      = 7 << 5 | 16;
 }
 
 static void run_some( void ) {
     int count;
 
-    /*
-    execute 100000 z80 instructions; the less instructions we execute here the
-    slower the emulation gets, the more we execute the less responsive the
-    keyboard gets
-    */
+    // execute 100000 z80 instructions; the less instructions we execute here the
+    // slower the emulation gets, the more we execute the less responsive the
+    // keyboard gets
     for ( count = 0; count < 100000; count++ ) {
-        z80_step( &z80 );
+        // show the trace if requested
+        if (trace) {
+            printf("\n");
+            disasm(&z80, z80.pc);
+        }
+
+        // single-step the z80
+        z80_step(&z80);
+
+        // show registers
+        if (trace) {
+            show_regs(&z80);
+        }
     }
 }
 
@@ -279,20 +316,20 @@ void load_mem() {
 
 void save_16k() {
     sprintf(k16_NAME, "%d.16k",
-            memory[0x407b]); /* 0x407b=16507 make 16k file name 0-255.16k */
+            memory[0x407b]); // 0x407b=16507 make 16k file name 0-255.16k
     fptr = fopen(k16_NAME, "wb"); // w for write, b for binary
     if (fptr != NULL) {
-        fwrite(memory + 0x4009, 0x4000, 1, fptr);
+        fwrite(memory + SAVE_ADDR, 0x4000, 1, fptr);
         fclose(fptr);
     }
 }
 
 void load_16k() {
     sprintf(k16_NAME, "%d.16k",
-            memory[0x407b]); /* 0x407b=16507 make 16k file name 0-255.16k */
+            memory[0x407b]); // 0x407b=16507 make 16k file name 0-255.16k
     fptr = fopen(k16_NAME, "rb"); // r for read, b for binary
     if (fptr != NULL) {
-        size_t count = fread(memory + 0x4009, 1, 0x4000, fptr);
+        size_t count = fread(memory + SAVE_ADDR, 1, 0x4000, fptr);
         if (count != 0x4000) {
             die("Error reading 16k file: %s\n", k16_NAME);
         }
@@ -300,19 +337,19 @@ void load_16k() {
     }
 }
 
-static int consume_events( void ) {
-    /* the event to process the window manager events */
+static bool consume_events( void ) {
+    // the event to process the window manager events
     SDL_Event event;
-    /* the resulting scan of a key */
-    BYTE scan;
 
-    /* empty the event queue */
+    // empty the event queue
     while ( SDL_PollEvent( &event ) ) {
         switch ( event.type ) {
         case SDL_KEYDOWN:
-            /* key pressed, reset the corresponding bit in the keyboard state */
+            kbd_handle_sdl_event(&event);
+
+            // key pressed, reset the corresponding bit in the keyboard state
             if ( event.key.keysym.sym == SDLK_ESCAPE ) {
-                return 0;
+                return false;
             }
             if ( event.key.keysym.sym == SDLK_F8 ) {
                 save_16k();
@@ -326,57 +363,39 @@ static int consume_events( void ) {
             if ( event.key.keysym.sym == SDLK_F7 ) {
                 load_mem();
             }
-            if ( event.key.keysym.sym == SDLK_BACKSPACE ) {
-                keyboard[ 0 ] &= ~1;
-                keyboard[ 4 ] &= ~1;
-            }
-            else {
-                scan = sdlk2scan[ event.key.keysym.sym ];
-                keyboard[ scan >> 5 ] &= ~( scan & 0x1f );
-            }
             break;
 
         case SDL_KEYUP:
-            /* key released, set the corresponding bit in the keyboard state */
-            if ( event.key.keysym.sym == SDLK_BACKSPACE ) {
-                keyboard[ 0 ] |= 1;
-                keyboard[ 4 ] |= 1;
-            }
-            else {
-                scan = sdlk2scan[ event.key.keysym.sym ];
-                keyboard[ scan >> 5 ] |= scan & 0x1f;
-            }
+            kbd_handle_sdl_event(&event);
             break;
 
         case SDL_QUIT:
-            /* quit the emulation */
-            return 0;
+            // quit the emulation
+            return false;
         }
     }
 
-    return 1;
+    return true;
 }
 
 static void update_screen( void ) {
-    /* a pointer to the display file */
+    // a pointer to the display file
     WORD d_file;
-    /* rects to blit from the charset to the screen */
+    // rects to blit from the charset to the screen
     SDL_Rect source, dest;
-    /* counters to redraw the screen */
+    // counters to redraw the screen
     int row, col;
 
-    /* setup invariants of the rect to address characters in the charset */
+    // setup invariants of the rect to address characters in the charset
     source.y = 0;
     source.w = 16;
     source.h = 16;
 
-    /* get the pointer into the display file */
+    // get the pointer into the display file
     d_file = memory[ D_FILE ] | memory[ D_FILE + 1 ] << 8;
 
-    /*
-    redraw the screen; we could maintain a copy of the display file to avoid
-    unnecessary blits
-    */
+    // redraw the screen; we could maintain a copy of the display file to avoid
+    // unnecessary blits
     dest.y = 0;
 
     for ( row = 0; row < 24; row++ ) {
@@ -388,7 +407,7 @@ static void update_screen( void ) {
             dest.x += 16;
         }
 
-        /* skip the 0x76 at the end of the line */
+        // skip the 0x76 at the end of the line
         d_file++;
         dest.y += 16;
     }
@@ -396,35 +415,65 @@ static void update_screen( void ) {
     SDL_UpdateRect( screen, 0, 0, 0, 0 );
 }
 
+static void exit_usage(void) {
+    fprintf(stderr, "Usage: zx81 [-t] file.p\n");
+    exit(EXIT_FAILURE);
+}
+
+
 int main( int argc, char* argv[] ) {
-    int dont_quit;
-
-    /* create our 512x384 screen; the bpp will be the same as the desktop */
-    screen = SDL_SetVideoMode( 512, 384, 0, SDL_SWSURFACE );
-
-    if ( screen == NULL ) {
-        fprintf( stderr, "Unable to set 512x384 video: %s\n", SDL_GetError() );
-        return 1;
+    // check command line arguments for a .p file to load
+    while (true) {
+        int c = getopt(argc, argv, "t");
+        if (c == -1) {
+            break;
+        }
+        switch (c) {
+        case 't':
+            trace = true;
+            break;
+        default:
+            exit_usage();
+        }
     }
 
-    /* create the characters */
+    if (argc == optind + 1) {
+        load_file_name = argv[optind];
+        if (strcmp(load_file_name + strlen(load_file_name) - 2, ".p") != 0) {
+            exit_usage();
+        }
+    }
+    else if (argc != optind) {
+        exit_usage();
+    }
+
+    // initialize SDL
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        die("SDL_Init failed: %s\n", SDL_GetError());
+    }
+
+    // create our 512x384 screen; the bpp will be the same as the desktop
+    screen = SDL_SetVideoMode( 512, 384, 0, SDL_SWSURFACE );
+    if ( screen == NULL ) {
+        die("Unable to set 512x384 video: %s\n", SDL_GetError());
+    }
+
+    // create the characters
     if ( !create_charset() ) {
         SDL_FreeSurface( screen );
-        fprintf( stderr, "Unable to create charset image: %s\n", SDL_GetError() );
-        return 1;
+        die("Unable to create charset image: %s\n", SDL_GetError());
     }
 
-
-    /* initialize the state */
+    // initialize the state
     setup_emulation();
 
-    /* emulate! */
-    do {
+    // emulate!
+    bool dont_quit = true;
+    while(dont_quit) {
         run_some();
         dont_quit = consume_events();
         update_screen();
     }
-    while ( dont_quit );
 
     SDL_FreeSurface( screen );
 

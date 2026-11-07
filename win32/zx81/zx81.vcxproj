@@ -145,14 +145,20 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\disasm.c" />
+    <ClCompile Include="..\..\getopt.c" />
     <ClCompile Include="..\..\simz80.c" />
     <ClCompile Include="..\..\utils.c" />
     <ClCompile Include="..\..\zx81.c" />
+    <ClCompile Include="..\..\zx81kbd.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\disasm.h" />
+    <ClInclude Include="..\..\getopt.h" />
     <ClInclude Include="..\..\simz80.h" />
     <ClInclude Include="..\..\utils.h" />
     <ClInclude Include="..\..\zx81.h" />
+    <ClInclude Include="..\..\zx81kbd.h" />
     <ClInclude Include="..\..\zx81rom.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

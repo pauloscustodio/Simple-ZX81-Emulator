@@ -12,11 +12,16 @@ else
 endif
 
 CFLAGS 	:= -O3 -MMD -Wall -Werror \
-			`pkg-config --cflags sdl | sed 's/-Dmain=SDL_main//'`
-LDFLAGS	:=  `pkg-config --libs sdl | sed 's/-lSDLmain//'`
+			$(filter-out -Dmain=SDL_main,$(shell pkg-config --cflags sdl))
+LDFLAGS := 	$(filter-out -lSDLmain,$(shell pkg-config --libs sdl))
 
-ZX81_OBJS = zx81.o simz80.o utils.o
+SRCS := $(wildcard *.c)
+OBJS := $(SRCS:.c=.o)
 FILE2C_OBJS = file2c.o
+ZX81_OBJS = $(filter-out $(FILE2C_OBJS), $(OBJS))
+
+FILE2C := $(CURDIR)/file2c$(EXESUFFIX)
+
 DEPS = $(ZX81_OBJS:.o=.d) $(FILE2C_OBJS:.o=.d)
 
 .c.o:
@@ -30,14 +35,14 @@ zx81$(EXESUFFIX): $(ZX81_OBJS)
 zx81.o: zx81rom.h
 
 zx81rom.h: zx81.rom file2c$(EXESUFFIX)
-	./file2c$(EXESUFFIX) zx81.rom rom > zx81rom.h
+	"$(FILE2C)" $< rom > $@
 	dos2unix zx81rom.h
 
 file2c$(EXESUFFIX): $(FILE2C_OBJS)
 	gcc $(CFLAGS) -o file2c$(EXESUFFIX) $(FILE2C_OBJS)
 
-clean:
-	rm -f zx81$(EXESUFFIX) $(ZX81_OBJS) file2c$(EXESUFFIX) $(FILE2C_OBJS) $(DEPS) *.o *.orig *.bak
+clean::
+	$(RM) $(wildcard zx81$(EXESUFFIX) $(ZX81_OBJS) file2c$(EXESUFFIX) $(FILE2C_OBJS) $(DEPS) *.o *.d *.orig *.bak *.img *.16k)
 
 -include $(DEPS)
 
@@ -61,3 +66,10 @@ tidy:
 # test
 test: zx81$(EXESUFFIX)
 	perl -S prove t/*.t
+
+# test files
+all: hello.p
+hello.p: hello.bas
+	zx81_make_p -o hello.p hello.bas
+clean::
+	$(RM) $(wildcard *.p)

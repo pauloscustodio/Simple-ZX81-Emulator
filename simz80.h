@@ -20,6 +20,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 
 #ifndef _SIMZ80_H
+#define _SIMZ80_H
 
 #include <limits.h>
 
@@ -72,11 +73,13 @@ struct z80 {
     WORD iff;
 };
 
-extern void z80_step( struct z80* z80 );
-extern BYTE z80_fetch( struct z80* z80, WORD a );
-extern BYTE z80_read( struct z80* z80, WORD a );
-extern void z80_write( struct z80* z80, WORD a, BYTE b );
-extern BYTE z80_in( struct z80* z80, WORD a );
-extern void z80_out( struct z80* z80, WORD a, BYTE b );
+typedef struct z80 Z80;
+
+extern void z80_step( Z80* z80 );
+extern BYTE z80_fetch( Z80* z80, WORD a );
+extern BYTE z80_read( Z80* z80, WORD a );
+extern void z80_write( Z80* z80, WORD a, BYTE b );
+extern BYTE z80_in( Z80* z80, WORD a );
+extern void z80_out( Z80* z80, WORD a, BYTE b );
 
 #endif /* _SIMZ80_H */
