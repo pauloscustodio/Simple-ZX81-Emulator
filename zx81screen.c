@@ -39,6 +39,8 @@ void zx81screen_init(void) {
         die("SDL_Init failed: %s\n", SDL_GetError());
     }
 
+    SDL_WM_SetCaption("Simple ZX81 Emulator", "zx81");
+
     // create our 512x384 screen; the bpp will be the same as the desktop
     screen = SDL_SetVideoMode(512, 384, 0, SDL_SWSURFACE);
     if (screen == NULL) {
