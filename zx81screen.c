@@ -21,6 +21,9 @@ static SDL_Surface* charset = NULL;
 // last charset address
 static WORD last_charset_addr = 0;
 
+// last contents of the display file
+static BYTE last_screen[NUM_ROWS][NUM_COLS];
+
 void zx81screen_free(void) {
     if (charset) {
         SDL_FreeSurface(charset);
@@ -46,6 +49,10 @@ void zx81screen_init(void) {
     if (screen == NULL) {
         die("Unable to set 512x384 video: %s\n", SDL_GetError());
     }
+
+    // initialize the last_screen array to 0xff
+    // so that the first update will redraw the entire screen
+    memset(last_screen, 0xff, sizeof(last_screen));
 
     atexit(zx81screen_free);
 }
@@ -167,8 +174,14 @@ static void zx81screen_update_display(WORD display_addr) {
                 addr++; // advance to the next byte in the display file
             }
 
-            source.x = b * 16;
-            SDL_BlitSurface(charset, &source, screen, &dest);
+            if (last_screen[row][col] != b) {
+                last_screen[row][col] = b;
+
+                // blit the character from the charset to the screen
+                source.x = b * 16;
+                SDL_BlitSurface(charset, &source, screen, &dest);
+            }
+
             dest.x += 16;
         }
 
