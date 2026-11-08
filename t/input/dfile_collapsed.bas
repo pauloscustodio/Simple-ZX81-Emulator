@@ -24,5 +24,7 @@
 #DFILE="                       LINE 24"
 #DFILE_COLLAPSED=1
 
-#VARS EXIT=1
+    PAUSE 5*50
+    RAND USR 1
+
 #AUTOSTART=1

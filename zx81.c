@@ -20,44 +20,49 @@
 #include <string.h>
 
 #include <SDL.h>
+#include <stdint.h>
 #undef main   // keep our own main(); we don't need SDLmain.lib's WinMain shim
 
 // global variables
 Z80 z80;
 BYTE memory[MEMSIZE] = { 0 };
 bool do_exit = false;
+bool in_pause = false;
+Uint32 pause_start =
+    0;     // SDL ticks (in milliseconds) when the pause started
+Uint32 pause_duration = 0;
 
 // static variables
 static bool trace = false;
 
 // fetches an opcode from memory
-BYTE z80_fetch( Z80* z80, WORD a ) {
+BYTE z80_fetch(Z80* z80, WORD a) {
     // opcodes fetched below 0x8000 are just read
-    if ( a < 0x8000 ) {
-        return PEEK( a );
+    if (a < 0x8000) {
+        return PEEK(a);
     }
 
     // opcodes fetched above 0x7fff are read modulo 0x8000 and as 0 if the 6th bit
     // is reset
-    BYTE b = PEEK( a & 0x7fff );
-    return ( b & 64 ) ? b : 0;
+    BYTE b = PEEK(a & 0x7fff);
+    return (b & 64) ? b : 0;
 }
 
 // reads from memory
-BYTE z80_read( Z80* z80, WORD a ) {
-    return PEEK( a );
+BYTE z80_read(Z80* z80, WORD a) {
+    return PEEK(a);
 }
 
 // writes to memory
-void z80_write( Z80* z80, WORD a, BYTE b ) {
+void z80_write(Z80* z80, WORD a, BYTE b) {
     // don't write to rom
-    if ( a >= RAM_START ) {
-        POKE( a, b );
+    if (a >= RAM_START) {
+        POKE(a, b);
     }
 }
 
 // reads from a port
-BYTE z80_in( Z80* z80, WORD addr ) {
+BYTE z80_in(Z80* z80, WORD addr) {
     // any read where the 0th bit of the port is zero reads from the keyboard
     if ((addr & 1) == 0) {
         return kbd_input_isr(z80, addr);
@@ -67,18 +72,18 @@ BYTE z80_in( Z80* z80, WORD addr ) {
 }
 
 // writes to a port
-void z80_out( Z80* z80, WORD a, BYTE b ) {
+void z80_out(Z80* z80, WORD a, BYTE b) {
     (void)z80;
     (void)a;
     (void)b;
 }
 
 // setup the emulation state
-static void setup_emulation( void ) {
+static void setup_emulation(void) {
     kbd_init();
 
     // init memory and z80 state
-    memset( &z80, 0, sizeof( z80 ) );
+    memset(&z80, 0, sizeof(z80));
     memset(memory, 0, sizeof(memory));
 
     // load rom
@@ -96,13 +101,10 @@ static void setup_emulation( void ) {
     z80.af_sel = z80.regs_sel = 0;
 }
 
-static void run_some( void ) {
-    int count;
-
-    // execute 100000 z80 instructions; the less instructions we execute here the
-    // slower the emulation gets, the more we execute the less responsive the
-    // keyboard gets
-    for ( count = 0; count < 100000; count++ ) {
+static void run_frame(void) {
+    // execute one video-frame time of z80 instructions
+    uint64_t start = z80.ticks;
+    while ((uint64_t)(z80.ticks - start) < CYCLES_PER_FRAME) {
         // hooks
         if (z80.pc == EXIT_HOOK) {      // EXIT routine
             do_exit = true;
@@ -116,6 +118,28 @@ static void run_some( void ) {
         }
         else if (z80.pc == SAVE1) {     // SAVE routine after file name was parsed
             save_prog_hook(&z80);
+        }
+        else if (z80.pc ==
+                 PAUSE1) {     // PAUSE routine after delay has been parsed and is in BC
+            WORD bc = z80.regs[z80.regs_sel].bc;
+            in_pause = true;
+            pause_start = SDL_GetTicks();
+            pause_duration = bc * 1000 / REFRESH_HZ;
+            z80.pc = RET_ADDR;
+        }
+
+        // handle PAUSE
+        if (in_pause) {
+            Uint32 elapsed = SDL_GetTicks() - pause_start;
+            if (elapsed < pause_duration) {
+                // stay in pause, advance
+                z80.ticks += 4; // simulate a NOP
+                continue;
+            }
+            else {
+                // exit pause, continue execution
+                in_pause = false;
+            }
         }
 
         // show the trace if requested
@@ -132,23 +156,30 @@ static void run_some( void ) {
             show_regs(&z80);
         }
     }
+
+    // decrement FRAMES
+    WORD frames = PEEKW(FRAMES);
+    frames--;
+    frames |= 0x8000; // bit 15 must be set
+    POKEW(FRAMES, frames);
 }
 
-static void consume_events( void ) {
+static void consume_events(void) {
     // the event to process the window manager events
     SDL_Event event;
 
     // empty the event queue
-    while ( SDL_PollEvent( &event ) ) {
-        switch ( event.type ) {
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
         case SDL_KEYDOWN:
+            in_pause = false; // exit pause on any key press
             kbd_handle_sdl_event(&event);
 
             // key pressed, reset the corresponding bit in the keyboard state
-            if ( event.key.keysym.sym == SDLK_F6 ) {
+            if (event.key.keysym.sym == SDLK_F6) {
                 write_state(DUMP_NAME, &z80, memory);
             }
-            else if ( event.key.keysym.sym == SDLK_F7 ) {
+            else if (event.key.keysym.sym == SDLK_F7) {
                 read_state(DUMP_NAME, &z80, memory);
             }
             break;
@@ -170,7 +201,7 @@ static void exit_usage(void) {
     exit(EXIT_FAILURE);
 }
 
-int main( int argc, char* argv[] ) {
+int main(int argc, char* argv[]) {
     const char* filename = NULL;
 
     // check command line arguments for a .p file to load
@@ -213,7 +244,7 @@ int main( int argc, char* argv[] ) {
 
     // emulate
     while(!do_exit) {
-        run_some();
+        run_frame();
         consume_events();
 
         WORD d_file = PEEKW(D_FILE);

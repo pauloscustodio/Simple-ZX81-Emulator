@@ -23,18 +23,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 #define _SIMZ80_H
 
 #include <limits.h>
+#include <stdint.h>
 
-#if UCHAR_MAX == 255
-typedef unsigned char	BYTE;
-#else
-#error Need to find an 8-bit type for BYTE
-#endif
-
-#if USHRT_MAX == 65535
-typedef unsigned short	WORD;
-#else
-#error Need to find an 16-bit type for WORD
-#endif
+typedef uint8_t  BYTE;
+typedef uint16_t WORD;
 
 /* FASTREG needs to be at least 16 bits wide and efficient for the
    host architecture */
@@ -71,15 +63,17 @@ struct z80 {
     WORD sp;
     WORD pc;
     WORD iff;
+
+    uint64_t ticks;
 };
 
 typedef struct z80 Z80;
 
-extern void z80_step( Z80* z80 );
-extern BYTE z80_fetch( Z80* z80, WORD a );
-extern BYTE z80_read( Z80* z80, WORD a );
-extern void z80_write( Z80* z80, WORD a, BYTE b );
-extern BYTE z80_in( Z80* z80, WORD a );
-extern void z80_out( Z80* z80, WORD a, BYTE b );
+extern void z80_step(Z80* z80);
+extern BYTE z80_fetch(Z80* z80, WORD a);
+extern BYTE z80_read(Z80* z80, WORD a);
+extern void z80_write(Z80* z80, WORD a, BYTE b);
+extern BYTE z80_in(Z80* z80, WORD a);
+extern void z80_out(Z80* z80, WORD a, BYTE b);
 
 #endif /* _SIMZ80_H */

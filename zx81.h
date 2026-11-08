@@ -22,6 +22,11 @@
 #define NUM_ROWS  24
 #define NUM_COLS  32
 
+// clock and interrups
+#define CLOCK_HZ   3250000
+#define REFRESH_HZ 50
+#define CYCLES_PER_FRAME (CLOCK_HZ / REFRESH_HZ)
+
 // Emulator HOOKS
 #define EXIT_HOOK 0x0001    // exit the emulator
 #define DUMP_HOOK 0x0003    // dump memory and z80 state to a file
@@ -33,6 +38,7 @@
 #define NEXT_PROG 0x0347
 #define DISPLAY_6 0x04c1
 #define SLOW_DISP 0x04cf
+#define PAUSE1    0x0f35    // PAUSE after delay has been parsed and is in BC
 #define SCROLL    0x0c0e
 #define CHARSET   0x1e00
 

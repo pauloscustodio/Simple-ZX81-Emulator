@@ -50,44 +50,45 @@ static const unsigned char partab[256] = {
 
 #define parity(x)	partab[(x)&0xff]
 
-#define GetBYTE(a)      ( z80_read( z80, ( a ) & 0xffff ) )
-#define GetBYTE_pp(a)	  ( z80_read( z80, ( a )++ & 0xffff ) )
-#define GetBYTE_mm(a)   ( z80_read( z80, ( a )-- & 0xffff ) )
-#define mm_GetBYTE(a)   ( z80_read( z80, --( a ) & 0xffff ) )
-#define PutBYTE(a, v)   ( z80_write( z80, ( a ) & 0xffff, ( v ) ) )
-#define PutBYTE_pp(a,v)	( z80_write( z80, ( a )++ & 0xffff, ( v ) ) )
-#define PutBYTE_mm(a,v)	( z80_write( z80, ( a )-- & 0xffff, ( v ) ) )
-#define GetWORD(a)      ( (WORD)z80_read( z80, a ) | (WORD)( z80_read( z80, ( a ) + 1 ) << 8 ) )
+#define GetBYTE(a)      (z80_read(z80, (a) & 0xffff))
+#define GetBYTE_pp(a)	(z80_read(z80, (a)++ & 0xffff))
+#define GetBYTE_mm(a)   (z80_read(z80, (a)-- & 0xffff))
+#define mm_GetBYTE(a)   (z80_read(z80, --(a) & 0xffff))
+#define PutBYTE(a, v)   (z80_write(z80, (a) & 0xffff, (v)))
+#define PutBYTE_pp(a,v)	(z80_write(z80, (a)++ & 0xffff, (v)))
+#define PutBYTE_mm(a,v)	(z80_write(z80, (a)-- & 0xffff, (v)))
+#define GetWORD(a)      ((WORD)z80_read(z80, a) | (WORD)(z80_read(z80, (a) + 1) << 8))
 
-#define PutWORD(a, v)							\
-    do { z80_write(z80, a, (BYTE)(v));						\
-	       z80_write(z80, (a)+1, (v) >> 8);						\
+#define PutWORD(a, v)						\
+    do { z80_write(z80, a, (BYTE)(v));		\
+	     z80_write(z80, (a)+1, (v) >> 8);	\
      } while (0)
 
-#define Input( a )     ( z80_in( z80, a ) )
-#define Output( a, v ) ( z80_out( z80, ( a ), ( v ) ) )
+#define Input(a)     (z80_in(z80, a))
+#define Output(a, v) (z80_out(z80, (a), (v)))
 
-#define POP(x)	do {							\
-	FASTREG y = z80_read(z80, SP++);						\
-	x = y + (z80_read(z80, SP++) << 8);					\
+#define POP(x)	do {					    \
+	FASTREG y = z80_read(z80, SP++);	    \
+	x = y + (z80_read(z80, SP++) << 8);	    \
 } while (0)
 
-#define PUSH(x) do {							\
-	z80_write(z80, --SP, (x) >> 8 );						\
-	z80_write(z80, --SP, x );							\
+#define PUSH(x) do {					    \
+	z80_write(z80, --SP, (x) >> 8);		    \
+	z80_write(z80, --SP, x);			    \
 } while (0)
 
-#define JPC(cond) PC = cond ? GetWORD(PC) : PC+2
+#define JPC(cond) (PC = (cond) ? GetWORD(PC) : PC+2)
 
-#define CALLC(cond) {							\
-    if (cond) {								\
-	FASTREG adrr = GetWORD(PC);					\
-	PUSH(PC+2);							\
-	PC = adrr;							\
-    }									\
-    else								\
-	PC += 2;							\
-}
+#define CALLC(cond) do {				    \
+    if (cond) {							    \
+	    FASTREG addr = GetWORD(PC);		    \
+	    PUSH(PC+2);						    \
+	    PC = addr;						    \
+    }									    \
+    else {								    \
+	    PC += 2;						    \
+    }                                       \
+} while (0)
 
 #define FLAG_C	1
 #define FLAG_N	2
@@ -96,8 +97,8 @@ static const unsigned char partab[256] = {
 #define FLAG_Z	64
 #define FLAG_S	128
 
-#define SETFLAG(f,c)	AF = (c) ? AF | FLAG_ ## f : AF & ~FLAG_ ## f
-#define TSTFLAG(f)	((AF & FLAG_ ## f) != 0)
+#define SETFLAG(f,c) AF = (c) ? AF | FLAG_ ## f : AF & ~FLAG_ ## f
+#define TSTFLAG(f)	 ((AF & FLAG_ ## f) != 0)
 
 #define ldig(x)		((x) & 0xf)
 #define hdig(x)		(((x)>>4)&0xf)
@@ -107,22 +108,224 @@ static const unsigned char partab[256] = {
 #define Setlreg(x, v)	x = (((x)&0xff00) | ((v)&0xff))
 #define Sethreg(x, v)	x = (((x)&0xff) | (((v)&0xff) << 8))
 
-#define AF  ( z80->af[ z80->af_sel ] )
-#define BC  ( z80->regs[ z80->regs_sel ].bc )
-#define DE  ( z80->regs[ z80->regs_sel ].de )
-#define HL  ( z80->regs[ z80->regs_sel ].hl )
-#define SP  ( z80->sp )
-#define IX  ( z80->ix )
-#define IY  ( z80->iy )
-#define PC  ( z80->pc )
-#define IFF ( z80->iff )
-#define IR  ( z80->ir )
+#define AF  (z80->af[ z80->af_sel ])
+#define BC  (z80->regs[ z80->regs_sel ].bc)
+#define DE  (z80->regs[ z80->regs_sel ].de)
+#define HL  (z80->regs[ z80->regs_sel ].hl)
+#define SP  (z80->sp)
+#define IX  (z80->ix)
+#define IY  (z80->iy)
+#define PC  (z80->pc)
+#define IFF (z80->iff)
+#define IR  (z80->ir)
 
-void z80_step( Z80* z80 ) {
+#define TICKS (z80->ticks)
+
+static const unsigned char z80_cycles_main[256] = {
+    4, 10, 7, 6, 4, 4, 7, 4, 4, 11, 7, 6, 4, 4, 7, 4,
+    8, 10, 7, 6, 4, 4, 7, 4, 12, 11, 7, 6, 4, 4, 7, 4,
+    7, 10, 16, 6, 4, 4, 7, 4, 7, 11, 16, 6, 4, 4, 7, 4,
+    7, 10, 13, 6, 11, 11, 10, 4, 7, 11, 13, 6, 4, 4, 7, 4,
+    4, 4, 4, 4, 4, 4, 7, 4, 4, 4, 4, 4, 4, 4, 7, 4,
+    4, 4, 4, 4, 4, 4, 7, 4, 4, 4, 4, 4, 4, 4, 7, 4,
+    4, 4, 4, 4, 4, 4, 7, 4, 4, 4, 4, 4, 4, 4, 7, 4,
+    7, 7, 7, 7, 7, 7, 4, 7, 4, 4, 4, 4, 4, 4, 7, 4,
+    4, 4, 4, 4, 4, 4, 7, 4, 4, 4, 4, 4, 4, 4, 7, 4,
+    4, 4, 4, 4, 4, 4, 7, 4, 4, 4, 4, 4, 4, 4, 7, 4,
+    4, 4, 4, 4, 4, 4, 7, 4, 4, 4, 4, 4, 4, 4, 7, 4,
+    4, 4, 4, 4, 4, 4, 7, 4, 4, 4, 4, 4, 4, 4, 7, 4,
+    5, 10, 10, 10, 10, 11, 7, 11, 5, 10, 10, 0, 10, 17, 7, 11,
+    5, 10, 10, 11, 10, 11, 7, 11, 5, 4, 10, 11, 10, 0, 7, 11,
+    5, 10, 10, 19, 10, 11, 7, 11, 5, 4, 10, 4, 10, 0, 7, 11,
+    5, 10, 10, 4, 10, 11, 7, 11, 5, 6, 10, 4, 10, 0, 7, 11
+};
+
+static unsigned char z80_cycles_cb(BYTE op) {
+    return (op & 7) == 6 ? 15 : 8;
+}
+
+static unsigned char z80_cycles_ed(BYTE op) {
+    switch (op) {
+    case 0x40:
+    case 0x41:
+    case 0x48:
+    case 0x49:
+    case 0x50:
+    case 0x51:
+    case 0x58:
+    case 0x59:
+    case 0x60:
+    case 0x61:
+    case 0x68:
+    case 0x69:
+    case 0x70:
+    case 0x71:
+    case 0x78:
+    case 0x79:
+        return 12;
+    case 0x42:
+    case 0x4A:
+    case 0x52:
+    case 0x5A:
+    case 0x62:
+    case 0x6A:
+    case 0x72:
+    case 0x7A:
+        return 15;
+    case 0x43:
+    case 0x4B:
+    case 0x53:
+    case 0x5B:
+    case 0x63:
+    case 0x6B:
+    case 0x73:
+    case 0x7B:
+        return 20;
+    case 0x45:
+    case 0x4D:
+        return 14;
+    case 0x47:
+    case 0x4F:
+    case 0x57:
+    case 0x5F:
+        return 9;
+    case 0x67:
+    case 0x6F:
+        return 18;
+    case 0xA0:
+    case 0xA1:
+    case 0xA2:
+    case 0xA3:
+    case 0xA8:
+    case 0xA9:
+    case 0xAA:
+    case 0xAB:
+        return 16;
+    case 0xB0:
+    case 0xB1:
+    case 0xB2:
+    case 0xB3:
+    case 0xB8:
+    case 0xB9:
+    case 0xBA:
+    case 0xBB:
+        return 0;
+    default:
+        return 8;
+    }
+}
+
+static unsigned char z80_cycles_ddfd(BYTE op) {
+    switch (op) {
+    case 0x09:
+    case 0x19:
+    case 0x29:
+    case 0x39:
+        return 15;
+    case 0x21:
+    case 0x2A:
+    case 0xE1:
+        return 14;
+    case 0x22:
+        return 20;
+    case 0x23:
+    case 0x2B:
+    case 0xF9:
+        return 10;
+    case 0x24:
+    case 0x25:
+    case 0x26:
+    case 0x2C:
+    case 0x2D:
+    case 0x2E:
+    case 0x44:
+    case 0x45:
+    case 0x4C:
+    case 0x4D:
+    case 0x54:
+    case 0x55:
+    case 0x5C:
+    case 0x5D:
+    case 0x60:
+    case 0x61:
+    case 0x62:
+    case 0x63:
+    case 0x64:
+    case 0x65:
+    case 0x67:
+    case 0x68:
+    case 0x69:
+    case 0x6A:
+    case 0x6B:
+    case 0x6C:
+    case 0x6D:
+    case 0x6F:
+    case 0x7C:
+    case 0x7D:
+    case 0x84:
+    case 0x85:
+    case 0x8C:
+    case 0x8D:
+    case 0x94:
+    case 0x95:
+    case 0x9C:
+    case 0x9D:
+    case 0xA4:
+    case 0xA5:
+    case 0xAC:
+    case 0xAD:
+    case 0xB4:
+    case 0xB5:
+    case 0xBC:
+    case 0xBD:
+    case 0xE9:
+        return 8;
+    case 0x34:
+    case 0x35:
+        return 23;
+    case 0x36:
+    case 0x46:
+    case 0x4E:
+    case 0x56:
+    case 0x5E:
+    case 0x66:
+    case 0x6E:
+    case 0x70:
+    case 0x71:
+    case 0x72:
+    case 0x73:
+    case 0x74:
+    case 0x75:
+    case 0x77:
+    case 0x7E:
+    case 0x86:
+    case 0x8E:
+    case 0x96:
+    case 0x9E:
+    case 0xA6:
+    case 0xAE:
+    case 0xB6:
+    case 0xBE:
+        return 19;
+    case 0xCB:
+        return 0;
+    case 0xE3:
+        return 23;
+    case 0xE5:
+        return 15;
+    default:
+        return 4;
+    }
+}
+
+void z80_step(Z80* z80) {
     FASTWORK temp = 0, acu = 0, sum = 0, cbits = 0;
     FASTWORK op = 0, adr = 0;
 
-    switch( z80_fetch( z80, PC++ ) ) {
+    op = z80_fetch(z80, PC++);
+    TICKS += z80_cycles_main[op];
+
+    switch(op) {
     case 0x00:			/* NOP */
         break;
     case 0x01:			/* LD BC,nnnn */
@@ -202,7 +405,13 @@ void z80_step( Z80* z80 ) {
              (sum & 0x28) | (AF & 0xc4) | (temp & 1);
         break;
     case 0x10:			/* DJNZ dd */
-        PC += ((BC -= 0x100) & 0xff00) ? (signed char) GetBYTE(PC) + 1 : 1;
+        if ((BC -= 0x100) & 0xff00) {
+            TICKS += 5;
+            PC += (signed char) GetBYTE(PC) + 1;
+        }
+        else {
+            PC += 1;
+        }
         break;
     case 0x11:			/* LD DE,nnnn */
         DE = GetWORD(PC);
@@ -281,7 +490,13 @@ void z80_step( Z80* z80 ) {
              (sum & 0x28) | (AF & 0xc4) | (temp & 1);
         break;
     case 0x20:			/* JR NZ,dd */
-        PC += (!TSTFLAG(Z)) ? (signed char) GetBYTE(PC) + 1 : 1;
+        if (!TSTFLAG(Z)) {
+            TICKS += 5;
+            PC += (signed char) GetBYTE(PC) + 1;
+        }
+        else {
+            PC += 1;
+        }
         break;
     case 0x21:			/* LD HL,nnnn */
         HL = GetWORD(PC);
@@ -346,7 +561,13 @@ void z80_step( Z80* z80 ) {
              (AF & 0x12) | partab[acu] | cbits;
         break;
     case 0x28:			/* JR Z,dd */
-        PC += (TSTFLAG(Z)) ? (signed char) GetBYTE(PC) + 1 : 1;
+        if (TSTFLAG(Z)) {
+            TICKS += 5;
+            PC += (signed char) GetBYTE(PC) + 1;
+        }
+        else {
+            PC += 1;
+        }
         break;
     case 0x29:			/* ADD HL,HL */
         HL &= 0xffff;
@@ -387,7 +608,13 @@ void z80_step( Z80* z80 ) {
         AF = (~AF & ~0xff) | (AF & 0xc5) | ((~AF >> 8) & 0x28) | 0x12;
         break;
     case 0x30:			/* JR NC,dd */
-        PC += (!TSTFLAG(C)) ? (signed char) GetBYTE(PC) + 1 : 1;
+        if (!TSTFLAG(C)) {
+            TICKS += 5;
+            PC += (signed char) GetBYTE(PC) + 1;
+        }
+        else {
+            PC += 1;
+        }
         break;
     case 0x31:			/* LD SP,nnnn */
         SP = GetWORD(PC);
@@ -424,7 +651,13 @@ void z80_step( Z80* z80 ) {
         AF = (AF & ~0x3b) | ((AF >> 8) & 0x28) | 1;
         break;
     case 0x38:			/* JR C,dd */
-        PC += (TSTFLAG(C)) ? (signed char) GetBYTE(PC) + 1 : 1;
+        if (TSTFLAG(C)) {
+            TICKS += 5;
+            PC += (signed char) GetBYTE(PC) + 1;
+        }
+        else {
+            PC += 1;
+        }
         break;
     case 0x39:			/* ADD HL,SP */
         HL &= 0xffff;
@@ -1171,6 +1404,7 @@ void z80_step( Z80* z80 ) {
         break;
     case 0xC0:			/* RET NZ */
         if (!TSTFLAG(Z)) {
+            TICKS += 6;
             POP(PC);
         }
         break;
@@ -1184,6 +1418,9 @@ void z80_step( Z80* z80 ) {
         JPC(1);
         break;
     case 0xC4:			/* CALL NZ,nnnn */
+        if (!TSTFLAG(Z)) {
+            TICKS += 7;
+        }
         CALLC(!TSTFLAG(Z));
         break;
     case 0xC5:			/* PUSH BC */
@@ -1205,6 +1442,7 @@ void z80_step( Z80* z80 ) {
         break;
     case 0xC8:			/* RET Z */
         if (TSTFLAG(Z)) {
+            TICKS += 6;
             POP(PC);
         }
         break;
@@ -1216,7 +1454,9 @@ void z80_step( Z80* z80 ) {
         break;
     case 0xCB:			/* CB prefix */
         adr = HL;
-        switch ((op = GetBYTE(PC)) & 7) {
+        op = GetBYTE(PC);
+        TICKS += z80_cycles_cb((BYTE) op);
+        switch (op & 7) {
         case 0:
             ++PC;
             acu = hreg(BC);
@@ -1337,6 +1577,9 @@ cbshflg1:
         }
         break;
     case 0xCC:			/* CALL Z,nnnn */
+        if (TSTFLAG(Z)) {
+            TICKS += 7;
+        }
         CALLC(TSTFLAG(Z));
         break;
     case 0xCD:			/* CALL nnnn */
@@ -1358,6 +1601,7 @@ cbshflg1:
         break;
     case 0xD0:			/* RET NC */
         if (!TSTFLAG(C)) {
+            TICKS += 6;
             POP(PC);
         }
         break;
@@ -1371,6 +1615,9 @@ cbshflg1:
         Output(GetBYTE_pp(PC), hreg(AF));
         break;
     case 0xD4:			/* CALL NC,nnnn */
+        if (!TSTFLAG(C)) {
+            TICKS += 7;
+        }
         CALLC(!TSTFLAG(C));
         break;
     case 0xD5:			/* PUSH DE */
@@ -1392,6 +1639,7 @@ cbshflg1:
         break;
     case 0xD8:			/* RET C */
         if (TSTFLAG(C)) {
+            TICKS += 6;
             POP(PC);
         }
         break;
@@ -1405,10 +1653,15 @@ cbshflg1:
         Sethreg(AF, Input((AF & 0xff00) | GetBYTE_pp(PC)));
         break;
     case 0xDC:			/* CALL C,nnnn */
+        if (TSTFLAG(C)) {
+            TICKS += 7;
+        }
         CALLC(TSTFLAG(C));
         break;
     case 0xDD:			/* DD prefix */
-        switch (op = GetBYTE_pp(PC)) {
+        op = GetBYTE_pp(PC);
+        TICKS += z80_cycles_ddfd((BYTE) op);
+        switch (op) {
         case 0x09:			/* ADD IX,BC */
             IX &= 0xffff;
             BC &= 0xffff;
@@ -1854,7 +2107,9 @@ cbshflg1:
             break;
         case 0xCB:			/* CB prefix */
             adr = IX + (signed char) GetBYTE_pp(PC);
-            switch ((op = GetBYTE(PC)) & 7) {
+            op = GetBYTE(PC);
+            TICKS += ((op & 0xc0) == 0x40) ? 20 : 23;
+            switch (op & 7) {
             case 0:
                 ++PC;
                 acu = hreg(BC);
@@ -2011,6 +2266,7 @@ cbshflg2:
         break;
     case 0xE0:			/* RET PO */
         if (!TSTFLAG(P)) {
+            TICKS += 6;
             POP(PC);
         }
         break;
@@ -2026,6 +2282,9 @@ cbshflg2:
         PUSH(temp);
         break;
     case 0xE4:			/* CALL PO,nnnn */
+        if (!TSTFLAG(P)) {
+            TICKS += 7;
+        }
         CALLC(!TSTFLAG(P));
         break;
     case 0xE5:			/* PUSH HL */
@@ -2042,6 +2301,7 @@ cbshflg2:
         break;
     case 0xE8:			/* RET PE */
         if (TSTFLAG(P)) {
+            TICKS += 6;
             POP(PC);
         }
         break;
@@ -2057,10 +2317,15 @@ cbshflg2:
         DE = temp;
         break;
     case 0xEC:			/* CALL PE,nnnn */
+        if (TSTFLAG(P)) {
+            TICKS += 7;
+        }
         CALLC(TSTFLAG(P));
         break;
     case 0xED:			/* ED prefix */
-        switch (op = GetBYTE_pp(PC)) {
+        op = GetBYTE_pp(PC);
+        TICKS += z80_cycles_ed((BYTE) op);
+        switch (op) {
         case 0x40:			/* IN B,(C) */
             temp = Input(BC);
             Sethreg(BC, temp);
@@ -2389,10 +2654,12 @@ cbshflg2:
             acu = hreg(AF);
             BC &= 0xffff;
             do {
+                TICKS += 21;
                 acu = GetBYTE_pp(HL);
                 PutBYTE_pp(DE, acu);
             }
             while (--BC);
+            TICKS -= 5;
             acu += hreg(AF);
             AF = (AF & ~0x3e) | (acu & 8) | ((acu & 2) << 4);
             break;
@@ -2400,11 +2667,13 @@ cbshflg2:
             acu = hreg(AF);
             BC &= 0xffff;
             do {
+                TICKS += 21;
                 temp = GetBYTE_pp(HL);
                 op = --BC != 0;
                 sum = acu - temp;
             }
             while (op && sum != 0);
+            TICKS -= 5;
             cbits = acu ^ temp ^ sum;
             AF = (AF & ~0xfe) | (sum & 0x80) | (!(sum & 0xff) << 6) |
                  (((sum - ((cbits & 16) >> 4)) & 2) << 4) |
@@ -2417,10 +2686,12 @@ cbshflg2:
         case 0xB2:			/* INIR */
             temp = hreg(BC);
             do {
+                TICKS += 21;
                 PutBYTE(HL, Input(lreg(BC)));
                 ++HL;
             }
             while (--temp);
+            TICKS -= 5;
             Sethreg(BC, 0);
             SETFLAG(N, 1);
             SETFLAG(Z, 1);
@@ -2428,10 +2699,12 @@ cbshflg2:
         case 0xB3:			/* OTIR */
             temp = hreg(BC);
             do {
+                TICKS += 21;
                 Output(lreg(BC), GetBYTE(HL));
                 ++HL;
             }
             while (--temp);
+            TICKS -= 5;
             Sethreg(BC, 0);
             SETFLAG(N, 1);
             SETFLAG(Z, 1);
@@ -2439,10 +2712,12 @@ cbshflg2:
         case 0xB8:			/* LDDR */
             BC &= 0xffff;
             do {
+                TICKS += 21;
                 acu = GetBYTE_mm(HL);
                 PutBYTE_mm(DE, acu);
             }
             while (--BC);
+            TICKS -= 5;
             acu += hreg(AF);
             AF = (AF & ~0x3e) | (acu & 8) | ((acu & 2) << 4);
             break;
@@ -2450,11 +2725,13 @@ cbshflg2:
             acu = hreg(AF);
             BC &= 0xffff;
             do {
+                TICKS += 21;
                 temp = GetBYTE_mm(HL);
                 op = --BC != 0;
                 sum = acu - temp;
             }
             while (op && sum != 0);
+            TICKS -= 5;
             cbits = acu ^ temp ^ sum;
             AF = (AF & ~0xfe) | (sum & 0x80) | (!(sum & 0xff) << 6) |
                  (((sum - ((cbits & 16) >> 4)) & 2) << 4) |
@@ -2467,10 +2744,12 @@ cbshflg2:
         case 0xBA:			/* INDR */
             temp = hreg(BC);
             do {
+                TICKS += 21;
                 PutBYTE(HL, Input(lreg(BC)));
                 --HL;
             }
             while (--temp);
+            TICKS -= 5;
             Sethreg(BC, 0);
             SETFLAG(N, 1);
             SETFLAG(Z, 1);
@@ -2478,10 +2757,12 @@ cbshflg2:
         case 0xBB:			/* OTDR */
             temp = hreg(BC);
             do {
+                TICKS += 21;
                 Output(lreg(BC), GetBYTE(HL));
                 --HL;
             }
             while (--temp);
+            TICKS -= 5;
             Sethreg(BC, 0);
             SETFLAG(N, 1);
             SETFLAG(Z, 1);
@@ -2502,6 +2783,7 @@ cbshflg2:
         break;
     case 0xF0:			/* RET P */
         if (!TSTFLAG(S)) {
+            TICKS += 6;
             POP(PC);
         }
         break;
@@ -2515,6 +2797,9 @@ cbshflg2:
         IFF = 0;
         break;
     case 0xF4:			/* CALL P,nnnn */
+        if (!TSTFLAG(S)) {
+            TICKS += 7;
+        }
         CALLC(!TSTFLAG(S));
         break;
     case 0xF5:			/* PUSH AF */
@@ -2530,6 +2815,7 @@ cbshflg2:
         break;
     case 0xF8:			/* RET M */
         if (TSTFLAG(S)) {
+            TICKS += 6;
             POP(PC);
         }
         break;
@@ -2543,10 +2829,15 @@ cbshflg2:
         IFF = 3;
         break;
     case 0xFC:			/* CALL M,nnnn */
+        if (TSTFLAG(S)) {
+            TICKS += 7;
+        }
         CALLC(TSTFLAG(S));
         break;
     case 0xFD:			/* FD prefix */
-        switch (op = GetBYTE_pp(PC)) {
+        op = GetBYTE_pp(PC);
+        TICKS += z80_cycles_ddfd((BYTE) op);
+        switch (op) {
         case 0x09:			/* ADD IY,BC */
             IY &= 0xffff;
             BC &= 0xffff;
@@ -2992,7 +3283,9 @@ cbshflg2:
             break;
         case 0xCB:			/* CB prefix */
             adr = IY + (signed char) GetBYTE_pp(PC);
-            switch ((op = GetBYTE(PC)) & 7) {
+            op = GetBYTE(PC);
+            TICKS += ((op & 0xc0) == 0x40) ? 20 : 23;
+            switch (op & 7) {
             case 0:
                 ++PC;
                 acu = hreg(BC);
