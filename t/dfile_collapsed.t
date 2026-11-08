@@ -10,6 +10,9 @@ if ( $ENV{DEVELOPER} ) {
     make_p( "t/input/dfile_collapsed.bas", "t/input/dfile_collapsed.p" );
     run_ok("zx81 t/input/dfile_collapsed.p");
 }
+else {
+    ok 1;
+}
 
 unlink_testfiles();
 done_testing();
