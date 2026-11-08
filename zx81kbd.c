@@ -89,53 +89,72 @@ static kbd_state_t queue_pop(kbd_queue_t* q) {
 // mapping of SDLK_xxx to kbd_state_t
 //-----------------------------------------------------------------------------
 static kbd_state_t sdlk2kbd[SDLK_LAST];
+static kbd_state_t sdlk2kbd_shift[SDLK_LAST];
 
 static void sdlk2kbd_init(void) {
     memset(sdlk2kbd, 0, sizeof(sdlk2kbd));
 
-    sdlk2kbd[SDLK_LSHIFT]    = K_SHIFT;
-    sdlk2kbd[SDLK_RSHIFT]    = K_SHIFT;
-    sdlk2kbd[SDLK_z]         = K_Z;
-    sdlk2kbd[SDLK_x]         = K_X;
-    sdlk2kbd[SDLK_c]         = K_C;
-    sdlk2kbd[SDLK_v]         = K_V;
-    sdlk2kbd[SDLK_a]         = K_A;
-    sdlk2kbd[SDLK_s]         = K_S;
-    sdlk2kbd[SDLK_d]         = K_D;
-    sdlk2kbd[SDLK_f]         = K_F;
-    sdlk2kbd[SDLK_g]         = K_G;
-    sdlk2kbd[SDLK_q]         = K_Q;
-    sdlk2kbd[SDLK_w]         = K_W;
-    sdlk2kbd[SDLK_e]         = K_E;
-    sdlk2kbd[SDLK_r]         = K_R;
-    sdlk2kbd[SDLK_t]         = K_T;
-    sdlk2kbd[SDLK_1]         = K_1;
-    sdlk2kbd[SDLK_2]         = K_2;
-    sdlk2kbd[SDLK_3]         = K_3;
-    sdlk2kbd[SDLK_4]         = K_4;
-    sdlk2kbd[SDLK_5]         = K_5;
-    sdlk2kbd[SDLK_0]         = K_0;
-    sdlk2kbd[SDLK_9]         = K_9;
-    sdlk2kbd[SDLK_8]         = K_8;
-    sdlk2kbd[SDLK_7]         = K_7;
-    sdlk2kbd[SDLK_6]         = K_6;
-    sdlk2kbd[SDLK_p]         = K_P;
-    sdlk2kbd[SDLK_o]         = K_O;
-    sdlk2kbd[SDLK_i]         = K_I;
-    sdlk2kbd[SDLK_u]         = K_U;
-    sdlk2kbd[SDLK_y]         = K_Y;
-    sdlk2kbd[SDLK_RETURN]    = K_RETURN;
-    sdlk2kbd[SDLK_l]         = K_L;
-    sdlk2kbd[SDLK_k]         = K_K;
-    sdlk2kbd[SDLK_j]         = K_J;
-    sdlk2kbd[SDLK_h]         = K_H;
-    sdlk2kbd[SDLK_SPACE]     = K_SPACE;
-    sdlk2kbd[SDLK_PERIOD]    = K_PERIOD;
-    sdlk2kbd[SDLK_m]         = K_M;
-    sdlk2kbd[SDLK_n]         = K_N;
-    sdlk2kbd[SDLK_b]         = K_B;
+    sdlk2kbd[SDLK_LSHIFT]       = K_SHIFT;
+    sdlk2kbd[SDLK_RSHIFT]       = K_SHIFT;
+    sdlk2kbd[SDLK_z]            = K_Z;
+    sdlk2kbd[SDLK_x]            = K_X;
+    sdlk2kbd[SDLK_c]            = K_C;
+    sdlk2kbd[SDLK_v]            = K_V;
+    sdlk2kbd[SDLK_a]            = K_A;
+    sdlk2kbd[SDLK_s]            = K_S;
+    sdlk2kbd[SDLK_d]            = K_D;
+    sdlk2kbd[SDLK_f]            = K_F;
+    sdlk2kbd[SDLK_g]            = K_G;
+    sdlk2kbd[SDLK_q]            = K_Q;
+    sdlk2kbd[SDLK_w]            = K_W;
+    sdlk2kbd[SDLK_e]            = K_E;
+    sdlk2kbd[SDLK_r]            = K_R;
+    sdlk2kbd[SDLK_t]            = K_T;
+    sdlk2kbd[SDLK_1]            = K_1;
+    sdlk2kbd[SDLK_2]            = K_2;
+    sdlk2kbd[SDLK_3]            = K_3;
+    sdlk2kbd[SDLK_4]            = K_4;
+    sdlk2kbd[SDLK_5]            = K_5;
+    sdlk2kbd[SDLK_0]            = K_0;
+    sdlk2kbd[SDLK_9]            = K_9;
+    sdlk2kbd[SDLK_8]            = K_8;
+    sdlk2kbd[SDLK_7]            = K_7;
+    sdlk2kbd[SDLK_6]            = K_6;
+    sdlk2kbd[SDLK_p]            = K_P;
+    sdlk2kbd[SDLK_o]            = K_O;
+    sdlk2kbd[SDLK_i]            = K_I;
+    sdlk2kbd[SDLK_u]            = K_U;
+    sdlk2kbd[SDLK_y]            = K_Y;
+    sdlk2kbd[SDLK_RETURN]       = K_RETURN;
+    sdlk2kbd[SDLK_l]            = K_L;
+    sdlk2kbd[SDLK_k]            = K_K;
+    sdlk2kbd[SDLK_j]            = K_J;
+    sdlk2kbd[SDLK_h]            = K_H;
+    sdlk2kbd[SDLK_SPACE]        = K_SPACE;
+    sdlk2kbd[SDLK_PERIOD]       = K_PERIOD;
+    sdlk2kbd[SDLK_m]            = K_M;
+    sdlk2kbd[SDLK_n]            = K_N;
+    sdlk2kbd[SDLK_b]            = K_B;
+    sdlk2kbd[SDLK_BACKSPACE]    = K_BACKSPACE;
+    sdlk2kbd[SDLK_MINUS]        = K_MINUS;
+    sdlk2kbd[SDLK_EQUALS]       = K_EQ;
+    sdlk2kbd[SDLK_LEFTBRACKET]  = K_LPAREN;
+    sdlk2kbd[SDLK_RIGHTBRACKET] = K_RPAREN;
+    sdlk2kbd[SDLK_SEMICOLON]    = K_SEMICOLON;
+    sdlk2kbd[SDLK_QUOTE]        = K_QUOTE;
+    sdlk2kbd[SDLK_COMMA]        = K_COMMA;
+    sdlk2kbd[SDLK_SLASH]        = K_DIVIDE;
+    sdlk2kbd[SDLK_UP]           = K_UP;
+    sdlk2kbd[SDLK_DOWN]         = K_DOWN;
+    sdlk2kbd[SDLK_LEFT]         = K_LEFT;
+    sdlk2kbd[SDLK_RIGHT]        = K_RIGHT;
 
-    sdlk2kbd[SDLK_BACKSPACE] = K_BACKSPACE;
+    memcpy(sdlk2kbd_shift, sdlk2kbd, sizeof(sdlk2kbd));
+    sdlk2kbd_shift[SDLK_EQUALS]    = K_PLUS;
+    sdlk2kbd_shift[SDLK_SEMICOLON] = K_COLON;
+    sdlk2kbd_shift[SDLK_COMMA]     = K_LT;
+    sdlk2kbd_shift[SDLK_PERIOD]    = K_GT;
+    sdlk2kbd_shift[SDLK_SLASH]     = K_QUESTION;
 }
 
 //-----------------------------------------------------------------------------
@@ -184,21 +203,22 @@ BYTE kbd_input_isr(Z80* z80, WORD addr) {
 
 //-----------------------------------------------------------------------------
 void kbd_handle_sdl_event(const SDL_Event* event) {
+    SDLKey sym = event->key.keysym.sym;
+    bool shifted = (event->key.keysym.mod & KMOD_SHIFT) != 0;
+
     switch (event->type) {
     case SDL_KEYDOWN:
-        if (event->key.keysym.sym == SDLK_LSHIFT ||
-                event->key.keysym.sym == SDLK_RSHIFT) {
-            keydown(K_SHIFT);
+        if (shifted) {
+            keydown(sdlk2kbd_shift[sym]);
         }
         else {
-            keydown(sdlk2kbd[event->key.keysym.sym]);
+            keydown(sdlk2kbd[sym]);
         }
         break;
 
     case SDL_KEYUP:
-        if (event->key.keysym.sym == SDLK_LSHIFT ||
-                event->key.keysym.sym == SDLK_RSHIFT) {
-            keyup(K_SHIFT);
+        if (shifted) {
+            keyup(sdlk2kbd_shift[event->key.keysym.sym]);
         }
         else {
             keyup(sdlk2kbd[event->key.keysym.sym]);
