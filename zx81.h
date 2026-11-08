@@ -18,6 +18,10 @@
 #define MEMSIZE   0x10000
 #define REGS_SIZE (2 * 4 + 2 * 4 + 2 * 6) // AF BC DE HL AF' BC' DE' HL' IR IX IY SP PC IFF
 
+// screen size
+#define NUM_ROWS  24
+#define NUM_COLS  32
+
 // Emulator HOOKS
 #define EXIT_HOOK 0x0001    // exit the emulator
 #define DUMP_HOOK 0x0003    // dump memory and z80 state to a file
@@ -30,6 +34,7 @@
 #define DISPLAY_6 0x04c1
 #define SLOW_DISP 0x04cf
 #define SCROLL    0x0c0e
+#define CHARSET   0x1e00
 
 // system variables
 #define SAVE_ADDR 0x4009

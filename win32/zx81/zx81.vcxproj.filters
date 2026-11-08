@@ -39,6 +39,9 @@
     <ClCompile Include="..\..\zx81chars.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\zx81screen.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\simz80.h">
@@ -69,6 +72,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\utstring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\zx81screen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
