@@ -28,9 +28,9 @@ Z80 z80;
 BYTE memory[MEMSIZE] = { 0 };
 bool do_exit = false;
 bool in_pause = false;
-Uint32 pause_start =
-    0;     // SDL ticks (in milliseconds) when the pause started
+Uint32 pause_start = 0;     // SDL ticks (in ms) when the pause started
 Uint32 pause_duration = 0;
+bool slow_mode = false;     // true to run at clock speed
 
 // static variables
 static bool trace = false;
@@ -92,6 +92,9 @@ static void setup_emulation(void) {
     // patch DISPLAY-5 to a return so that it does not execute the display file
     POKE(DISPLAY_5, 0xc9);
 
+    // patch CDFLAG for SLOW mode
+    POKE(CDFLAG, 0x40);
+
     // setup the registers
     z80.pc  = 0;
     z80.iff = 0;
@@ -100,8 +103,14 @@ static void setup_emulation(void) {
 
 static void run_frame(void) {
     // execute one video-frame time of z80 instructions
-    uint64_t start = z80.ticks;
-    while ((uint64_t)(z80.ticks - start) < CYCLES_PER_FRAME) {
+    bool cpu_slow = (PEEK(CDFLAG) & 0x40) != 0;
+    bool slow = slow_mode && cpu_slow;
+    uint64_t cycles_per_frame = slow ?
+                                CYCLES_PER_FRAME_SLOW : CYCLES_PER_FRAME_FAST;
+
+    uint64_t start_ticks = z80.ticks;
+    Uint32 start_sdl_ticks = SDL_GetTicks();
+    while ((uint64_t)(z80.ticks - start_ticks) < cycles_per_frame) {
         // hooks
         if (z80.pc == EXIT_HOOK) {      // EXIT routine
             do_exit = true;
@@ -116,12 +125,19 @@ static void run_frame(void) {
         else if (z80.pc == SAVE1) {     // SAVE routine after file name was parsed
             save_prog_hook(&z80);
         }
-        else if (z80.pc ==
-                 PAUSE1) {     // PAUSE routine after delay has been parsed and is in BC
-            WORD bc = z80.regs[z80.regs_sel].bc;
+        else if (z80.pc == PAUSE1) {    // PAUSE routine after delay parsed
+            WORD bc = z80.regs[z80.regs_sel].bc;    // delay
             in_pause = true;
             pause_start = SDL_GetTicks();
             pause_duration = bc * 1000 / REFRESH_HZ;
+            z80.pc = RET_ADDR;
+        }
+        else if (z80.pc == FAST) {      // FAST routine
+            POKE(CDFLAG, PEEK(CDFLAG) & ~0x40);
+            z80.pc = RET_ADDR;
+        }
+        else if (z80.pc == SLOW) {      // SLOW routine
+            POKE(CDFLAG, PEEK(CDFLAG) | 0x40);
             z80.pc = RET_ADDR;
         }
 
@@ -159,6 +175,15 @@ static void run_frame(void) {
     frames--;
     frames |= 0x8000; // bit 15 must be set
     POKEW(FRAMES, frames);
+
+    // if slow mode is requested, wait until the frame time has passed
+    if (slow) {
+        Uint32 elapsed = SDL_GetTicks() - start_sdl_ticks;
+        if (elapsed < 1000 / REFRESH_HZ) {
+            Uint32 delay = 1000 / REFRESH_HZ - elapsed;
+            SDL_Delay(delay);
+        }
+    }
 }
 
 static void consume_events(void) {
@@ -194,7 +219,7 @@ static void consume_events(void) {
 }
 
 static void exit_usage(void) {
-    fprintf(stderr, "Usage: zx81 [-t] [file.p|file.dump]\n");
+    fprintf(stderr, "Usage: zx81 [-s] [-t] [file.p|file.dump]\n");
     exit(EXIT_FAILURE);
 }
 
@@ -203,11 +228,14 @@ int main(int argc, char* argv[]) {
 
     // check command line arguments for a .p file to load
     while (true) {
-        int c = getopt(argc, argv, "t");
+        int c = getopt(argc, argv, "st");
         if (c == -1) {
             break;
         }
         switch (c) {
+        case 's':
+            slow_mode = true;
+            break;
         case 't':
             trace = true;
             break;

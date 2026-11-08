@@ -14,8 +14,9 @@ Released under GPL.
 
 # Command line
 
-    zx81 [-t] [file.p|file.dump]
+    zx81 [-s] [-t] [file.p|file.dump]
 
+- with the '-s' option runs at clock speed, except when in FAST mode.
 - with the '-t' option the emulator dumps a trace of Z80 execution to stdout.
 - with a file.p argument, that file is loaded on startup, as if LOAD "" was typed.
 - with a file.dump argument, the memory and Z80 state are read from the file
@@ -30,6 +31,8 @@ Released under GPL.
 - -t option traces Z80 execution.
 - Load a file.p or file.dump on startup
 - SAVE "X" in BASIC creates a file x.p
+- LOAD "X" in BASIC reads a file x.p
+- PAUSE in BASIC pauses for the given amount of frames
 
 # Possible further extensions
 See Issues

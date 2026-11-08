@@ -25,7 +25,8 @@
 // clock and interrups
 #define CLOCK_HZ   3250000
 #define REFRESH_HZ 50
-#define CYCLES_PER_FRAME (CLOCK_HZ / REFRESH_HZ)
+#define CYCLES_PER_FRAME_FAST (CLOCK_HZ / REFRESH_HZ)
+#define CYCLES_PER_FRAME_SLOW (CYCLES_PER_FRAME_FAST / 4)
 
 // Emulator HOOKS
 #define EXIT_HOOK 0x0001    // exit the emulator
@@ -38,6 +39,8 @@
 #define NEXT_PROG 0x0347
 #define DISPLAY_6 0x04c1
 #define SLOW_DISP 0x04cf
+#define FAST      0x0f23
+#define SLOW      0x0f2b
 #define PAUSE1    0x0f35    // PAUSE after delay has been parsed and is in BC
 #define SCROLL    0x0c0e
 #define CHARSET   0x1e00
