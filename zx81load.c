@@ -5,6 +5,7 @@
 // License: GPL
 //-----------------------------------------------------------------------------
 
+#include "simz80.h"
 #include "utils.h"
 #include "utstring.h"
 #include "zx81.h"
@@ -12,7 +13,7 @@
 #include "zx81kbd.h"
 #include "zx81load.h"
 #include <stdio.h>
-#include <string.h>
+#include <sys/stat.h>
 
 static char* pending_load_file = NULL;
 
@@ -28,38 +29,13 @@ void push_load_file(const char* p_file) {
     kbd_push_key(K_RETURN);
 }
 
-void next_prog_hook(Z80* z80) {
-    WORD de = z80->regs[z80->regs_sel].de;
-    if (pending_load_file == NULL || (de & 0x8000) == 0) {
-        // nothing to load, or LOAD "FILE"
-        z80->pc = RET_ADDR;
-    }
-
-    // find the size of the .p file
-    struct stat st;
-    xstat(pending_load_file, &st);
-
-    // load the .p file into memory starting at address SAVE_ADDR
-    FILE* fp = xfopen(pending_load_file, "rb");
-    xfread(&memory[SAVE_ADDR], 1, st.st_size, fp);
-    xfclose(fp);
-
-    // cancel load for next time
-    free(pending_load_file);
-    pending_load_file = NULL;
-
-    // jump to RET
-    z80->pc = RET_ADDR;
-}
-
-void save_prog_hook(Z80* z80) {
+static UT_string* collect_file_name(WORD addr) {
     UT_string* filename;
     utstring_new(filename);
 
     // collect file name
-    WORD hl = z80->regs[z80->regs_sel].hl;  // address of the program to save
     for (int i = 0; ; i++) {
-        BYTE b = PEEK(hl + i);
+        BYTE b = PEEK(addr + i);
         utstring_printf(filename, "%s",
                         zx81chars[b & 0x7f]);  // convert to string using zx81chars
         if ((b & 0x80) != 0) {
@@ -68,17 +44,65 @@ void save_prog_hook(Z80* z80) {
     }
     str_tolower(utstring_body(filename));
     utstring_printf(filename, ".p");
+    return filename;
+}
 
-    // save the program to a .p file
-    size_t size = PEEKW(E_LINE) - SAVE_ADDR;
-    FILE* fp = xfopen(utstring_body(filename), "wb");
-    xfwrite(&memory[SAVE_ADDR], 1, size, fp);
+static void load_file(const char* p_file) {
+    // find the size of the .p file
+    struct stat st;
+    xstat(p_file, &st);
+
+    // load the .p file into memory starting at address SAVE_ADDR
+    FILE* fp = xfopen(p_file, "rb");
+    xfread(&memory[SAVE_ADDR], 1, st.st_size, fp);
     xfclose(fp);
+}
+
+static void save_file(const char* p_file, WORD start_addr, WORD end_addr) {
+    // save the program to a .p file
+    size_t size = end_addr - start_addr;
+    FILE* fp = xfopen(p_file, "wb");
+    xfwrite(&memory[start_addr], 1, size, fp);
+    xfclose(fp);
+}
+
+void next_prog_hook(Z80* z80) {
+    WORD de = z80->regs[z80->regs_sel].de;
+    bool is_load_qq = (de & 0x8000) != 0;
+
+    if (pending_load_file) {
+        // load file from command line
+        load_file(pending_load_file);
+
+        // cancel load for next time
+        free(pending_load_file);
+        pending_load_file = NULL;
+    }
+    else if (!is_load_qq) {
+        // LOAD "FILE"
+        UT_string* filename = collect_file_name(de);
+        load_file(utstring_body(filename));
+        utstring_free(filename);
+    }
+    else {
+        // ignore LOAD ""
+    }
 
     // jump to RET
     z80->pc = RET_ADDR;
+}
 
+void save_prog_hook(Z80* z80) {
+    // collect file name
+    WORD hl = z80->regs[z80->regs_sel].hl;  // address of the program to save
+
+    // save the program to a .p file
+    UT_string* filename = collect_file_name(hl);
+    save_file(utstring_body(filename), SAVE_ADDR, PEEKW(E_LINE));
     utstring_free(filename);
+
+    // jump to RET
+    z80->pc = RET_ADDR;
 }
 
 void write_state(const char* filename, Z80* z80, BYTE* memory) {
