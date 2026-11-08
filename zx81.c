@@ -92,9 +92,6 @@ static void setup_emulation(void) {
     // patch DISPLAY-5 to a return so that it does not execute the display file
     POKE(DISPLAY_5, 0xc9);
 
-    // patch SCROLL to a return, since it doesn't work correctly here
-    POKE(SCROLL, 0xc9);
-
     // setup the registers
     z80.pc  = 0;
     z80.iff = 0;
