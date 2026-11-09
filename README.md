@@ -36,6 +36,7 @@ Released under GPL.
 - LOAD "X" in BASIC reads a file x.p.
 - PAUSE in BASIC pauses for the given amount of frames.
 - LPRINT, LLIST and COPY append output to a "zx81.txt" file.
+- Redefine the font when register I is changed.
 
 # Possible further extensions
 https://github.com/pauloscustodio/Simple-ZX81-Emulator/issues/

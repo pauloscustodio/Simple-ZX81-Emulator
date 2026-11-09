@@ -196,6 +196,10 @@ void zx81screen_update(WORD charset_addr, WORD display_addr) {
     if (last_charset_addr != charset_addr) {
         zx81screen_update_charset(charset_addr);
         last_charset_addr = charset_addr;
+
+        // initialize the last_screen array to 0xff
+        // so that the next update will redraw the entire screen
+        memset(last_screen, 0xff, sizeof(last_screen));
     }
 
     if (display_addr != 0) {

@@ -34,7 +34,7 @@ zx81$(EXESUFFIX): $(ZX81_OBJS)
 
 zx81.o: zx81rom.h
 
-zx81rom.h: zx81.rom file2c$(EXESUFFIX)
+zx81rom.h: zx81.rom file2c$(EXESUFFIX) Makefile
 	"$(FILE2C)" $< rom > $@
 	dos2unix zx81rom.h
 
@@ -71,6 +71,10 @@ clean::
 	$(RM) $(wildcard *.p t/input/*.p)
 
 # test
-test: zx81$(EXESUFFIX) hello.p
+test: zx81$(EXESUFFIX) hello.p bold_font.asm
 	perl -S prove t/*.t
 
+all: bold_font.asm
+bold_font.asm: zx81.rom make_bold_font.pl Makefile
+	perl make_bold_font.pl $< > $@
+	dos2unix $@
