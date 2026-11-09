@@ -29,8 +29,8 @@
 #define CYCLES_PER_FRAME_SLOW (CYCLES_PER_FRAME_FAST / 4)
 
 // Emulator HOOKS
-#define EXIT_HOOK 0x0001    // exit the emulator
-#define DUMP_HOOK 0x0003    // dump memory and z80 state to a file
+#define EXIT_HOOK 8191		// exit the emulator
+#define DUMP_HOOK 8190    	// dump memory and z80 state to a file
 
 // ROM routines
 #define RET_ADDR  0x002f    // any ret instruction in ROM

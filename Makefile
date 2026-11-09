@@ -68,7 +68,7 @@ all: hello.p
 hello.p: hello.bas
 	zx81_make_p -o hello.p hello.bas
 clean::
-	$(RM) $(wildcard *.p)
+	$(RM) $(wildcard *.p t/input/*.p)
 
 # test
 test: zx81$(EXESUFFIX) hello.p
