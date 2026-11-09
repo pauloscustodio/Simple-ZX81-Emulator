@@ -10,8 +10,9 @@
 #include "simz80.h"
 #include <stdbool.h>
 
-// name of dump file
-#define DUMP_NAME "zx81.dump"
+// name of files
+#define DUMP_NAME 	"zx81.dump"
+#define LPRINT_NAME "zx81.txt"
 
 // Memory Size
 #define RAM_START 0x2000
@@ -33,6 +34,9 @@
 #define DUMP_HOOK 8190    	// dump memory and z80 state to a file
 
 // ROM routines
+#define PRINT_A   0x0010
+#define PRINT_CH  0x07f1
+#define PRINT_SP  0x07f5
 #define RET_ADDR  0x002f    // any ret instruction in ROM
 #define DISPLAY_5 0x02b5
 #define SAVE1     0x02fc    // SAVE "FILE" after name has been parsed
@@ -43,6 +47,7 @@
 #define SLOW      0x0f2b
 #define PAUSE1    0x0f35    // PAUSE after delay has been parsed and is in BC
 #define SCROLL    0x0c0e
+#define COPY	  0x0869
 #define CHARSET   0x1e00
 
 // system variables

@@ -42,7 +42,7 @@ file2c$(EXESUFFIX): $(FILE2C_OBJS)
 	gcc $(CFLAGS) -o file2c$(EXESUFFIX) $(FILE2C_OBJS)
 
 clean::
-	$(RM) $(wildcard zx81$(EXESUFFIX) $(ZX81_OBJS) file2c$(EXESUFFIX) $(FILE2C_OBJS) $(DEPS) *.o *.d *.orig *.bak *.img *.16k)
+	$(RM) $(wildcard zx81$(EXESUFFIX) $(ZX81_OBJS) file2c$(EXESUFFIX) $(FILE2C_OBJS) $(DEPS) *.o *.d *.orig *.bak zx81.txt zx81.dump)
 
 -include $(DEPS)
 

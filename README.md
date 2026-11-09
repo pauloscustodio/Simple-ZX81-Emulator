@@ -35,6 +35,7 @@ Released under GPL.
 - SAVE "X" in BASIC creates a file x.p.
 - LOAD "X" in BASIC reads a file x.p.
 - PAUSE in BASIC pauses for the given amount of frames.
+- LPRINT, LLIST and COPY append output to a "zx81.txt" file.
 
 # Possible further extensions
 https://github.com/pauloscustodio/Simple-ZX81-Emulator/issues/

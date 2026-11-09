@@ -12,6 +12,7 @@
 #include "zx81.h"
 #include "zx81kbd.h"
 #include "zx81load.h"
+#include "zx81printer.h"
 #include "zx81rom.h"
 #include "zx81screen.h"
 #include <stdbool.h>
@@ -138,6 +139,17 @@ static void run_frame(void) {
         }
         else if (z80.pc == SLOW) {      // SLOW routine
             POKE(CDFLAG, PEEK(CDFLAG) | 0x40);
+            z80.pc = RET_ADDR;
+        }
+        else if ((z80.pc == PRINT_A ||
+                  z80.pc == PRINT_CH ||
+                  z80.pc == PRINT_SP) &&
+                 (PEEK(FLAGS) & 2) != 0) {	// print to printer
+            lprint_char((z80.af[z80.af_sel]) >> 8);
+            z80.pc = RET_ADDR;
+        }
+        else if (z80.pc == COPY) {
+            copy();
             z80.pc = RET_ADDR;
         }
 

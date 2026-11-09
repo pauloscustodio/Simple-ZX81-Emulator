@@ -19,7 +19,7 @@ int main(int argc, char* argv[]) {
         if (col == 0) {
             printf("\n    ");
         }
-        printf("0x%.2x, ", byte);
+        printf("0x%.2x,", byte);
         if (++col == 16) {
             col = 0;
         }
