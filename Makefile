@@ -71,10 +71,14 @@ clean::
 	$(RM) $(wildcard *.p t/input/*.p)
 
 # test
-test: zx81$(EXESUFFIX) hello.p bold_font.asm
+test: zx81$(EXESUFFIX) hello.p normal_font.asm bold_font.asm
 	perl -S prove t/*.t
 
-all: bold_font.asm
+all: normal_font.asm bold_font.asm
 bold_font.asm: zx81.rom make_bold_font.pl Makefile
 	perl make_bold_font.pl $< > $@
+	dos2unix $@
+
+normal_font.asm: zx81.rom extract_font.pl Makefile
+	perl extract_font.pl $< > $@
 	dos2unix $@

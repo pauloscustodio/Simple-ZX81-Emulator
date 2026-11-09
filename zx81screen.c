@@ -11,6 +11,7 @@
 #include "zx81screen.h"
 #include <SDL.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 // the screen surface
 static SDL_Surface* screen = NULL;
@@ -59,56 +60,73 @@ void zx81screen_init(void) {
 
 // creates a sdl surface with the zx81 character set
 static void zx81screen_update_charset(WORD charset_addr) {
-    SDL_Surface* charset_rgb;
-    Uint32 rmask, gmask, bmask, black, white;
-    int i, addr, row, col, b;
-    Uint32* pixel;
-
     // create a rgb surface to hold 256 8x8 characters
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    rmask = 0xff000000;
-    gmask = 0x00ff0000;
-    bmask = 0x0000ff00;
+    Uint32 rmask = 0xff000000;
+    Uint32 gmask = 0x00ff0000;
+    Uint32 bmask = 0x0000ff00;
 #else
-    rmask = 0x000000ff;
-    gmask = 0x0000ff00;
-    bmask = 0x00ff0000;
+    Uint32 rmask = 0x000000ff;
+    Uint32 gmask = 0x0000ff00;
+    Uint32 bmask = 0x00ff0000;
 #endif
-    charset_rgb = SDL_CreateRGBSurface(SDL_SWSURFACE, 4096, 16, 32, rmask, gmask,
-                                       bmask, 0);
+    SDL_Surface* charset_rgb = SDL_CreateRGBSurface(SDL_SWSURFACE, 4096, 16, 32,
+                               rmask, gmask, bmask, 0);
     if (charset_rgb == NULL) {
         die("Unable to create RGB surface: %s\n", SDL_GetError());
     }
 
     // map black and white colors
-    black = SDL_MapRGB(charset_rgb->format, 0, 0, 0);
-    white = SDL_MapRGB(charset_rgb->format, 255, 255, 255);
+    Uint32 black = SDL_MapRGB(charset_rgb->format, 0, 0, 0);
+    Uint32 white = SDL_MapRGB(charset_rgb->format, 255, 255, 255);
 
-    // pixel points to the top-left pixel of the surface
-    pixel = (Uint32*)charset_rgb->pixels;
+    // base points to the top-left pixel of the surface
+    Uint32* base = (Uint32*)charset_rgb->pixels;
 
     // addr points to the start of the characters bits
-    addr = charset_addr;
+    // bit 0 of I is 1 for CHR$128 mode, where bit 7 of the char selects a new pattern
+    bool is_chr128 = (charset_addr & 0x0100) != 0;
+    WORD addr = charset_addr & ~0x0100;
+    int num_chars = is_chr128 ? 128 : 64;
 
     // the ammount of uint32s to add to go up/down on line
     int pitch = charset_rgb->pitch / 4;
 
-    // create the 128 characters (64 normal + 64 inverted)
-    for (i = 0; i < 64; i++) {
-        for (row = 0; row < 8; row++) {
-            b = PEEK(addr++);
+    // create the 128 characters (64 normal + 64 blanks + 64 inverted)
+    // or in CHR$128 mode (first 64 + 64 blanks + second 64)
+    for (int i = 0; i < num_chars; i++) {
+        int slot;
+        if (!is_chr128) {
+            slot = i;
+        }
+        else {
+            slot = (i < 64) ? i : (i + 64);
+        }
 
-            for (col = 0; col < 8; col++) {
-                if (b & 128) {
+        Uint32* char_pixel = base + slot * 16;
+
+        for (int row = 0; row < 8; row++) {
+            Uint32* pixel = char_pixel + row * pitch * 2;
+            BYTE b = PEEK(addr++);
+
+            for (int col = 0; col < 8; col++) {
+                bool bit_set = (b & 128) != 0;
+                if (is_chr128 && i >= 64) {
+                    bit_set = !bit_set; // invert the second 64 characters
+                }
+
+                if (bit_set) {
                     pixel[0] = black;
                     pixel[1] = black;
                     pixel[pitch + 0] = black;
                     pixel[pitch + 1] = black;
 
-                    pixel[2048] = white;
-                    pixel[2049] = white;
-                    pixel[pitch + 2048] = white;
-                    pixel[pitch + 2049] = white;
+                    if (!is_chr128) {
+                        pixel[2048] = white;
+                        pixel[2049] = white;
+                        pixel[pitch + 2048] = white;
+                        pixel[pitch + 2049] = white;
+                    }
                 }
                 else {
                     pixel[0] = white;
@@ -116,23 +134,27 @@ static void zx81screen_update_charset(WORD charset_addr) {
                     pixel[pitch + 0] = white;
                     pixel[pitch + 1] = white;
 
-                    pixel[2048] = black;
-                    pixel[2049] = black;
-                    pixel[pitch + 2048] = black;
-                    pixel[pitch + 2049] = black;
+                    if (!is_chr128) {
+                        pixel[2048] = black;
+                        pixel[2049] = black;
+                        pixel[pitch + 2048] = black;
+                        pixel[pitch + 2049] = black;
+                    }
                 }
                 // advance pixel to the right
                 pixel += 2;
                 b <<= 1;
             }
+
             // advance pixel to the start of the next line
             pixel += pitch * 2 - 16;
         }
-        // advance pixel to the top-left of the next character
-        pixel -= pitch * 16 - 16;
     }
 
     // convert the rgb surface to a surface the same format of the screen
+    if (charset) {
+        SDL_FreeSurface(charset);
+    }
     charset = SDL_DisplayFormat(charset_rgb);
     if (charset == NULL) {
         SDL_FreeSurface(charset_rgb);

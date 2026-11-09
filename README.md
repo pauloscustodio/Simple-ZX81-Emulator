@@ -37,6 +37,9 @@ Released under GPL.
 - PAUSE in BASIC pauses for the given amount of frames.
 - LPRINT, LLIST and COPY append output to a "zx81.txt" file.
 - Redefine the font when register I is changed.
+- Supports CHR$128: when I is odd, I & 0xFE is the page of the character 
+  bitmaps, and 128 bitmaps are read (1k). The top 64 characters need to 
+  be inverted because the CHR$128 hardware inverts them again.
 
 # Possible further extensions
 https://github.com/pauloscustodio/Simple-ZX81-Emulator/issues/

@@ -153,6 +153,7 @@
     <ClCompile Include="..\..\zx81chars.c" />
     <ClCompile Include="..\..\zx81kbd.c" />
     <ClCompile Include="..\..\zx81load.c" />
+    <ClCompile Include="..\..\zx81printer.c" />
     <ClCompile Include="..\..\zx81screen.c" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +166,7 @@
     <ClInclude Include="..\..\zx81chars.h" />
     <ClInclude Include="..\..\zx81kbd.h" />
     <ClInclude Include="..\..\zx81load.h" />
+    <ClInclude Include="..\..\zx81printer.h" />
     <ClInclude Include="..\..\zx81rom.h" />
     <ClInclude Include="..\..\zx81screen.h" />
   </ItemGroup>
