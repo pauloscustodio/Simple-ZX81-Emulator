@@ -5,48 +5,26 @@
 # License: GPL
 #------------------------------------------------------------------------------
 
+PROJ = zx81
+
 ifeq ($(OS),Windows_NT)
   EXESUFFIX	:= .exe
 else
   EXESUFFIX	?=
 endif
 
+#------------------------------------------------------------------------------
+# compile options
+#------------------------------------------------------------------------------
 CFLAGS 	:= -O3 -MMD -Wall -Werror \
 			$(filter-out -Dmain=SDL_main,$(shell pkg-config --cflags sdl))
 LDFLAGS := 	$(filter-out -lSDLmain,$(shell pkg-config --libs sdl))
 
-SRCS := $(wildcard *.c)
-OBJS := $(SRCS:.c=.o)
-FILE2C_OBJS = file2c.o
-ZX81_OBJS = $(filter-out $(FILE2C_OBJS), $(OBJS))
+INSTALL ?= install
 
-FILE2C := $(CURDIR)/file2c$(EXESUFFIX)
-
-DEPS = $(ZX81_OBJS:.o=.d) $(FILE2C_OBJS:.o=.d)
-
-.c.o:
-	gcc $(CFLAGS) -c $<
-
-all: zx81$(EXESUFFIX) file2c$(EXESUFFIX)
-
-zx81$(EXESUFFIX): $(ZX81_OBJS)
-	gcc $(CFLAGS) -o zx81$(EXESUFFIX) $(ZX81_OBJS) $(LDFLAGS)
-
-zx81.o: zx81rom.h
-
-zx81rom.h: zx81.rom file2c$(EXESUFFIX) Makefile
-	"$(FILE2C)" $< rom > $@
-	dos2unix zx81rom.h
-
-file2c$(EXESUFFIX): $(FILE2C_OBJS)
-	gcc $(CFLAGS) -o file2c$(EXESUFFIX) $(FILE2C_OBJS)
-
-clean::
-	$(RM) $(wildcard zx81$(EXESUFFIX) $(ZX81_OBJS) file2c$(EXESUFFIX) $(FILE2C_OBJS) $(DEPS) *.o *.d *.orig *.bak zx81.txt zx81.dump)
-
--include $(DEPS)
-
-# tidy
+#------------------------------------------------------------------------------
+# astyle
+#------------------------------------------------------------------------------
 STYLE_WIDTH = 80
 ASTYLE	= astyle --style=attach --pad-oper --align-pointer=type \
 		  --break-closing-braces --add-braces --attach-return-type \
@@ -55,6 +33,73 @@ PERLTIDY = perltidy --indent-columns=4 --continuation-indentation=4 \
 		  --maximum-line-length=$(STYLE_WIDTH) -b
 TIDY_STAMP = .tidy-stamp
 
+#------------------------------------------------------------------------------
+# target files
+#------------------------------------------------------------------------------
+BUILD_DIR = build
+
+SRCS := $(wildcard *.c)
+OBJS := $(patsubst %.c,$(BUILD_DIR)/%.o,$(SRCS))
+
+DEPENDS = $(OBJS:.o=.d)
+
+#------------------------------------------------------------------------------
+# build
+#------------------------------------------------------------------------------
+
+all: $(PROJ)$(EXESUFFIX)
+
+$(PROJ)$(EXESUFFIX): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@ 
+
+$(BUILD_DIR)/%.o: %.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILD_DIR):
+	mkdir $@
+
+$(PROJ).o: zx81rom.h
+
+zx81rom.h: zx81.rom tools/file2c.pl Makefile
+	perl tools/file2c.pl $< rom > $@
+	dos2unix $@
+
+#------------------------------------------------------------------------------
+# test
+#------------------------------------------------------------------------------
+all: hello.p
+
+hello.p: hello.bas
+	zx81_make_p -o hello.p hello.bas
+
+clean::
+	$(RM) $(wildcard *.p t/input/*.p)
+
+test: $(PROJ)$(EXESUFFIX) hello.p normal_font.asm bold_font.asm
+	perl -S prove t/*.t
+
+all: normal_font.asm bold_font.asm
+bold_font.asm: zx81.rom tools/make_bold_font.pl Makefile
+	perl tools/make_bold_font.pl $< > $@
+	dos2unix $@
+
+normal_font.asm: zx81.rom tools/extract_font.pl Makefile
+	perl tools/extract_font.pl $< > $@
+	dos2unix $@
+
+inittests: t/input/cpu_test_z80_ok.bas
+
+t/input/cpu_test_z80_ok.bas: t/input/cpu_test_z80_ok.asm \
+							tools/make_cpu_test_z80_ok_bas.pl Makefile
+	z88dk-z80asm -b t/input/cpu_test_z80_ok.asm
+	perl tools/make_cpu_test_z80_ok_bas.pl t/input/cpu_test_z80_ok.bin
+	$(RM) t/input/cpu_test_z80_ok.lis \
+		  t/input/cpu_test_z80_ok.o \
+		  t/input/cpu_test_z80_ok.bin
+		  
+#------------------------------------------------------------------------------
+# tidy
+#------------------------------------------------------------------------------
 tidy:
 	@[ -f $(TIDY_STAMP) ] || touch -t 197001010000 $(TIDY_STAMP)
 	find . \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.re' \) \
@@ -63,33 +108,13 @@ tidy:
 		-newer $(TIDY_STAMP) -exec $(PERLTIDY) {} +
 	touch $(TIDY_STAMP)
 
-# test files
-all: hello.p
-hello.p: hello.bas
-	zx81_make_p -o hello.p hello.bas
+#------------------------------------------------------------------------------
+# clean
+#------------------------------------------------------------------------------
 clean::
-	$(RM) $(wildcard *.p t/input/*.p)
+	$(RM) $(wildcard $(PROJ)$(EXESUFFIX) $(OBJS) $(DEPENDS) \
+					*.o *.d *.orig *.bak $(PROJ).txt $(PROJ).dump)
+	$(RM) -r $(BUILD_DIR)
 
-# test
-test: zx81$(EXESUFFIX) hello.p normal_font.asm bold_font.asm
-	perl -S prove t/*.t
-
-all: normal_font.asm bold_font.asm
-bold_font.asm: zx81.rom make_bold_font.pl Makefile
-	perl make_bold_font.pl $< > $@
-	dos2unix $@
-
-normal_font.asm: zx81.rom extract_font.pl Makefile
-	perl extract_font.pl $< > $@
-	dos2unix $@
-
-inittests: t/input/cpu_test_z80_ok.bas
-
-t/input/cpu_test_z80_ok.bas: t/input/cpu_test_z80_ok.asm Makefile
-	z88dk-z80asm -b t/input/cpu_test_z80_ok.asm
-	perl make_cpu_test_z80_ok_bas.pl t/input/cpu_test_z80_ok.bin
-	$(RM) t/input/cpu_test_z80_ok.lis \
-		  t/input/cpu_test_z80_ok.o \
-		  t/input/cpu_test_z80_ok.bin
-		  
-
+#------------------------------------------------------------------------------
+-include $(DEPENDS)
