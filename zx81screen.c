@@ -40,7 +40,7 @@ void zx81screen_free(void) {
 void zx81screen_init(void) {
     // initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        die("SDL_Init failed: %s\n", SDL_GetError());
+        die("Error: SDL_Init failed: %s\n", SDL_GetError());
     }
 
     SDL_WM_SetCaption("Simple ZX81 Emulator", "zx81");
@@ -48,7 +48,7 @@ void zx81screen_init(void) {
     // create our 512x384 screen; the bpp will be the same as the desktop
     screen = SDL_SetVideoMode(512, 384, 0, SDL_SWSURFACE);
     if (screen == NULL) {
-        die("Unable to set 512x384 video: %s\n", SDL_GetError());
+        die("Error: Unable to set 512x384 video: %s\n", SDL_GetError());
     }
 
     // initialize the last_screen array to 0xff
@@ -73,7 +73,7 @@ static void zx81screen_update_charset(WORD charset_addr) {
     SDL_Surface* charset_rgb = SDL_CreateRGBSurface(SDL_SWSURFACE, 4096, 16, 32,
                                rmask, gmask, bmask, 0);
     if (charset_rgb == NULL) {
-        die("Unable to create RGB surface: %s\n", SDL_GetError());
+        die("Error: Unable to create RGB surface: %s\n", SDL_GetError());
     }
 
     // map black and white colors
@@ -158,7 +158,7 @@ static void zx81screen_update_charset(WORD charset_addr) {
     charset = SDL_DisplayFormat(charset_rgb);
     if (charset == NULL) {
         SDL_FreeSurface(charset_rgb);
-        die("Unable to convert charset surface: %s\n", SDL_GetError());
+        die("Error: Unable to convert charset surface: %s\n", SDL_GetError());
     }
 
     SDL_FreeSurface(charset_rgb);

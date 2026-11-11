@@ -24,7 +24,7 @@ void die(const char* msg, ...) {
 void* xmalloc(size_t size) {
     void* p = malloc(size);
     if (!p) {
-        die("Out of memory\n");
+        die("Error: Out of memory\n");
     }
     return p;
 }
@@ -32,7 +32,7 @@ void* xmalloc(size_t size) {
 char* xstrdup(const char* str) {
     char* p = strdup(str);
     if (!p) {
-        die("Out of memory\n");
+        die("Error: Out of memory\n");
     }
     return p;
 }

@@ -16,12 +16,12 @@
 #include "zx81rom.h"
 #include "zx81screen.h"
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <SDL.h>
-#include <stdint.h>
 #undef main   // keep our own main(); we don't need SDLmain.lib's WinMain shim
 
 // global variables
@@ -231,16 +231,17 @@ static void consume_events(void) {
 }
 
 static void exit_usage(void) {
-    fprintf(stderr, "Usage: zx81 [-s] [-t] [file.p|file.dump]\n");
+    fprintf(stderr, "Usage: zx81 [-d] [-s] [-t] [file.p|file.dump]\n");
     exit(EXIT_FAILURE);
 }
 
 int main(int argc, char* argv[]) {
     const char* filename = NULL;
+    bool dump_prog_flag = false;
 
     // check command line arguments for a .p file to load
     while (true) {
-        int c = getopt(argc, argv, "st");
+        int c = getopt(argc, argv, "std");
         if (c == -1) {
             break;
         }
@@ -250,6 +251,9 @@ int main(int argc, char* argv[]) {
             break;
         case 't':
             trace = true;
+            break;
+        case 'd':
+            dump_prog_flag = true;
             break;
         default:
             exit_usage();
@@ -263,10 +267,21 @@ int main(int argc, char* argv[]) {
         exit_usage();
     }
 
+    // dump p_file
+    if (dump_prog_flag) {
+        if (filename == NULL || !str_ends_with(filename, ".p")) {
+            die("Error: -d option requires a .p file\n");
+        }
+        load_prog(filename);
+        dump_prog(&z80);
+        return 0;
+    }
+
     // initialize the state
     zx81screen_init();
     setup_emulation();
 
+    // load file if requested
     if (filename != NULL) {
         if (str_ends_with(filename, ".p")) {
             push_load_file(filename);
@@ -275,7 +290,7 @@ int main(int argc, char* argv[]) {
             read_state(filename, &z80, memory);
         }
         else {
-            die("Invalid file extension: %s\n", filename);
+            die("Error: Invalid file extension: %s\n", filename);
         }
     }
 

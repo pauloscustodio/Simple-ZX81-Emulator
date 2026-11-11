@@ -7,9 +7,11 @@
 
 #include "disasm.h"
 #include "simz80.h"
+#include "zx81.h"
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include "zx81chars.h"
 
 static const char* catf(const char* fmt, ...) {
     static char buffer[64];
@@ -21,50 +23,53 @@ static const char* catf(const char* fmt, ...) {
 }
 
 static const char* dd1(int n, int x) {
-    static const char* n_lut[] = { "bc", "de", "hl", "sp" };
-    static const char* x_lut[] = { "hl", "ix", "iy" };
+    static const char* n_lut[3][4] = {
+        { "bc", "de", "hl", "sp" },
+        { "bc", "de", "ix", "sp" },
+        { "bc", "de", "iy", "sp" }
+    };
     n &= 0x03;
-    if (n == 2) {
-        return x_lut[x];
-    }
-    else {
-        return n_lut[n];
-    }
+    return n_lut[x][n];
 }
 
 static const char* dd2(int n, int x) {
-    static const char* n_lut[] = { "bc", "de", "hl", "af" };
-    static const char* x_lut[] = { "hl", "ix", "iy" };
+    static const char* n_lut[3][4] = {
+        { "bc", "de", "hl", "af" },
+        { "bc", "de", "ix", "af" },
+        { "bc", "de", "iy", "af" }
+    };
     n &= 0x03;
-    if (n == 2) {
-        return x_lut[x];
-    }
-    else {
-        return n_lut[n];
-    }
+    return n_lut[x][n];
 }
 
 static const char* r1(int n, int x, int dis) {
     static char buffer[16];
-    static const char* n_lut[] = { "b", "c", "d", "e", "h", "l", "(hl)", "a" };
-    static const char* x_lut[] = { "(hl)", "(ix%+02x)", "(iy%+02x)" };
+    static const char* n_lut[3][8] = {
+        { "b", "c", "d", "e", "h", "l", "(hl)", "a" },
+        { "b", "c", "d", "e", "ixh", "ixl", "(ix%+d)", "a" },
+        { "b", "c", "d", "e", "iyh", "iyl", "(iy%+d)", "a" }
+    };
     n &= 0x07;
     if (n == 6) {
-        sprintf(buffer, x_lut[x], dis);
+        sprintf(buffer, n_lut[x][n], dis);
         return buffer;
     }
     else {
-        return n_lut[n];
+        return n_lut[x][n];
     }
 }
 
 static const char* x1(int x) {
-    static const char* x_lut[] = { "hl", "ix", "iy" };
+    static const char* x_lut[] = {
+        "hl", "ix", "iy"
+    };
     return x_lut[x];
 }
 
 static const char* flags1(int n) {
-    static const char* n_lut[] = { "nz", "z", "nc", "c", "po", "pe", "p", "m" };
+    static const char* n_lut[] = {
+        "nz", "z", "nc", "c", "po", "pe", "p", "m"
+    };
     n &= 0x07;
     return n_lut[n];
 }
@@ -75,19 +80,25 @@ static const char* flags2(int n) {
 }
 
 static const char* alu1(int n) {
-    static const char* n_lut[] = { "add a, ", "adc a, ", "sub ", "sbc a, ", "and ", "xor ", "or ", "cp " };
+    static const char* n_lut[] = {
+        "add a, ", "adc a, ", "sub ", "sbc a, ", "and ", "xor ", "or ", "cp "
+    };
     n &= 0x07;
     return n_lut[n];
 }
 
 static const char* rot1(int n) {
-    static const char* n_lut[] = { "rlc ", "rrc ", "rl ", "rr ", "sla ", "sra ", "sll ", "srl " };
+    static const char* n_lut[] = {
+        "rlc ", "rrc ", "rl ", "rr ", "sla ", "sra ", "sll ", "srl "
+    };
     n &= 0x07;
     return n_lut[n];
 }
 
 static const char* bit1(int n) {
-    static const char* n_lut[] = { "", "bit ", "res ", "set " };
+    static const char* n_lut[] = {
+        "", "bit ", "res ", "set "
+    };
     n &= 0x03;
     return n_lut[n];
 }
@@ -95,7 +106,7 @@ static const char* bit1(int n) {
 static const char* collect_nn(Z80* z80, WORD* a) {
     static char buffer[16];
     WORD nn = z80_fetch(z80, *a) | (z80_fetch(z80, *a + 1) << 8);
-    sprintf(buffer, "%04x", nn);
+    sprintf(buffer, "$%04x", nn);
     (*a) += 2;
     return buffer;
 }
@@ -103,7 +114,7 @@ static const char* collect_nn(Z80* z80, WORD* a) {
 static const char* collect_n(Z80* z80, WORD* a) {
     static char buffer[16];
     BYTE n = z80_fetch(z80, *a);
-    sprintf(buffer, "%02x", n);
+    sprintf(buffer, "$%02x", n);
     (*a)++;
     return buffer;
 }
@@ -118,7 +129,7 @@ static const char* collect_jr(Z80* z80, WORD* a) {
     static char buffer[16];
     int dis = (signed char)z80_fetch(z80, *a);
     WORD addr = *a + 1 + dis;
-    sprintf(buffer, "%04x", addr);
+    sprintf(buffer, "$%04x", addr);
     (*a)++;
     return buffer;
 }
@@ -300,12 +311,27 @@ static const char* disasm_str(Z80* z80, WORD* a) {
         case 0x7c:
         case 0x7d:
         case 0x7e:
-        case 0x7f:
-            if (x != 0)
-                if ((b & 0x07) == 0x06 || (b & 0x38) == 0x30) {
+        case 0x7f: {
+            int src = b & 0x07;
+            int dst = (b >> 3) & 0x07;
+            if (x != 0) {
+                if (src == 6) {
                     dis = collect_dis(z80, a);
+                    return catf("ld %s, %s", r1(b >> 3, 0, dis), r1(b, x, dis));
                 }
-            return catf("ld %s, %s", r1(b >> 3, x, dis), r1(b, x, dis));
+                else if (dst == 6) {
+                    dis = collect_dis(z80, a);
+                    return catf("ld %s, %s", r1(b >> 3, x, dis), r1(b, 0, dis));
+                }
+                else {
+                    return catf("ld %s, %s", r1(b >> 3, x, dis), r1(b, x, dis));
+                }
+            }
+            else {
+                return catf("ld %s, %s", r1(b >> 3, x, dis), r1(b, x, dis));
+            }
+            break;
+        }
         case 0x76:
             return "halt";
         case 0x80:
@@ -372,10 +398,11 @@ static const char* disasm_str(Z80* z80, WORD* a) {
         case 0xbd:
         case 0xbe:
         case 0xbf:
-            if (x != 0)
+            if (x != 0) {
                 if ((b & 0x07) == 0x06) {
                     dis = collect_dis(z80, a);
                 }
+            }
             return catf("%s%s", alu1(b >> 3), r1(b, x, dis));
         case 0xc0:
         case 0xc8:
@@ -433,7 +460,7 @@ static const char* disasm_str(Z80* z80, WORD* a) {
         case 0xef:
         case 0xf7:
         case 0xff:
-            return catf("rst %02xh", b & 0x34);
+            return catf("rst $%02x", b & 0x38);
         case 0xc9:
             return "ret";
         case 0xcb:
@@ -778,7 +805,7 @@ static const char* disasm_str(Z80* z80, WORD* a) {
     return "???";
 }
 
-void disasm(Z80* z80, WORD a) {
+WORD disasm(Z80* z80, WORD a) {
     WORD a0 = a;
     const char* asm_str = disasm_str(z80, &a);
 
@@ -790,6 +817,7 @@ void disasm(Z80* z80, WORD a) {
         printf("   ");
     }
     printf(" %s\n", asm_str);
+    return a;
 }
 
 static const char* flags_str(WORD af) {
@@ -817,4 +845,110 @@ void show_regs(Z80* z80) {
            z80->regs[1 - z80->regs_sel].de, z80->regs[1 - z80->regs_sel].hl);
     printf("IR = %04x IX = %04x IY = %04x SP = %04x PC = %04x\n",
            z80->ir, z80->ix, z80->iy, z80->sp, z80->pc);
+}
+
+static void dump_byte(WORD* addr, const char* name) {
+    BYTE b = PEEK(*addr);
+    printf("%04x  %02x     %-16s =   $%02x = %5d\n", *addr, b, name, b, b);
+    (*addr)++;
+}
+
+static void dump_word(WORD* addr, const char* name) {
+    WORD w = PEEKW(*addr);
+    printf("%04x  %02x %02x  %-16s = $%04x = %5d\n", *addr, (w >> 8) & 0xff,
+           w & 0xff, name, w, w);
+    (*addr) += 2;
+}
+
+static void dump_bytes(WORD* addr, const char* name, int count) {
+    printf("%04x         %s\n", *addr, name);
+    for (int i = 0; i < count; i += 16) {
+        printf("%04x  ", *addr + i);
+        for (int j = 0; j < 16 && (i + j) < count; j++) {
+            BYTE b = PEEK(*addr + i + j);
+            printf("%02x ", b);
+        }
+        printf("\n");
+    }
+    (*addr) += count;
+}
+
+void dump_prog(Z80* z80) {
+    WORD d_file = PEEKW(D_FILE);
+    WORD vars = PEEKW(VARS);
+    WORD e_line = PEEKW(E_LINE);
+
+    // dump system variables
+    WORD addr = VERSN;
+    dump_byte(&addr, "VERSN");
+    dump_word(&addr, "EPPC");
+    dump_word(&addr, "D_FILE");
+    dump_word(&addr, "DF_CC");
+    dump_word(&addr, "VARS");
+    dump_word(&addr, "DEST");
+    dump_word(&addr, "E_LINE");
+    dump_word(&addr, "CH_ADD");
+    dump_word(&addr, "X_PTR");
+    dump_word(&addr, "STKBOT");
+    dump_word(&addr, "STKEND");
+    dump_byte(&addr, "BREG");
+    dump_word(&addr, "MEM");
+    dump_byte(&addr, "SPARE1");
+    dump_byte(&addr, "DF_SZ");
+    dump_word(&addr, "STOP");
+    dump_word(&addr, "LAST_K");
+    dump_byte(&addr, "DB_ST");
+    dump_byte(&addr, "MARGIN");
+    dump_word(&addr, "NXTLIN");
+    dump_word(&addr, "OLDPPC");
+    dump_byte(&addr, "FLAGX");
+    dump_word(&addr, "STRLEN");
+    dump_word(&addr, "T_ADDR");
+    dump_word(&addr, "SEED");
+    dump_word(&addr, "FRAMES");
+    dump_byte(&addr, "COORDS_X");
+    dump_byte(&addr, "COORDS_Y");
+    dump_byte(&addr, "PR_CC");
+    dump_byte(&addr, "SPOSN_COL");
+    dump_byte(&addr, "SPOSN_ROW");
+    dump_byte(&addr, "CDFLAG");
+    dump_bytes(&addr, "PRBUF", 33);
+    dump_bytes(&addr, "MEMBOT", 30);
+    dump_word(&addr, "SPARE2");
+
+    // dump BASIC program
+    while (addr < d_file) {
+        WORD line_addr = addr;
+        WORD line_num = PEEKW_BE(addr);
+        addr += 2;
+        WORD size = PEEKW(addr);
+        addr += 2;
+        printf("%04x  %02x %02x  %-16s = %6d\n", line_addr, line_num & 0xff,
+               (line_num >> 8) & 0xff, "Line Number", line_num);
+        printf("%04x  %02x %02x  %-16s = %6d\n", line_addr + 2, (size >> 8) & 0xff,
+               size & 0xff, "Size", size);
+
+        if (PEEK(addr) == 0xea) {   // REM
+            printf("%04x  %02x     %-16s\n", addr, PEEK(addr), "REM");
+            addr++;
+            while (addr < line_addr + 4 + size - 1) {
+                addr = disasm(z80, addr);
+            }
+            addr = line_addr + 4 + size - 1;    // in case disasm overflowed
+        }
+        else {  // BASIC line
+            while (addr < line_addr + 4 + size - 1) {
+                printf("%04x  %02x     %-16s\n", addr, PEEK(addr), zx81chars[PEEK(addr)]);
+                addr++;
+            }
+        }
+        printf("%04x  %02x     %-16s\n", addr, PEEK(addr), "newline");
+        addr++;
+    }
+
+    // dump display
+    dump_bytes(&addr, "DISPLAY", vars - d_file);
+
+    // dump variables
+    dump_bytes(&addr, "VARIABLES", e_line - vars);
 }

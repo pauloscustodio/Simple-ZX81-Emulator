@@ -1,15 +1,15 @@
 
-0000  d3 fd        out (fd), a
+0000  d3 fd        out ($fd), a
 AF = 0000 ........  BC = 0000 DE = 0000 HL = 0000
 AF'= 0000 ........  BC'= 0000 DE'= 0000 HL'= 0000
 IR = 0000 IX = 0000 IY = 0000 SP = 0000 PC = 0002
 
-0002  01 ff 7f     ld bc, 7fff
+0002  01 ff 7f     ld bc, $7fff
 AF = 0000 ........  BC = 7fff DE = 0000 HL = 0000
 AF'= 0000 ........  BC'= 0000 DE'= 0000 HL'= 0000
 IR = 0000 IX = 0000 IY = 0000 SP = 0000 PC = 0005
 
-0005  c3 cb 03     jp 03cb
+0005  c3 cb 03     jp $03cb
 AF = 0000 ........  BC = 7fff DE = 0000 HL = 0000
 AF'= 0000 ........  BC'= 0000 DE'= 0000 HL'= 0000
 IR = 0000 IX = 0000 IY = 0000 SP = 0000 PC = 03cb
@@ -24,12 +24,12 @@ AF = 0000 ........  BC = 7fff DE = 0000 HL = 7fff
 AF'= 0000 ........  BC'= 0000 DE'= 0000 HL'= 0000
 IR = 0000 IX = 0000 IY = 0000 SP = 0000 PC = 03cd
 
-03cd  3e 3f        ld a, 3f
+03cd  3e 3f        ld a, $3f
 AF = 3f00 ........  BC = 7fff DE = 0000 HL = 7fff
 AF'= 0000 ........  BC'= 0000 DE'= 0000 HL'= 0000
 IR = 0000 IX = 0000 IY = 0000 SP = 0000 PC = 03cf
 
-03cf  36 02        ld (hl), 02
+03cf  36 02        ld (hl), $02
 AF = 3f00 ........  BC = 7fff DE = 0000 HL = 7fff
 AF'= 0000 ........  BC'= 0000 DE'= 0000 HL'= 0000
 IR = 0000 IX = 0000 IY = 0000 SP = 0000 PC = 03d1
@@ -44,12 +44,12 @@ AF = 3fab S.5.3.NC  BC = 7fff DE = 0000 HL = 7ffe
 AF'= 0000 ........  BC'= 0000 DE'= 0000 HL'= 0000
 IR = 0000 IX = 0000 IY = 0000 SP = 0000 PC = 03d3
 
-03d3  20 fa        jr nz, 03cf
+03d3  20 fa        jr nz, $03cf
 AF = 3fab S.5.3.NC  BC = 7fff DE = 0000 HL = 7ffe
 AF'= 0000 ........  BC'= 0000 DE'= 0000 HL'= 0000
 IR = 0000 IX = 0000 IY = 0000 SP = 0000 PC = 03cf
 
-03cf  36 02        ld (hl), 02
+03cf  36 02        ld (hl), $02
 AF = 3fab S.5.3.NC  BC = 7fff DE = 0000 HL = 7ffe
 AF'= 0000 ........  BC'= 0000 DE'= 0000 HL'= 0000
 IR = 0000 IX = 0000 IY = 0000 SP = 0000 PC = 03d1
@@ -64,12 +64,12 @@ AF = 3fab S.5.3.NC  BC = 7fff DE = 0000 HL = 7ffd
 AF'= 0000 ........  BC'= 0000 DE'= 0000 HL'= 0000
 IR = 0000 IX = 0000 IY = 0000 SP = 0000 PC = 03d3
 
-03d3  20 fa        jr nz, 03cf
+03d3  20 fa        jr nz, $03cf
 AF = 3fab S.5.3.NC  BC = 7fff DE = 0000 HL = 7ffd
 AF'= 0000 ........  BC'= 0000 DE'= 0000 HL'= 0000
 IR = 0000 IX = 0000 IY = 0000 SP = 0000 PC = 03cf
 
-03cf  36 02        ld (hl), 02
+03cf  36 02        ld (hl), $02
 AF = 3fab S.5.3.NC  BC = 7fff DE = 0000 HL = 7ffd
 AF'= 0000 ........  BC'= 0000 DE'= 0000 HL'= 0000
 IR = 0000 IX = 0000 IY = 0000 SP = 0000 PC = 03d1
@@ -84,12 +84,12 @@ AF = 3fab S.5.3.NC  BC = 7fff DE = 0000 HL = 7ffc
 AF'= 0000 ........  BC'= 0000 DE'= 0000 HL'= 0000
 IR = 0000 IX = 0000 IY = 0000 SP = 0000 PC = 03d3
 
-03d3  20 fa        jr nz, 03cf
+03d3  20 fa        jr nz, $03cf
 AF = 3fab S.5.3.NC  BC = 7fff DE = 0000 HL = 7ffc
 AF'= 0000 ........  BC'= 0000 DE'= 0000 HL'= 0000
 IR = 0000 IX = 0000 IY = 0000 SP = 0000 PC = 03cf
 
-03cf  36 02        ld (hl), 02
+03cf  36 02        ld (hl), $02
 AF = 3fab S.5.3.NC  BC = 7fff DE = 0000 HL = 7ffc
 AF'= 0000 ........  BC'= 0000 DE'= 0000 HL'= 0000
 IR = 0000 IX = 0000 IY = 0000 SP = 0000 PC = 03d1

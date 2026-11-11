@@ -9,5 +9,6 @@
 
 #include "simz80.h"
 
-void disasm(Z80* z80, WORD a);
+WORD disasm(Z80* z80, WORD a);
 void show_regs(Z80* z80);
+void dump_prog(Z80* z80);

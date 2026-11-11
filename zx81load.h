@@ -9,6 +9,10 @@
 
 #include "simz80.h"
 
+// load and save a program to a .p file
+void load_prog(const char* p_file);
+void save_prog(const char* p_file);
+
 // push a file to be loaded by LOAD ""
 void push_load_file(const char* p_file);
 

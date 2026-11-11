@@ -82,3 +82,14 @@ bold_font.asm: zx81.rom make_bold_font.pl Makefile
 normal_font.asm: zx81.rom extract_font.pl Makefile
 	perl extract_font.pl $< > $@
 	dos2unix $@
+
+inittests: t/input/cpu_test_z80_ok.bas
+
+t/input/cpu_test_z80_ok.bas: t/input/cpu_test_z80_ok.asm Makefile
+	z88dk-z80asm -b t/input/cpu_test_z80_ok.asm
+	perl make_cpu_test_z80_ok_bas.pl t/input/cpu_test_z80_ok.bin
+	$(RM) t/input/cpu_test_z80_ok.lis \
+		  t/input/cpu_test_z80_ok.o \
+		  t/input/cpu_test_z80_ok.bin
+		  
+

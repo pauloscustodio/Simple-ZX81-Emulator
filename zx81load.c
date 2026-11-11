@@ -47,7 +47,7 @@ static UT_string* collect_file_name(WORD addr) {
     return filename;
 }
 
-static void load_file(const char* p_file) {
+static void load_p_file(const char* p_file) {
     // find the size of the .p file
     struct stat st;
     xstat(p_file, &st);
@@ -58,7 +58,7 @@ static void load_file(const char* p_file) {
     xfclose(fp);
 }
 
-static void save_file(const char* p_file, WORD start_addr, WORD end_addr) {
+static void save_p_file(const char* p_file, WORD start_addr, WORD end_addr) {
     // save the program to a .p file
     size_t size = end_addr - start_addr;
     FILE* fp = xfopen(p_file, "wb");
@@ -72,7 +72,7 @@ void next_prog_hook(Z80* z80) {
 
     if (pending_load_file) {
         // load file from command line
-        load_file(pending_load_file);
+        load_p_file(pending_load_file);
 
         // cancel load for next time
         free(pending_load_file);
@@ -81,7 +81,7 @@ void next_prog_hook(Z80* z80) {
     else if (!is_load_qq) {
         // LOAD "FILE"
         UT_string* filename = collect_file_name(de);
-        load_file(utstring_body(filename));
+        load_p_file(utstring_body(filename));
         utstring_free(filename);
     }
     else {
@@ -98,11 +98,19 @@ void save_prog_hook(Z80* z80) {
 
     // save the program to a .p file
     UT_string* filename = collect_file_name(hl);
-    save_file(utstring_body(filename), SAVE_ADDR, PEEKW(E_LINE));
+    save_prog(utstring_body(filename));
     utstring_free(filename);
 
     // jump to RET
     z80->pc = RET_ADDR;
+}
+
+void load_prog(const char* p_file) {
+    load_p_file(p_file);
+}
+
+void save_prog(const char* p_file) {
+    save_p_file(p_file, SAVE_ADDR, PEEKW(E_LINE));
 }
 
 void write_state(const char* filename, Z80* z80, BYTE* memory) {

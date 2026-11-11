@@ -1,0 +1,3039 @@
+4009  00     VERSN            =   $00 =     0
+400a  00 00  EPPC             = $0000 =     0
+400c  56 ad  D_FILE           = $56ad = 22189
+400e  56 ae  DF_CC            = $56ae = 22190
+4010  59 c6  VARS             = $59c6 = 22982
+4012  00 00  DEST             = $0000 =     0
+4014  59 c7  E_LINE           = $59c7 = 22983
+4016  59 c8  CH_ADD           = $59c8 = 22984
+4018  00 00  X_PTR            = $0000 =     0
+401a  59 c9  STKBOT           = $59c9 = 22985
+401c  59 c9  STKEND           = $59c9 = 22985
+401e  00     BREG             =   $00 =     0
+401f  40 5d  MEM              = $405d = 16477
+4021  00     SPARE1           =   $00 =     0
+4022  02     DF_SZ            =   $02 =     2
+4023  00 00  STOP             = $0000 =     0
+4025  ff ff  LAST_K           = $ffff = 65535
+4027  0f     DB_ST            =   $0f =    15
+4028  37     MARGIN           =   $37 =    55
+4029  56 ad  NXTLIN           = $56ad = 22189
+402b  00 00  OLDPPC           = $0000 =     0
+402d  00     FLAGX            =   $00 =     0
+402e  00 00  STRLEN           = $0000 =     0
+4030  0c 6b  T_ADDR           = $0c6b =  3179
+4032  00 00  SEED             = $0000 =     0
+4034  ff ff  FRAMES           = $ffff = 65535
+4036  00     COORDS_X         =   $00 =     0
+4037  00     COORDS_Y         =   $00 =     0
+4038  bc     PR_CC            =   $bc =   188
+4039  21     SPOSN_COL        =   $21 =    33
+403a  18     SPOSN_ROW        =   $18 =    24
+403b  40     CDFLAG           =   $40 =    64
+403c         PRBUF
+403c  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+404c  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+405c  76 
+405d         MEMBOT
+405d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+406d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+407b  00 00  SPARE2           = $0000 =     0
+407d  00 00  Line Number      =      0
+407f  16 2c  Size             =   5676
+4081  ea     REM             
+4082  8e           adc a, (hl)
+4083  8e           adc a, (hl)
+4084  23           inc hl
+4085  8e           adc a, (hl)
+4086  2b           dec hl
+4087  dd 8e 00     adc a, (ix+0)
+408a  dd 8e 00     adc a, (ix+0)
+408d  dd 8e 7e     adc a, (ix+126)
+4090  dd 8e 80     adc a, (ix-128)
+4093  fd 8e 00     adc a, (iy+0)
+4096  fd 8e 00     adc a, (iy+0)
+4099  fd 8e 7e     adc a, (iy+126)
+409c  fd 8e 80     adc a, (iy-128)
+409f  ce 00        adc a, $00
+40a1  ce 7f        adc a, $7f
+40a3  ce ff        adc a, $ff
+40a5  8f           adc a, a
+40a6  8e           adc a, (hl)
+40a7  8e           adc a, (hl)
+40a8  23           inc hl
+40a9  8e           adc a, (hl)
+40aa  2b           dec hl
+40ab  dd 8e 00     adc a, (ix+0)
+40ae  dd 8e 00     adc a, (ix+0)
+40b1  dd 8e 7e     adc a, (ix+126)
+40b4  dd 8e 80     adc a, (ix-128)
+40b7  fd 8e 00     adc a, (iy+0)
+40ba  fd 8e 00     adc a, (iy+0)
+40bd  fd 8e 7e     adc a, (iy+126)
+40c0  fd 8e 80     adc a, (iy-128)
+40c3  ce 00        adc a, $00
+40c5  ce 7f        adc a, $7f
+40c7  ce ff        adc a, $ff
+40c9  8f           adc a, a
+40ca  88           adc a, b
+40cb  89           adc a, c
+40cc  8a           adc a, d
+40cd  8b           adc a, e
+40ce  8c           adc a, h
+40cf  dd 8c        adc a, ixh
+40d1  dd 8d        adc a, ixl
+40d3  fd 8c        adc a, iyh
+40d5  fd 8d        adc a, iyl
+40d7  8d           adc a, l
+40d8  88           adc a, b
+40d9  89           adc a, c
+40da  8a           adc a, d
+40db  8b           adc a, e
+40dc  8c           adc a, h
+40dd  ed 4a        adc hl, bc
+40df  ed 5a        adc hl, de
+40e1  ed 6a        adc hl, hl
+40e3  ed 7a        adc hl, sp
+40e5  dd 8c        adc a, ixh
+40e7  dd 8d        adc a, ixl
+40e9  fd 8c        adc a, iyh
+40eb  fd 8d        adc a, iyl
+40ed  8d           adc a, l
+40ee  86           add a, (hl)
+40ef  86           add a, (hl)
+40f0  23           inc hl
+40f1  86           add a, (hl)
+40f2  2b           dec hl
+40f3  dd 86 00     add a, (ix+0)
+40f6  dd 86 00     add a, (ix+0)
+40f9  dd 86 7e     add a, (ix+126)
+40fc  dd 86 80     add a, (ix-128)
+40ff  fd 86 00     add a, (iy+0)
+4102  fd 86 00     add a, (iy+0)
+4105  fd 86 7e     add a, (iy+126)
+4108  fd 86 80     add a, (iy-128)
+410b  c6 00        add a, $00
+410d  c6 7f        add a, $7f
+410f  c6 ff        add a, $ff
+4111  87           add a, a
+4112  86           add a, (hl)
+4113  86           add a, (hl)
+4114  23           inc hl
+4115  86           add a, (hl)
+4116  2b           dec hl
+4117  dd 86 00     add a, (ix+0)
+411a  dd 86 00     add a, (ix+0)
+411d  dd 86 7e     add a, (ix+126)
+4120  dd 86 80     add a, (ix-128)
+4123  fd 86 00     add a, (iy+0)
+4126  fd 86 00     add a, (iy+0)
+4129  fd 86 7e     add a, (iy+126)
+412c  fd 86 80     add a, (iy-128)
+412f  c6 00        add a, $00
+4131  c6 7f        add a, $7f
+4133  c6 ff        add a, $ff
+4135  87           add a, a
+4136  80           add a, b
+4137  81           add a, c
+4138  82           add a, d
+4139  83           add a, e
+413a  84           add a, h
+413b  dd 84        add a, ixh
+413d  dd 85        add a, ixl
+413f  fd 84        add a, iyh
+4141  fd 85        add a, iyl
+4143  85           add a, l
+4144  80           add a, b
+4145  e5           push hl
+4146  21 34 12     ld hl, $1234
+4149  09           add hl, bc
+414a  44           ld b, h
+414b  4d           ld c, l
+414c  e1           pop hl
+414d  81           add a, c
+414e  82           add a, d
+414f  e5           push hl
+4150  21 34 12     ld hl, $1234
+4153  19           add hl, de
+4154  54           ld d, h
+4155  5d           ld e, l
+4156  e1           pop hl
+4157  83           add a, e
+4158  84           add a, h
+4159  d5           push de
+415a  11 34 12     ld de, $1234
+415d  19           add hl, de
+415e  d1           pop de
+415f  09           add hl, bc
+4160  19           add hl, de
+4161  29           add hl, hl
+4162  39           add hl, sp
+4163  dd 09        add ix, bc
+4165  dd 19        add ix, de
+4167  dd 29        add ix, ix
+4169  dd 39        add ix, sp
+416b  dd 84        add a, ixh
+416d  dd 85        add a, ixl
+416f  fd 09        add iy, bc
+4171  fd 19        add iy, de
+4173  fd 29        add iy, iy
+4175  fd 39        add iy, sp
+4177  fd 84        add a, iyh
+4179  fd 85        add a, iyl
+417b  85           add a, l
+417c  a6           and (hl)
+417d  a6           and (hl)
+417e  23           inc hl
+417f  a6           and (hl)
+4180  2b           dec hl
+4181  dd a6 00     and (ix+0)
+4184  dd a6 00     and (ix+0)
+4187  dd a6 7e     and (ix+126)
+418a  dd a6 80     and (ix-128)
+418d  fd a6 00     and (iy+0)
+4190  fd a6 00     and (iy+0)
+4193  fd a6 7e     and (iy+126)
+4196  fd a6 80     and (iy-128)
+4199  e6 00        and $00
+419b  e6 7f        and $7f
+419d  e6 ff        and $ff
+419f  a7           and a
+41a0  a6           and (hl)
+41a1  a6           and (hl)
+41a2  23           inc hl
+41a3  a6           and (hl)
+41a4  2b           dec hl
+41a5  dd a6 00     and (ix+0)
+41a8  dd a6 00     and (ix+0)
+41ab  dd a6 7e     and (ix+126)
+41ae  dd a6 80     and (ix-128)
+41b1  fd a6 00     and (iy+0)
+41b4  fd a6 00     and (iy+0)
+41b7  fd a6 7e     and (iy+126)
+41ba  fd a6 80     and (iy-128)
+41bd  e6 00        and $00
+41bf  e6 7f        and $7f
+41c1  e6 ff        and $ff
+41c3  a7           and a
+41c4  a0           and b
+41c5  a1           and c
+41c6  a2           and d
+41c7  a3           and e
+41c8  a4           and h
+41c9  dd a4        and ixh
+41cb  dd a5        and ixl
+41cd  fd a4        and iyh
+41cf  fd a5        and iyl
+41d1  a5           and l
+41d2  a0           and b
+41d3  a1           and c
+41d4  a2           and d
+41d5  a3           and e
+41d6  a4           and h
+41d7  f5           push af
+41d8  7c           ld a, h
+41d9  a0           and b
+41da  67           ld h, a
+41db  7d           ld a, l
+41dc  a1           and c
+41dd  6f           ld l, a
+41de  f1           pop af
+41df  f5           push af
+41e0  7c           ld a, h
+41e1  a2           and d
+41e2  67           ld h, a
+41e3  7d           ld a, l
+41e4  a3           and e
+41e5  6f           ld l, a
+41e6  f1           pop af
+41e7  f5           push af
+41e8  dd 7c        ld a, ixh
+41ea  a0           and b
+41eb  dd 67        ld ixh, a
+41ed  dd 7d        ld a, ixl
+41ef  a1           and c
+41f0  dd 6f        ld ixl, a
+41f2  f1           pop af
+41f3  f5           push af
+41f4  dd 7c        ld a, ixh
+41f6  a2           and d
+41f7  dd 67        ld ixh, a
+41f9  dd 7d        ld a, ixl
+41fb  a3           and e
+41fc  dd 6f        ld ixl, a
+41fe  f1           pop af
+41ff  dd a4        and ixh
+4201  dd a5        and ixl
+4203  f5           push af
+4204  fd 7c        ld a, iyh
+4206  a0           and b
+4207  fd 67        ld iyh, a
+4209  fd 7d        ld a, iyl
+420b  a1           and c
+420c  fd 6f        ld iyl, a
+420e  f1           pop af
+420f  f5           push af
+4210  fd 7c        ld a, iyh
+4212  a2           and d
+4213  fd 67        ld iyh, a
+4215  fd 7d        ld a, iyl
+4217  a3           and e
+4218  fd 6f        ld iyl, a
+421a  f1           pop af
+421b  fd a4        and iyh
+421d  fd a5        and iyl
+421f  a5           and l
+4220  cb 46        bit 0, (hl)
+4222  dd cb 00 46  bit 0, (ix+0)
+4226  dd cb 00 46  bit 0, (ix+0)
+422a  dd cb 7e 46  bit 0, (ix+126)
+422e  dd cb 80 46  bit 0, (ix-128)
+4232  fd cb 00 46  bit 0, (iy+0)
+4236  fd cb 00 46  bit 0, (iy+0)
+423a  fd cb 7e 46  bit 0, (iy+126)
+423e  fd cb 80 46  bit 0, (iy-128)
+4242  cb 47        bit 0, a
+4244  cb 40        bit 0, b
+4246  cb 41        bit 0, c
+4248  cb 42        bit 0, d
+424a  cb 43        bit 0, e
+424c  cb 44        bit 0, h
+424e  cb 45        bit 0, l
+4250  cb 4e        bit 1, (hl)
+4252  dd cb 00 4e  bit 1, (ix+0)
+4256  dd cb 00 4e  bit 1, (ix+0)
+425a  dd cb 7e 4e  bit 1, (ix+126)
+425e  dd cb 80 4e  bit 1, (ix-128)
+4262  fd cb 00 4e  bit 1, (iy+0)
+4266  fd cb 00 4e  bit 1, (iy+0)
+426a  fd cb 7e 4e  bit 1, (iy+126)
+426e  fd cb 80 4e  bit 1, (iy-128)
+4272  cb 4f        bit 1, a
+4274  cb 48        bit 1, b
+4276  cb 49        bit 1, c
+4278  cb 4a        bit 1, d
+427a  cb 4b        bit 1, e
+427c  cb 4c        bit 1, h
+427e  cb 4d        bit 1, l
+4280  cb 56        bit 2, (hl)
+4282  dd cb 00 56  bit 2, (ix+0)
+4286  dd cb 00 56  bit 2, (ix+0)
+428a  dd cb 7e 56  bit 2, (ix+126)
+428e  dd cb 80 56  bit 2, (ix-128)
+4292  fd cb 00 56  bit 2, (iy+0)
+4296  fd cb 00 56  bit 2, (iy+0)
+429a  fd cb 7e 56  bit 2, (iy+126)
+429e  fd cb 80 56  bit 2, (iy-128)
+42a2  cb 57        bit 2, a
+42a4  cb 50        bit 2, b
+42a6  cb 51        bit 2, c
+42a8  cb 52        bit 2, d
+42aa  cb 53        bit 2, e
+42ac  cb 54        bit 2, h
+42ae  cb 55        bit 2, l
+42b0  cb 5e        bit 3, (hl)
+42b2  dd cb 00 5e  bit 3, (ix+0)
+42b6  dd cb 00 5e  bit 3, (ix+0)
+42ba  dd cb 7e 5e  bit 3, (ix+126)
+42be  dd cb 80 5e  bit 3, (ix-128)
+42c2  fd cb 00 5e  bit 3, (iy+0)
+42c6  fd cb 00 5e  bit 3, (iy+0)
+42ca  fd cb 7e 5e  bit 3, (iy+126)
+42ce  fd cb 80 5e  bit 3, (iy-128)
+42d2  cb 5f        bit 3, a
+42d4  cb 58        bit 3, b
+42d6  cb 59        bit 3, c
+42d8  cb 5a        bit 3, d
+42da  cb 5b        bit 3, e
+42dc  cb 5c        bit 3, h
+42de  cb 5d        bit 3, l
+42e0  cb 66        bit 4, (hl)
+42e2  dd cb 00 66  bit 4, (ix+0)
+42e6  dd cb 00 66  bit 4, (ix+0)
+42ea  dd cb 7e 66  bit 4, (ix+126)
+42ee  dd cb 80 66  bit 4, (ix-128)
+42f2  fd cb 00 66  bit 4, (iy+0)
+42f6  fd cb 00 66  bit 4, (iy+0)
+42fa  fd cb 7e 66  bit 4, (iy+126)
+42fe  fd cb 80 66  bit 4, (iy-128)
+4302  cb 67        bit 4, a
+4304  cb 60        bit 4, b
+4306  cb 61        bit 4, c
+4308  cb 62        bit 4, d
+430a  cb 63        bit 4, e
+430c  cb 64        bit 4, h
+430e  cb 65        bit 4, l
+4310  cb 6e        bit 5, (hl)
+4312  dd cb 00 6e  bit 5, (ix+0)
+4316  dd cb 00 6e  bit 5, (ix+0)
+431a  dd cb 7e 6e  bit 5, (ix+126)
+431e  dd cb 80 6e  bit 5, (ix-128)
+4322  fd cb 00 6e  bit 5, (iy+0)
+4326  fd cb 00 6e  bit 5, (iy+0)
+432a  fd cb 7e 6e  bit 5, (iy+126)
+432e  fd cb 80 6e  bit 5, (iy-128)
+4332  cb 6f        bit 5, a
+4334  cb 68        bit 5, b
+4336  cb 69        bit 5, c
+4338  cb 6a        bit 5, d
+433a  cb 6b        bit 5, e
+433c  cb 6c        bit 5, h
+433e  cb 6d        bit 5, l
+4340  cb 76        bit 6, (hl)
+4342  dd cb 00 76  bit 6, (ix+0)
+4346  dd cb 00 76  bit 6, (ix+0)
+434a  dd cb 7e 76  bit 6, (ix+126)
+434e  dd cb 80 76  bit 6, (ix-128)
+4352  fd cb 00 76  bit 6, (iy+0)
+4356  fd cb 00 76  bit 6, (iy+0)
+435a  fd cb 7e 76  bit 6, (iy+126)
+435e  fd cb 80 76  bit 6, (iy-128)
+4362  cb 77        bit 6, a
+4364  cb 70        bit 6, b
+4366  cb 71        bit 6, c
+4368  cb 72        bit 6, d
+436a  cb 73        bit 6, e
+436c  cb 74        bit 6, h
+436e  cb 75        bit 6, l
+4370  cb 7e        bit 7, (hl)
+4372  dd cb 00 7e  bit 7, (ix+0)
+4376  dd cb 00 7e  bit 7, (ix+0)
+437a  dd cb 7e 7e  bit 7, (ix+126)
+437e  dd cb 80 7e  bit 7, (ix-128)
+4382  fd cb 00 7e  bit 7, (iy+0)
+4386  fd cb 00 7e  bit 7, (iy+0)
+438a  fd cb 7e 7e  bit 7, (iy+126)
+438e  fd cb 80 7e  bit 7, (iy-128)
+4392  cb 7f        bit 7, a
+4394  cb 78        bit 7, b
+4396  cb 79        bit 7, c
+4398  cb 7a        bit 7, d
+439a  cb 7b        bit 7, e
+439c  cb 7c        bit 7, h
+439e  cb 7d        bit 7, l
+43a0  f5           push af
+43a1  7c           ld a, h
+43a2  b5           or l
+43a3  28 03        jr z, $43a8
+43a5  21 01 00     ld hl, $0001
+43a8  f1           pop af
+43a9  f5           push af
+43aa  dd 7c        ld a, ixh
+43ac  dd b5        or ixl
+43ae  28 04        jr z, $43b4
+43b0  dd 21 01 00  ld ix, $0001
+43b4  f1           pop af
+43b5  f5           push af
+43b6  fd 7c        ld a, iyh
+43b8  fd b5        or iyl
+43ba  28 04        jr z, $43c0
+43bc  fd 21 01 00  ld iy, $0001
+43c0  f1           pop af
+43c1  cd 34 12     call $1234
+43c4  dc 34 12     call c, $1234
+43c7  cc 34 12     call z, $1234
+43ca  d4 34 12     call nc, $1234
+43cd  28 03        jr z, $43d2
+43cf  d4 34 12     call nc, $1234
+43d2  28 02        jr z, $43d6
+43d4  30 03        jr nc, $43d9
+43d6  cd 34 12     call $1234
+43d9  dc 34 12     call c, $1234
+43dc  fc 34 12     call m, $1234
+43df  d4 34 12     call nc, $1234
+43e2  c4 34 12     call nz, $1234
+43e5  e4 34 12     call po, $1234
+43e8  c4 34 12     call nz, $1234
+43eb  f4 34 12     call p, $1234
+43ee  ec 34 12     call pe, $1234
+43f1  e4 34 12     call po, $1234
+43f4  ec 34 12     call pe, $1234
+43f7  cc 34 12     call z, $1234
+43fa  3f           ccf
+43fb  36 00        ld (hl), $00
+43fd  dd 36 00 00  ld (ix+0), $00
+4401  dd 36 00 00  ld (ix+0), $00
+4405  dd 36 7e 00  ld (ix+126), $00
+4409  dd 36 80 00  ld (ix-128), $00
+440d  fd 36 00 00  ld (iy+0), $00
+4411  fd 36 00 00  ld (iy+0), $00
+4415  fd 36 7e 00  ld (iy+126), $00
+4419  fd 36 80 00  ld (iy-128), $00
+441d  3e 00        ld a, $00
+441f  06 00        ld b, $00
+4421  01 00 00     ld bc, $0000
+4424  0e 00        ld c, $00
+4426  16 00        ld d, $00
+4428  11 00 00     ld de, $0000
+442b  1e 00        ld e, $00
+442d  26 00        ld h, $00
+442f  21 00 00     ld hl, $0000
+4432  dd 21 00 00  ld ix, $0000
+4436  dd 26 00     ld ixh, $00
+4439  dd 2e 00     ld ixl, $00
+443c  fd 21 00 00  ld iy, $0000
+4440  fd 26 00     ld iyh, $00
+4443  fd 2e 00     ld iyl, $00
+4446  2e 00        ld l, $00
+4448  be           cp (hl)
+4449  be           cp (hl)
+444a  23           inc hl
+444b  be           cp (hl)
+444c  2b           dec hl
+444d  dd be 00     cp (ix+0)
+4450  dd be 00     cp (ix+0)
+4453  dd be 7e     cp (ix+126)
+4456  dd be 80     cp (ix-128)
+4459  fd be 00     cp (iy+0)
+445c  fd be 00     cp (iy+0)
+445f  fd be 7e     cp (iy+126)
+4462  fd be 80     cp (iy-128)
+4465  fe 00        cp $00
+4467  fe 7f        cp $7f
+4469  fe ff        cp $ff
+446b  bf           cp a
+446c  be           cp (hl)
+446d  be           cp (hl)
+446e  23           inc hl
+446f  be           cp (hl)
+4470  2b           dec hl
+4471  dd be 00     cp (ix+0)
+4474  dd be 00     cp (ix+0)
+4477  dd be 7e     cp (ix+126)
+447a  dd be 80     cp (ix-128)
+447d  fd be 00     cp (iy+0)
+4480  fd be 00     cp (iy+0)
+4483  fd be 7e     cp (iy+126)
+4486  fd be 80     cp (iy-128)
+4489  fe 00        cp $00
+448b  fe 7f        cp $7f
+448d  fe ff        cp $ff
+448f  bf           cp a
+4490  b8           cp b
+4491  b9           cp c
+4492  ba           cp d
+4493  bb           cp e
+4494  bc           cp h
+4495  dd bc        cp ixh
+4497  dd bd        cp ixl
+4499  fd bc        cp iyh
+449b  fd bd        cp iyl
+449d  bd           cp l
+449e  b8           cp b
+449f  b9           cp c
+44a0  ba           cp d
+44a1  bb           cp e
+44a2  bc           cp h
+44a3  dd bc        cp ixh
+44a5  dd bd        cp ixl
+44a7  fd bc        cp iyh
+44a9  fd bd        cp iyl
+44ab  bd           cp l
+44ac  ed a9        cpd
+44ae  ed b9        cpdr
+44b0  ed a1        cpi
+44b2  ed b1        cpir
+44b4  2f           cpl
+44b5  27           daa
+44b6  35           dec (hl)
+44b7  35           dec (hl)
+44b8  23           inc hl
+44b9  35           dec (hl)
+44ba  2b           dec hl
+44bb  dd 35 00     dec (ix+0)
+44be  dd 35 00     dec (ix+0)
+44c1  dd 35 7e     dec (ix+126)
+44c4  dd 35 80     dec (ix-128)
+44c7  fd 35 00     dec (iy+0)
+44ca  fd 35 00     dec (iy+0)
+44cd  fd 35 7e     dec (iy+126)
+44d0  fd 35 80     dec (iy-128)
+44d3  3d           dec a
+44d4  05           dec b
+44d5  0b           dec bc
+44d6  0d           dec c
+44d7  15           dec d
+44d8  1b           dec de
+44d9  1d           dec e
+44da  25           dec h
+44db  2b           dec hl
+44dc  dd 2b        dec ix
+44de  dd 25        dec ixh
+44e0  dd 2d        dec ixl
+44e2  fd 2b        dec iy
+44e4  fd 25        dec iyh
+44e6  fd 2d        dec iyl
+44e8  2d           dec l
+44e9  3b           dec sp
+44ea  f3           di
+44eb  10 fe        djnz $44eb
+44ed  fb           ei
+44ee  e3           ex (sp), hl
+44ef  dd e3        ex (sp), ix
+44f1  fd e3        ex (sp), iy
+44f3  08           ex af, af'
+44f4  08           ex af, af'
+44f5  08           ex af, af'
+44f6  e5           push hl
+44f7  c5           push bc
+44f8  e1           pop hl
+44f9  c1           pop bc
+44fa  eb           ex de, hl
+44fb  e5           push hl
+44fc  c5           push bc
+44fd  e1           pop hl
+44fe  c1           pop bc
+44ff  eb           ex de, hl
+4500  d9           exx
+4501  76           halt
+4502  ed 46        im 0
+4504  ed 56        im 1
+4506  ed 5e        im 2
+4508  db 00        in a, ($00)
+450a  db 7f        in a, ($7f)
+450c  db ff        in a, ($ff)
+450e  ed 78        in a, (c)
+4510  ed 40        in b, (c)
+4512  ed 48        in c, (c)
+4514  ed 50        in d, (c)
+4516  ed 58        in e, (c)
+4518  ed 60        in h, (c)
+451a  ed 68        in l, (c)
+451c  34           inc (hl)
+451d  34           inc (hl)
+451e  23           inc hl
+451f  34           inc (hl)
+4520  2b           dec hl
+4521  dd 34 00     inc (ix+0)
+4524  dd 34 00     inc (ix+0)
+4527  dd 34 7e     inc (ix+126)
+452a  dd 34 80     inc (ix-128)
+452d  fd 34 00     inc (iy+0)
+4530  fd 34 00     inc (iy+0)
+4533  fd 34 7e     inc (iy+126)
+4536  fd 34 80     inc (iy-128)
+4539  3c           inc a
+453a  04           inc b
+453b  03           inc bc
+453c  0c           inc c
+453d  14           inc d
+453e  13           inc de
+453f  1c           inc e
+4540  24           inc h
+4541  23           inc hl
+4542  dd 23        inc ix
+4544  dd 24        inc ixh
+4546  dd 2c        inc ixl
+4548  fd 23        inc iy
+454a  fd 24        inc iyh
+454c  fd 2c        inc iyl
+454e  2c           inc l
+454f  33           inc sp
+4550  ed aa        ind
+4552  ed ba        indr
+4554  ed a2        ini
+4556  ed b2        inir
+4558  c5           push bc
+4559  c9           ret
+455a  d5           push de
+455b  c9           ret
+455c  e9           jp (hl)
+455d  dd e9        jp (ix)
+455f  fd e9        jp (iy)
+4561  c3 34 12     jp $1234
+4564  da 34 12     jp c, $1234
+4567  ca 34 12     jp z, $1234
+456a  d2 34 12     jp nc, $1234
+456d  28 03        jr z, $4572
+456f  d2 34 12     jp nc, $1234
+4572  ca 34 12     jp z, $1234
+4575  da 34 12     jp c, $1234
+4578  da 34 12     jp c, $1234
+457b  fa 34 12     jp m, $1234
+457e  d2 34 12     jp nc, $1234
+4581  c2 34 12     jp nz, $1234
+4584  e2 34 12     jp po, $1234
+4587  c2 34 12     jp nz, $1234
+458a  f2 34 12     jp p, $1234
+458d  ea 34 12     jp pe, $1234
+4590  e2 34 12     jp po, $1234
+4593  ea 34 12     jp pe, $1234
+4596  ca 34 12     jp z, $1234
+4599  18 fe        jr $4599
+459b  38 fe        jr c, $459b
+459d  28 fe        jr z, $459d
+459f  30 fe        jr nc, $459f
+45a1  28 02        jr z, $45a5
+45a3  30 fc        jr nc, $45a1
+45a5  28 fe        jr z, $45a5
+45a7  38 fc        jr c, $45a5
+45a9  38 fe        jr c, $45a9
+45ab  30 fe        jr nc, $45ab
+45ad  20 fe        jr nz, $45ad
+45af  20 fe        jr nz, $45af
+45b1  28 fe        jr z, $45b1
+45b3  32 34 12     ld ($1234), a
+45b6  ed 43 34 12  ld ($1234), bc
+45ba  ed 53 34 12  ld ($1234), de
+45be  22 34 12     ld ($1234), hl
+45c1  dd 22 34 12  ld ($1234), ix
+45c5  fd 22 34 12  ld ($1234), iy
+45c9  ed 73 34 12  ld ($1234), sp
+45cd  02           ld (bc), a
+45ce  02           ld (bc), a
+45cf  03           inc bc
+45d0  02           ld (bc), a
+45d1  0b           dec bc
+45d2  eb           ex de, hl
+45d3  36 00        ld (hl), $00
+45d5  eb           ex de, hl
+45d6  eb           ex de, hl
+45d7  36 7f        ld (hl), $7f
+45d9  eb           ex de, hl
+45da  eb           ex de, hl
+45db  36 ff        ld (hl), $ff
+45dd  eb           ex de, hl
+45de  12           ld (de), a
+45df  eb           ex de, hl
+45e0  70           ld (hl), b
+45e1  eb           ex de, hl
+45e2  eb           ex de, hl
+45e3  71           ld (hl), c
+45e4  eb           ex de, hl
+45e5  eb           ex de, hl
+45e6  74           ld (hl), h
+45e7  eb           ex de, hl
+45e8  eb           ex de, hl
+45e9  75           ld (hl), l
+45ea  eb           ex de, hl
+45eb  eb           ex de, hl
+45ec  72           ld (hl), d
+45ed  eb           ex de, hl
+45ee  eb           ex de, hl
+45ef  73           ld (hl), e
+45f0  23           inc hl
+45f1  72           ld (hl), d
+45f2  2b           dec hl
+45f3  eb           ex de, hl
+45f4  eb           ex de, hl
+45f5  73           ld (hl), e
+45f6  eb           ex de, hl
+45f7  eb           ex de, hl
+45f8  36 00        ld (hl), $00
+45fa  eb           ex de, hl
+45fb  13           inc de
+45fc  eb           ex de, hl
+45fd  36 7f        ld (hl), $7f
+45ff  eb           ex de, hl
+4600  13           inc de
+4601  eb           ex de, hl
+4602  36 ff        ld (hl), $ff
+4604  eb           ex de, hl
+4605  13           inc de
+4606  12           ld (de), a
+4607  13           inc de
+4608  eb           ex de, hl
+4609  70           ld (hl), b
+460a  eb           ex de, hl
+460b  13           inc de
+460c  eb           ex de, hl
+460d  71           ld (hl), c
+460e  eb           ex de, hl
+460f  13           inc de
+4610  eb           ex de, hl
+4611  74           ld (hl), h
+4612  eb           ex de, hl
+4613  13           inc de
+4614  eb           ex de, hl
+4615  75           ld (hl), l
+4616  eb           ex de, hl
+4617  13           inc de
+4618  eb           ex de, hl
+4619  72           ld (hl), d
+461a  eb           ex de, hl
+461b  13           inc de
+461c  eb           ex de, hl
+461d  73           ld (hl), e
+461e  eb           ex de, hl
+461f  13           inc de
+4620  eb           ex de, hl
+4621  36 00        ld (hl), $00
+4623  eb           ex de, hl
+4624  1b           dec de
+4625  eb           ex de, hl
+4626  36 7f        ld (hl), $7f
+4628  eb           ex de, hl
+4629  1b           dec de
+462a  eb           ex de, hl
+462b  36 ff        ld (hl), $ff
+462d  eb           ex de, hl
+462e  1b           dec de
+462f  12           ld (de), a
+4630  1b           dec de
+4631  eb           ex de, hl
+4632  70           ld (hl), b
+4633  eb           ex de, hl
+4634  1b           dec de
+4635  eb           ex de, hl
+4636  71           ld (hl), c
+4637  eb           ex de, hl
+4638  1b           dec de
+4639  eb           ex de, hl
+463a  74           ld (hl), h
+463b  eb           ex de, hl
+463c  1b           dec de
+463d  eb           ex de, hl
+463e  75           ld (hl), l
+463f  eb           ex de, hl
+4640  1b           dec de
+4641  eb           ex de, hl
+4642  72           ld (hl), d
+4643  eb           ex de, hl
+4644  1b           dec de
+4645  eb           ex de, hl
+4646  73           ld (hl), e
+4647  eb           ex de, hl
+4648  1b           dec de
+4649  36 00        ld (hl), $00
+464b  36 7f        ld (hl), $7f
+464d  36 ff        ld (hl), $ff
+464f  77           ld (hl), a
+4650  70           ld (hl), b
+4651  71           ld (hl), c
+4652  23           inc hl
+4653  70           ld (hl), b
+4654  2b           dec hl
+4655  71           ld (hl), c
+4656  72           ld (hl), d
+4657  73           ld (hl), e
+4658  23           inc hl
+4659  72           ld (hl), d
+465a  2b           dec hl
+465b  73           ld (hl), e
+465c  74           ld (hl), h
+465d  f5           push af
+465e  7c           ld a, h
+465f  75           ld (hl), l
+4660  23           inc hl
+4661  77           ld (hl), a
+4662  f1           pop af
+4663  2b           dec hl
+4664  d5           push de
+4665  dd e5        push ix
+4667  d1           pop de
+4668  73           ld (hl), e
+4669  23           inc hl
+466a  72           ld (hl), d
+466b  2b           dec hl
+466c  d1           pop de
+466d  d5           push de
+466e  fd e5        push iy
+4670  d1           pop de
+4671  73           ld (hl), e
+4672  23           inc hl
+4673  72           ld (hl), d
+4674  2b           dec hl
+4675  d1           pop de
+4676  75           ld (hl), l
+4677  36 00        ld (hl), $00
+4679  23           inc hl
+467a  36 7f        ld (hl), $7f
+467c  23           inc hl
+467d  36 ff        ld (hl), $ff
+467f  23           inc hl
+4680  77           ld (hl), a
+4681  23           inc hl
+4682  70           ld (hl), b
+4683  23           inc hl
+4684  71           ld (hl), c
+4685  23           inc hl
+4686  70           ld (hl), b
+4687  23           inc hl
+4688  71           ld (hl), c
+4689  23           inc hl
+468a  72           ld (hl), d
+468b  23           inc hl
+468c  73           ld (hl), e
+468d  23           inc hl
+468e  72           ld (hl), d
+468f  23           inc hl
+4690  73           ld (hl), e
+4691  23           inc hl
+4692  74           ld (hl), h
+4693  23           inc hl
+4694  f5           push af
+4695  7c           ld a, h
+4696  75           ld (hl), l
+4697  23           inc hl
+4698  77           ld (hl), a
+4699  f1           pop af
+469a  23           inc hl
+469b  d5           push de
+469c  dd e5        push ix
+469e  d1           pop de
+469f  73           ld (hl), e
+46a0  23           inc hl
+46a1  72           ld (hl), d
+46a2  23           inc hl
+46a3  d1           pop de
+46a4  d5           push de
+46a5  fd e5        push iy
+46a7  d1           pop de
+46a8  73           ld (hl), e
+46a9  23           inc hl
+46aa  72           ld (hl), d
+46ab  23           inc hl
+46ac  d1           pop de
+46ad  75           ld (hl), l
+46ae  23           inc hl
+46af  36 00        ld (hl), $00
+46b1  2b           dec hl
+46b2  36 7f        ld (hl), $7f
+46b4  2b           dec hl
+46b5  36 ff        ld (hl), $ff
+46b7  2b           dec hl
+46b8  77           ld (hl), a
+46b9  2b           dec hl
+46ba  70           ld (hl), b
+46bb  2b           dec hl
+46bc  71           ld (hl), c
+46bd  2b           dec hl
+46be  72           ld (hl), d
+46bf  2b           dec hl
+46c0  73           ld (hl), e
+46c1  2b           dec hl
+46c2  74           ld (hl), h
+46c3  2b           dec hl
+46c4  75           ld (hl), l
+46c5  2b           dec hl
+46c6  dd 36 00 00  ld (ix+0), $00
+46ca  dd 36 00 7f  ld (ix+0), $7f
+46ce  dd 36 00 ff  ld (ix+0), $ff
+46d2  dd 77 00     ld (ix+0), a
+46d5  dd 70 00     ld (ix+0), b
+46d8  dd 71 00     ld (ix+0), c
+46db  dd 70 01     ld (ix+1), b
+46de  dd 71 00     ld (ix+0), c
+46e1  dd 72 00     ld (ix+0), d
+46e4  dd 73 00     ld (ix+0), e
+46e7  dd 72 01     ld (ix+1), d
+46ea  dd 73 00     ld (ix+0), e
+46ed  dd 74 00     ld (ix+0), h
+46f0  dd 75 00     ld (ix+0), l
+46f3  dd 74 01     ld (ix+1), h
+46f6  dd e5        push ix
+46f8  e3           ex (sp), hl
+46f9  dd 75 00     ld (ix+0), l
+46fc  dd 74 01     ld (ix+1), h
+46ff  e3           ex (sp), hl
+4700  dd e1        pop ix
+4702  fd e5        push iy
+4704  e3           ex (sp), hl
+4705  dd 75 00     ld (ix+0), l
+4708  dd 74 01     ld (ix+1), h
+470b  e3           ex (sp), hl
+470c  fd e1        pop iy
+470e  dd 75 00     ld (ix+0), l
+4711  dd 36 00 00  ld (ix+0), $00
+4715  dd 36 00 7f  ld (ix+0), $7f
+4719  dd 36 00 ff  ld (ix+0), $ff
+471d  dd 77 00     ld (ix+0), a
+4720  dd 70 00     ld (ix+0), b
+4723  dd 71 00     ld (ix+0), c
+4726  dd 70 01     ld (ix+1), b
+4729  dd 71 00     ld (ix+0), c
+472c  dd 72 00     ld (ix+0), d
+472f  dd 73 00     ld (ix+0), e
+4732  dd 72 01     ld (ix+1), d
+4735  dd 73 00     ld (ix+0), e
+4738  dd 74 00     ld (ix+0), h
+473b  dd 75 00     ld (ix+0), l
+473e  dd 74 01     ld (ix+1), h
+4741  dd e5        push ix
+4743  e3           ex (sp), hl
+4744  dd 75 00     ld (ix+0), l
+4747  dd 74 01     ld (ix+1), h
+474a  e3           ex (sp), hl
+474b  dd e1        pop ix
+474d  fd e5        push iy
+474f  e3           ex (sp), hl
+4750  dd 75 00     ld (ix+0), l
+4753  dd 74 01     ld (ix+1), h
+4756  e3           ex (sp), hl
+4757  fd e1        pop iy
+4759  dd 75 00     ld (ix+0), l
+475c  dd 36 7e 00  ld (ix+126), $00
+4760  dd 36 7e 7f  ld (ix+126), $7f
+4764  dd 36 7e ff  ld (ix+126), $ff
+4768  dd 77 7e     ld (ix+126), a
+476b  dd 70 7e     ld (ix+126), b
+476e  dd 71 7e     ld (ix+126), c
+4771  dd 70 7f     ld (ix+127), b
+4774  dd 71 7e     ld (ix+126), c
+4777  dd 72 7e     ld (ix+126), d
+477a  dd 73 7e     ld (ix+126), e
+477d  dd 72 7f     ld (ix+127), d
+4780  dd 73 7e     ld (ix+126), e
+4783  dd 74 7e     ld (ix+126), h
+4786  dd 75 7e     ld (ix+126), l
+4789  dd 74 7f     ld (ix+127), h
+478c  dd e5        push ix
+478e  e3           ex (sp), hl
+478f  dd 75 7e     ld (ix+126), l
+4792  dd 74 7f     ld (ix+127), h
+4795  e3           ex (sp), hl
+4796  dd e1        pop ix
+4798  fd e5        push iy
+479a  e3           ex (sp), hl
+479b  dd 75 7e     ld (ix+126), l
+479e  dd 74 7f     ld (ix+127), h
+47a1  e3           ex (sp), hl
+47a2  fd e1        pop iy
+47a4  dd 75 7e     ld (ix+126), l
+47a7  dd 36 80 00  ld (ix-128), $00
+47ab  dd 36 80 7f  ld (ix-128), $7f
+47af  dd 36 80 ff  ld (ix-128), $ff
+47b3  dd 77 80     ld (ix-128), a
+47b6  dd 70 80     ld (ix-128), b
+47b9  dd 71 80     ld (ix-128), c
+47bc  dd 70 81     ld (ix-127), b
+47bf  dd 71 80     ld (ix-128), c
+47c2  dd 72 80     ld (ix-128), d
+47c5  dd 73 80     ld (ix-128), e
+47c8  dd 72 81     ld (ix-127), d
+47cb  dd 73 80     ld (ix-128), e
+47ce  dd 74 80     ld (ix-128), h
+47d1  dd 75 80     ld (ix-128), l
+47d4  dd 74 81     ld (ix-127), h
+47d7  dd e5        push ix
+47d9  e3           ex (sp), hl
+47da  dd 75 80     ld (ix-128), l
+47dd  dd 74 81     ld (ix-127), h
+47e0  e3           ex (sp), hl
+47e1  dd e1        pop ix
+47e3  fd e5        push iy
+47e5  e3           ex (sp), hl
+47e6  dd 75 80     ld (ix-128), l
+47e9  dd 74 81     ld (ix-127), h
+47ec  e3           ex (sp), hl
+47ed  fd e1        pop iy
+47ef  dd 75 80     ld (ix-128), l
+47f2  fd 36 00 00  ld (iy+0), $00
+47f6  fd 36 00 7f  ld (iy+0), $7f
+47fa  fd 36 00 ff  ld (iy+0), $ff
+47fe  fd 77 00     ld (iy+0), a
+4801  fd 70 00     ld (iy+0), b
+4804  fd 71 00     ld (iy+0), c
+4807  fd 70 01     ld (iy+1), b
+480a  fd 71 00     ld (iy+0), c
+480d  fd 72 00     ld (iy+0), d
+4810  fd 73 00     ld (iy+0), e
+4813  fd 72 01     ld (iy+1), d
+4816  fd 73 00     ld (iy+0), e
+4819  fd 74 00     ld (iy+0), h
+481c  fd 75 00     ld (iy+0), l
+481f  fd 74 01     ld (iy+1), h
+4822  dd e5        push ix
+4824  e3           ex (sp), hl
+4825  fd 75 00     ld (iy+0), l
+4828  fd 74 01     ld (iy+1), h
+482b  e3           ex (sp), hl
+482c  dd e1        pop ix
+482e  fd e5        push iy
+4830  e3           ex (sp), hl
+4831  fd 75 00     ld (iy+0), l
+4834  fd 74 01     ld (iy+1), h
+4837  e3           ex (sp), hl
+4838  fd e1        pop iy
+483a  fd 75 00     ld (iy+0), l
+483d  fd 36 00 00  ld (iy+0), $00
+4841  fd 36 00 7f  ld (iy+0), $7f
+4845  fd 36 00 ff  ld (iy+0), $ff
+4849  fd 77 00     ld (iy+0), a
+484c  fd 70 00     ld (iy+0), b
+484f  fd 71 00     ld (iy+0), c
+4852  fd 70 01     ld (iy+1), b
+4855  fd 71 00     ld (iy+0), c
+4858  fd 72 00     ld (iy+0), d
+485b  fd 73 00     ld (iy+0), e
+485e  fd 72 01     ld (iy+1), d
+4861  fd 73 00     ld (iy+0), e
+4864  fd 74 00     ld (iy+0), h
+4867  fd 75 00     ld (iy+0), l
+486a  fd 74 01     ld (iy+1), h
+486d  dd e5        push ix
+486f  e3           ex (sp), hl
+4870  fd 75 00     ld (iy+0), l
+4873  fd 74 01     ld (iy+1), h
+4876  e3           ex (sp), hl
+4877  dd e1        pop ix
+4879  fd e5        push iy
+487b  e3           ex (sp), hl
+487c  fd 75 00     ld (iy+0), l
+487f  fd 74 01     ld (iy+1), h
+4882  e3           ex (sp), hl
+4883  fd e1        pop iy
+4885  fd 75 00     ld (iy+0), l
+4888  fd 36 7e 00  ld (iy+126), $00
+488c  fd 36 7e 7f  ld (iy+126), $7f
+4890  fd 36 7e ff  ld (iy+126), $ff
+4894  fd 77 7e     ld (iy+126), a
+4897  fd 70 7e     ld (iy+126), b
+489a  fd 71 7e     ld (iy+126), c
+489d  fd 70 7f     ld (iy+127), b
+48a0  fd 71 7e     ld (iy+126), c
+48a3  fd 72 7e     ld (iy+126), d
+48a6  fd 73 7e     ld (iy+126), e
+48a9  fd 72 7f     ld (iy+127), d
+48ac  fd 73 7e     ld (iy+126), e
+48af  fd 74 7e     ld (iy+126), h
+48b2  fd 75 7e     ld (iy+126), l
+48b5  fd 74 7f     ld (iy+127), h
+48b8  dd e5        push ix
+48ba  e3           ex (sp), hl
+48bb  fd 75 7e     ld (iy+126), l
+48be  fd 74 7f     ld (iy+127), h
+48c1  e3           ex (sp), hl
+48c2  dd e1        pop ix
+48c4  fd e5        push iy
+48c6  e3           ex (sp), hl
+48c7  fd 75 7e     ld (iy+126), l
+48ca  fd 74 7f     ld (iy+127), h
+48cd  e3           ex (sp), hl
+48ce  fd e1        pop iy
+48d0  fd 75 7e     ld (iy+126), l
+48d3  fd 36 80 00  ld (iy-128), $00
+48d7  fd 36 80 7f  ld (iy-128), $7f
+48db  fd 36 80 ff  ld (iy-128), $ff
+48df  fd 77 80     ld (iy-128), a
+48e2  fd 70 80     ld (iy-128), b
+48e5  fd 71 80     ld (iy-128), c
+48e8  fd 70 81     ld (iy-127), b
+48eb  fd 71 80     ld (iy-128), c
+48ee  fd 72 80     ld (iy-128), d
+48f1  fd 73 80     ld (iy-128), e
+48f4  fd 72 81     ld (iy-127), d
+48f7  fd 73 80     ld (iy-128), e
+48fa  fd 74 80     ld (iy-128), h
+48fd  fd 75 80     ld (iy-128), l
+4900  fd 74 81     ld (iy-127), h
+4903  dd e5        push ix
+4905  e3           ex (sp), hl
+4906  fd 75 80     ld (iy-128), l
+4909  fd 74 81     ld (iy-127), h
+490c  e3           ex (sp), hl
+490d  dd e1        pop ix
+490f  fd e5        push iy
+4911  e3           ex (sp), hl
+4912  fd 75 80     ld (iy-128), l
+4915  fd 74 81     ld (iy-127), h
+4918  e3           ex (sp), hl
+4919  fd e1        pop iy
+491b  fd 75 80     ld (iy-128), l
+491e  3a 34 12     ld a, ($1234)
+4921  0a           ld a, (bc)
+4922  0a           ld a, (bc)
+4923  03           inc bc
+4924  0a           ld a, (bc)
+4925  0b           dec bc
+4926  1a           ld a, (de)
+4927  1a           ld a, (de)
+4928  13           inc de
+4929  1a           ld a, (de)
+492a  1b           dec de
+492b  7e           ld a, (hl)
+492c  7e           ld a, (hl)
+492d  23           inc hl
+492e  7e           ld a, (hl)
+492f  2b           dec hl
+4930  dd 7e 00     ld a, (ix+0)
+4933  dd 7e 00     ld a, (ix+0)
+4936  dd 7e 7e     ld a, (ix+126)
+4939  dd 7e 80     ld a, (ix-128)
+493c  fd 7e 00     ld a, (iy+0)
+493f  fd 7e 00     ld a, (iy+0)
+4942  fd 7e 7e     ld a, (iy+126)
+4945  fd 7e 80     ld a, (iy-128)
+4948  3e 00        ld a, $00
+494a  3e 7f        ld a, $7f
+494c  3e ff        ld a, $ff
+494e  7f           ld a, a
+494f  78           ld a, b
+4950  79           ld a, c
+4951  7a           ld a, d
+4952  7b           ld a, e
+4953  7c           ld a, h
+4954  ed 57        ld a, i
+4956  dd 7c        ld a, ixh
+4958  dd 7d        ld a, ixl
+495a  fd 7c        ld a, iyh
+495c  fd 7d        ld a, iyl
+495e  7d           ld a, l
+495f  ed 5f        ld a, r
+4961  eb           ex de, hl
+4962  46           ld b, (hl)
+4963  eb           ex de, hl
+4964  eb           ex de, hl
+4965  46           ld b, (hl)
+4966  eb           ex de, hl
+4967  13           inc de
+4968  eb           ex de, hl
+4969  46           ld b, (hl)
+496a  eb           ex de, hl
+496b  1b           dec de
+496c  46           ld b, (hl)
+496d  46           ld b, (hl)
+496e  23           inc hl
+496f  46           ld b, (hl)
+4970  2b           dec hl
+4971  dd 46 00     ld b, (ix+0)
+4974  dd 46 00     ld b, (ix+0)
+4977  dd 46 7e     ld b, (ix+126)
+497a  dd 46 80     ld b, (ix-128)
+497d  fd 46 00     ld b, (iy+0)
+4980  fd 46 00     ld b, (iy+0)
+4983  fd 46 7e     ld b, (iy+126)
+4986  fd 46 80     ld b, (iy-128)
+4989  06 00        ld b, $00
+498b  06 7f        ld b, $7f
+498d  06 ff        ld b, $ff
+498f  47           ld b, a
+4990  40           ld b, b
+4991  41           ld b, c
+4992  42           ld b, d
+4993  43           ld b, e
+4994  44           ld b, h
+4995  dd 44        ld b, ixh
+4997  dd 45        ld b, ixl
+4999  fd 44        ld b, iyh
+499b  fd 45        ld b, iyl
+499d  45           ld b, l
+499e  d9           exx
+499f  42           ld b, d
+49a0  4b           ld c, e
+49a1  d9           exx
+49a2  d9           exx
+49a3  44           ld b, h
+49a4  4d           ld c, l
+49a5  d9           exx
+49a6  ed 4b 34 12  ld bc, ($1234)
+49aa  4e           ld c, (hl)
+49ab  23           inc hl
+49ac  46           ld b, (hl)
+49ad  2b           dec hl
+49ae  4e           ld c, (hl)
+49af  23           inc hl
+49b0  46           ld b, (hl)
+49b1  23           inc hl
+49b2  dd 4e 00     ld c, (ix+0)
+49b5  dd 46 01     ld b, (ix+1)
+49b8  dd 4e 00     ld c, (ix+0)
+49bb  dd 46 01     ld b, (ix+1)
+49be  dd 4e 7e     ld c, (ix+126)
+49c1  dd 46 7f     ld b, (ix+127)
+49c4  dd 4e 80     ld c, (ix-128)
+49c7  dd 46 81     ld b, (ix-127)
+49ca  fd 4e 00     ld c, (iy+0)
+49cd  fd 46 01     ld b, (iy+1)
+49d0  fd 4e 00     ld c, (iy+0)
+49d3  fd 46 01     ld b, (iy+1)
+49d6  fd 4e 7e     ld c, (iy+126)
+49d9  fd 46 7f     ld b, (iy+127)
+49dc  fd 4e 80     ld c, (iy-128)
+49df  fd 46 81     ld b, (iy-127)
+49e2  01 34 12     ld bc, $1234
+49e5  d9           exx
+49e6  c5           push bc
+49e7  d9           exx
+49e8  c1           pop bc
+49e9  42           ld b, d
+49ea  4b           ld c, e
+49eb  d9           exx
+49ec  d5           push de
+49ed  d9           exx
+49ee  c1           pop bc
+49ef  44           ld b, h
+49f0  4d           ld c, l
+49f1  d9           exx
+49f2  e5           push hl
+49f3  d9           exx
+49f4  c1           pop bc
+49f5  dd 44        ld b, ixh
+49f7  dd 4d        ld c, ixl
+49f9  fd 44        ld b, iyh
+49fb  fd 4d        ld c, iyl
+49fd  eb           ex de, hl
+49fe  4e           ld c, (hl)
+49ff  eb           ex de, hl
+4a00  eb           ex de, hl
+4a01  4e           ld c, (hl)
+4a02  eb           ex de, hl
+4a03  13           inc de
+4a04  eb           ex de, hl
+4a05  4e           ld c, (hl)
+4a06  eb           ex de, hl
+4a07  1b           dec de
+4a08  4e           ld c, (hl)
+4a09  4e           ld c, (hl)
+4a0a  23           inc hl
+4a0b  4e           ld c, (hl)
+4a0c  2b           dec hl
+4a0d  dd 4e 00     ld c, (ix+0)
+4a10  dd 4e 00     ld c, (ix+0)
+4a13  dd 4e 7e     ld c, (ix+126)
+4a16  dd 4e 80     ld c, (ix-128)
+4a19  fd 4e 00     ld c, (iy+0)
+4a1c  fd 4e 00     ld c, (iy+0)
+4a1f  fd 4e 7e     ld c, (iy+126)
+4a22  fd 4e 80     ld c, (iy-128)
+4a25  0e 00        ld c, $00
+4a27  0e 7f        ld c, $7f
+4a29  0e ff        ld c, $ff
+4a2b  4f           ld c, a
+4a2c  48           ld c, b
+4a2d  49           ld c, c
+4a2e  4a           ld c, d
+4a2f  4b           ld c, e
+4a30  4c           ld c, h
+4a31  dd 4c        ld c, ixh
+4a33  dd 4d        ld c, ixl
+4a35  fd 4c        ld c, iyh
+4a37  fd 4d        ld c, iyl
+4a39  4d           ld c, l
+4a3a  eb           ex de, hl
+4a3b  66           ld h, (hl)
+4a3c  eb           ex de, hl
+4a3d  eb           ex de, hl
+4a3e  66           ld h, (hl)
+4a3f  eb           ex de, hl
+4a40  13           inc de
+4a41  eb           ex de, hl
+4a42  66           ld h, (hl)
+4a43  eb           ex de, hl
+4a44  1b           dec de
+4a45  56           ld d, (hl)
+4a46  56           ld d, (hl)
+4a47  23           inc hl
+4a48  56           ld d, (hl)
+4a49  2b           dec hl
+4a4a  dd 56 00     ld d, (ix+0)
+4a4d  dd 56 00     ld d, (ix+0)
+4a50  dd 56 7e     ld d, (ix+126)
+4a53  dd 56 80     ld d, (ix-128)
+4a56  fd 56 00     ld d, (iy+0)
+4a59  fd 56 00     ld d, (iy+0)
+4a5c  fd 56 7e     ld d, (iy+126)
+4a5f  fd 56 80     ld d, (iy-128)
+4a62  16 00        ld d, $00
+4a64  16 7f        ld d, $7f
+4a66  16 ff        ld d, $ff
+4a68  57           ld d, a
+4a69  50           ld d, b
+4a6a  51           ld d, c
+4a6b  52           ld d, d
+4a6c  53           ld d, e
+4a6d  54           ld d, h
+4a6e  dd 54        ld d, ixh
+4a70  dd 55        ld d, ixl
+4a72  fd 54        ld d, iyh
+4a74  fd 55        ld d, iyl
+4a76  55           ld d, l
+4a77  d9           exx
+4a78  50           ld d, b
+4a79  59           ld e, c
+4a7a  d9           exx
+4a7b  d9           exx
+4a7c  54           ld d, h
+4a7d  5d           ld e, l
+4a7e  d9           exx
+4a7f  ed 5b 34 12  ld de, ($1234)
+4a83  5e           ld e, (hl)
+4a84  23           inc hl
+4a85  56           ld d, (hl)
+4a86  2b           dec hl
+4a87  5e           ld e, (hl)
+4a88  23           inc hl
+4a89  56           ld d, (hl)
+4a8a  23           inc hl
+4a8b  dd 5e 00     ld e, (ix+0)
+4a8e  dd 56 01     ld d, (ix+1)
+4a91  dd 5e 00     ld e, (ix+0)
+4a94  dd 56 01     ld d, (ix+1)
+4a97  dd 5e 7e     ld e, (ix+126)
+4a9a  dd 56 7f     ld d, (ix+127)
+4a9d  dd 5e 80     ld e, (ix-128)
+4aa0  dd 56 81     ld d, (ix-127)
+4aa3  fd 5e 00     ld e, (iy+0)
+4aa6  fd 56 01     ld d, (iy+1)
+4aa9  fd 5e 00     ld e, (iy+0)
+4aac  fd 56 01     ld d, (iy+1)
+4aaf  fd 5e 7e     ld e, (iy+126)
+4ab2  fd 56 7f     ld d, (iy+127)
+4ab5  fd 5e 80     ld e, (iy-128)
+4ab8  fd 56 81     ld d, (iy-127)
+4abb  11 34 12     ld de, $1234
+4abe  50           ld d, b
+4abf  59           ld e, c
+4ac0  d9           exx
+4ac1  c5           push bc
+4ac2  d9           exx
+4ac3  d1           pop de
+4ac4  d9           exx
+4ac5  d5           push de
+4ac6  d9           exx
+4ac7  d1           pop de
+4ac8  54           ld d, h
+4ac9  5d           ld e, l
+4aca  d9           exx
+4acb  e5           push hl
+4acc  d9           exx
+4acd  d1           pop de
+4ace  e5           push hl
+4acf  11 00 00     ld de, $0000
+4ad2  19           add hl, de
+4ad3  eb           ex de, hl
+4ad4  e1           pop hl
+4ad5  e5           push hl
+4ad6  11 7f 00     ld de, $007f
+4ad9  19           add hl, de
+4ada  eb           ex de, hl
+4adb  e1           pop hl
+4adc  e5           push hl
+4add  11 ff 00     ld de, $00ff
+4ae0  19           add hl, de
+4ae1  eb           ex de, hl
+4ae2  e1           pop hl
+4ae3  dd 54        ld d, ixh
+4ae5  dd 5d        ld e, ixl
+4ae7  fd 54        ld d, iyh
+4ae9  fd 5d        ld e, iyl
+4aeb  eb           ex de, hl
+4aec  21 00 00     ld hl, $0000
+4aef  39           add hl, sp
+4af0  eb           ex de, hl
+4af1  eb           ex de, hl
+4af2  21 00 00     ld hl, $0000
+4af5  39           add hl, sp
+4af6  eb           ex de, hl
+4af7  eb           ex de, hl
+4af8  21 7f 00     ld hl, $007f
+4afb  39           add hl, sp
+4afc  eb           ex de, hl
+4afd  eb           ex de, hl
+4afe  21 ff 00     ld hl, $00ff
+4b01  39           add hl, sp
+4b02  eb           ex de, hl
+4b03  eb           ex de, hl
+4b04  6e           ld l, (hl)
+4b05  eb           ex de, hl
+4b06  eb           ex de, hl
+4b07  6e           ld l, (hl)
+4b08  eb           ex de, hl
+4b09  13           inc de
+4b0a  eb           ex de, hl
+4b0b  6e           ld l, (hl)
+4b0c  eb           ex de, hl
+4b0d  1b           dec de
+4b0e  5e           ld e, (hl)
+4b0f  5e           ld e, (hl)
+4b10  23           inc hl
+4b11  5e           ld e, (hl)
+4b12  2b           dec hl
+4b13  dd 5e 00     ld e, (ix+0)
+4b16  dd 5e 00     ld e, (ix+0)
+4b19  dd 5e 7e     ld e, (ix+126)
+4b1c  dd 5e 80     ld e, (ix-128)
+4b1f  fd 5e 00     ld e, (iy+0)
+4b22  fd 5e 00     ld e, (iy+0)
+4b25  fd 5e 7e     ld e, (iy+126)
+4b28  fd 5e 80     ld e, (iy-128)
+4b2b  1e 00        ld e, $00
+4b2d  1e 7f        ld e, $7f
+4b2f  1e ff        ld e, $ff
+4b31  5f           ld e, a
+4b32  58           ld e, b
+4b33  59           ld e, c
+4b34  5a           ld e, d
+4b35  5b           ld e, e
+4b36  5c           ld e, h
+4b37  dd 5c        ld e, ixh
+4b39  dd 5d        ld e, ixl
+4b3b  fd 5c        ld e, iyh
+4b3d  fd 5d        ld e, iyl
+4b3f  5d           ld e, l
+4b40  eb           ex de, hl
+4b41  56           ld d, (hl)
+4b42  eb           ex de, hl
+4b43  eb           ex de, hl
+4b44  56           ld d, (hl)
+4b45  eb           ex de, hl
+4b46  13           inc de
+4b47  eb           ex de, hl
+4b48  56           ld d, (hl)
+4b49  eb           ex de, hl
+4b4a  1b           dec de
+4b4b  66           ld h, (hl)
+4b4c  66           ld h, (hl)
+4b4d  23           inc hl
+4b4e  66           ld h, (hl)
+4b4f  2b           dec hl
+4b50  dd 66 00     ld h, (ix+0)
+4b53  dd 66 00     ld h, (ix+0)
+4b56  dd 66 7e     ld h, (ix+126)
+4b59  dd 66 80     ld h, (ix-128)
+4b5c  fd 66 00     ld h, (iy+0)
+4b5f  fd 66 00     ld h, (iy+0)
+4b62  fd 66 7e     ld h, (iy+126)
+4b65  fd 66 80     ld h, (iy-128)
+4b68  26 00        ld h, $00
+4b6a  26 7f        ld h, $7f
+4b6c  26 ff        ld h, $ff
+4b6e  67           ld h, a
+4b6f  60           ld h, b
+4b70  61           ld h, c
+4b71  62           ld h, d
+4b72  63           ld h, e
+4b73  64           ld h, h
+4b74  65           ld h, l
+4b75  d9           exx
+4b76  60           ld h, b
+4b77  69           ld l, c
+4b78  d9           exx
+4b79  d9           exx
+4b7a  62           ld h, d
+4b7b  6b           ld l, e
+4b7c  d9           exx
+4b7d  2a 34 12     ld hl, ($1234)
+4b80  eb           ex de, hl
+4b81  5e           ld e, (hl)
+4b82  23           inc hl
+4b83  56           ld d, (hl)
+4b84  2b           dec hl
+4b85  eb           ex de, hl
+4b86  f5           push af
+4b87  7e           ld a, (hl)
+4b88  23           inc hl
+4b89  66           ld h, (hl)
+4b8a  6f           ld l, a
+4b8b  f1           pop af
+4b8c  dd 6e 00     ld l, (ix+0)
+4b8f  dd 66 01     ld h, (ix+1)
+4b92  dd 6e 00     ld l, (ix+0)
+4b95  dd 66 01     ld h, (ix+1)
+4b98  dd 6e 7e     ld l, (ix+126)
+4b9b  dd 66 7f     ld h, (ix+127)
+4b9e  dd 6e 80     ld l, (ix-128)
+4ba1  dd 66 81     ld h, (ix-127)
+4ba4  fd 6e 00     ld l, (iy+0)
+4ba7  fd 66 01     ld h, (iy+1)
+4baa  fd 6e 00     ld l, (iy+0)
+4bad  fd 66 01     ld h, (iy+1)
+4bb0  fd 6e 7e     ld l, (iy+126)
+4bb3  fd 66 7f     ld h, (iy+127)
+4bb6  fd 6e 80     ld l, (iy-128)
+4bb9  fd 66 81     ld h, (iy-127)
+4bbc  21 34 12     ld hl, $1234
+4bbf  60           ld h, b
+4bc0  69           ld l, c
+4bc1  d9           exx
+4bc2  c5           push bc
+4bc3  d9           exx
+4bc4  e1           pop hl
+4bc5  62           ld h, d
+4bc6  6b           ld l, e
+4bc7  d9           exx
+4bc8  d5           push de
+4bc9  d9           exx
+4bca  e1           pop hl
+4bcb  d9           exx
+4bcc  e5           push hl
+4bcd  d9           exx
+4bce  e1           pop hl
+4bcf  dd e5        push ix
+4bd1  e1           pop hl
+4bd2  fd e5        push iy
+4bd4  e1           pop hl
+4bd5  21 00 00     ld hl, $0000
+4bd8  39           add hl, sp
+4bd9  21 00 00     ld hl, $0000
+4bdc  39           add hl, sp
+4bdd  21 7e 00     ld hl, $007e
+4be0  39           add hl, sp
+4be1  21 80 ff     ld hl, $ff80
+4be4  39           add hl, sp
+4be5  ed 47        ld i, a
+4be7  dd 2a 34 12  ld ix, ($1234)
+4beb  d5           push de
+4bec  5e           ld e, (hl)
+4bed  23           inc hl
+4bee  56           ld d, (hl)
+4bef  2b           dec hl
+4bf0  d5           push de
+4bf1  dd e1        pop ix
+4bf3  d1           pop de
+4bf4  d5           push de
+4bf5  5e           ld e, (hl)
+4bf6  23           inc hl
+4bf7  56           ld d, (hl)
+4bf8  23           inc hl
+4bf9  d5           push de
+4bfa  dd e1        pop ix
+4bfc  d1           pop de
+4bfd  dd e5        push ix
+4bff  e3           ex (sp), hl
+4c00  dd 6e 00     ld l, (ix+0)
+4c03  dd 66 01     ld h, (ix+1)
+4c06  e3           ex (sp), hl
+4c07  dd e1        pop ix
+4c09  dd e5        push ix
+4c0b  e3           ex (sp), hl
+4c0c  dd 6e 00     ld l, (ix+0)
+4c0f  dd 66 01     ld h, (ix+1)
+4c12  e3           ex (sp), hl
+4c13  dd e1        pop ix
+4c15  dd e5        push ix
+4c17  e3           ex (sp), hl
+4c18  dd 6e 7e     ld l, (ix+126)
+4c1b  dd 66 7f     ld h, (ix+127)
+4c1e  e3           ex (sp), hl
+4c1f  dd e1        pop ix
+4c21  dd e5        push ix
+4c23  e3           ex (sp), hl
+4c24  dd 6e 80     ld l, (ix-128)
+4c27  dd 66 81     ld h, (ix-127)
+4c2a  e3           ex (sp), hl
+4c2b  dd e1        pop ix
+4c2d  dd e5        push ix
+4c2f  e3           ex (sp), hl
+4c30  fd 6e 00     ld l, (iy+0)
+4c33  fd 66 01     ld h, (iy+1)
+4c36  e3           ex (sp), hl
+4c37  dd e1        pop ix
+4c39  dd e5        push ix
+4c3b  e3           ex (sp), hl
+4c3c  fd 6e 00     ld l, (iy+0)
+4c3f  fd 66 01     ld h, (iy+1)
+4c42  e3           ex (sp), hl
+4c43  dd e1        pop ix
+4c45  dd e5        push ix
+4c47  e3           ex (sp), hl
+4c48  fd 6e 7e     ld l, (iy+126)
+4c4b  fd 66 7f     ld h, (iy+127)
+4c4e  e3           ex (sp), hl
+4c4f  dd e1        pop ix
+4c51  dd e5        push ix
+4c53  e3           ex (sp), hl
+4c54  fd 6e 80     ld l, (iy-128)
+4c57  fd 66 81     ld h, (iy-127)
+4c5a  e3           ex (sp), hl
+4c5b  dd e1        pop ix
+4c5d  dd 21 34 12  ld ix, $1234
+4c61  dd 60        ld ixh, b
+4c63  dd 69        ld ixl, c
+4c65  d9           exx
+4c66  c5           push bc
+4c67  d9           exx
+4c68  dd e1        pop ix
+4c6a  dd 62        ld ixh, d
+4c6c  dd 6b        ld ixl, e
+4c6e  d9           exx
+4c6f  d5           push de
+4c70  d9           exx
+4c71  dd e1        pop ix
+4c73  e5           push hl
+4c74  dd e1        pop ix
+4c76  d9           exx
+4c77  e5           push hl
+4c78  d9           exx
+4c79  dd e1        pop ix
+4c7b  fd e5        push iy
+4c7d  dd e1        pop ix
+4c7f  dd 26 00     ld ixh, $00
+4c82  dd 26 7f     ld ixh, $7f
+4c85  dd 26 ff     ld ixh, $ff
+4c88  dd 67        ld ixh, a
+4c8a  dd 60        ld ixh, b
+4c8c  dd 61        ld ixh, c
+4c8e  dd 62        ld ixh, d
+4c90  dd 63        ld ixh, e
+4c92  dd 64        ld ixh, ixh
+4c94  dd 65        ld ixh, ixl
+4c96  dd 2e 00     ld ixl, $00
+4c99  dd 2e 7f     ld ixl, $7f
+4c9c  dd 2e ff     ld ixl, $ff
+4c9f  dd 6f        ld ixl, a
+4ca1  dd 68        ld ixl, b
+4ca3  dd 69        ld ixl, c
+4ca5  dd 6a        ld ixl, d
+4ca7  dd 6b        ld ixl, e
+4ca9  dd 6c        ld ixl, ixh
+4cab  dd 6d        ld ixl, ixl
+4cad  fd 2a 34 12  ld iy, ($1234)
+4cb1  d5           push de
+4cb2  5e           ld e, (hl)
+4cb3  23           inc hl
+4cb4  56           ld d, (hl)
+4cb5  2b           dec hl
+4cb6  d5           push de
+4cb7  fd e1        pop iy
+4cb9  d1           pop de
+4cba  d5           push de
+4cbb  5e           ld e, (hl)
+4cbc  23           inc hl
+4cbd  56           ld d, (hl)
+4cbe  23           inc hl
+4cbf  d5           push de
+4cc0  fd e1        pop iy
+4cc2  d1           pop de
+4cc3  fd e5        push iy
+4cc5  e3           ex (sp), hl
+4cc6  dd 6e 00     ld l, (ix+0)
+4cc9  dd 66 01     ld h, (ix+1)
+4ccc  e3           ex (sp), hl
+4ccd  fd e1        pop iy
+4ccf  fd e5        push iy
+4cd1  e3           ex (sp), hl
+4cd2  dd 6e 00     ld l, (ix+0)
+4cd5  dd 66 01     ld h, (ix+1)
+4cd8  e3           ex (sp), hl
+4cd9  fd e1        pop iy
+4cdb  fd e5        push iy
+4cdd  e3           ex (sp), hl
+4cde  dd 6e 7e     ld l, (ix+126)
+4ce1  dd 66 7f     ld h, (ix+127)
+4ce4  e3           ex (sp), hl
+4ce5  fd e1        pop iy
+4ce7  fd e5        push iy
+4ce9  e3           ex (sp), hl
+4cea  dd 6e 80     ld l, (ix-128)
+4ced  dd 66 81     ld h, (ix-127)
+4cf0  e3           ex (sp), hl
+4cf1  fd e1        pop iy
+4cf3  fd e5        push iy
+4cf5  e3           ex (sp), hl
+4cf6  fd 6e 00     ld l, (iy+0)
+4cf9  fd 66 01     ld h, (iy+1)
+4cfc  e3           ex (sp), hl
+4cfd  fd e1        pop iy
+4cff  fd e5        push iy
+4d01  e3           ex (sp), hl
+4d02  fd 6e 00     ld l, (iy+0)
+4d05  fd 66 01     ld h, (iy+1)
+4d08  e3           ex (sp), hl
+4d09  fd e1        pop iy
+4d0b  fd e5        push iy
+4d0d  e3           ex (sp), hl
+4d0e  fd 6e 7e     ld l, (iy+126)
+4d11  fd 66 7f     ld h, (iy+127)
+4d14  e3           ex (sp), hl
+4d15  fd e1        pop iy
+4d17  fd e5        push iy
+4d19  e3           ex (sp), hl
+4d1a  fd 6e 80     ld l, (iy-128)
+4d1d  fd 66 81     ld h, (iy-127)
+4d20  e3           ex (sp), hl
+4d21  fd e1        pop iy
+4d23  fd 21 34 12  ld iy, $1234
+4d27  fd 60        ld iyh, b
+4d29  fd 69        ld iyl, c
+4d2b  d9           exx
+4d2c  c5           push bc
+4d2d  d9           exx
+4d2e  fd e1        pop iy
+4d30  fd 62        ld iyh, d
+4d32  fd 6b        ld iyl, e
+4d34  d9           exx
+4d35  d5           push de
+4d36  d9           exx
+4d37  fd e1        pop iy
+4d39  e5           push hl
+4d3a  fd e1        pop iy
+4d3c  d9           exx
+4d3d  e5           push hl
+4d3e  d9           exx
+4d3f  fd e1        pop iy
+4d41  dd e5        push ix
+4d43  fd e1        pop iy
+4d45  fd 26 00     ld iyh, $00
+4d48  fd 26 7f     ld iyh, $7f
+4d4b  fd 26 ff     ld iyh, $ff
+4d4e  fd 67        ld iyh, a
+4d50  fd 60        ld iyh, b
+4d52  fd 61        ld iyh, c
+4d54  fd 62        ld iyh, d
+4d56  fd 63        ld iyh, e
+4d58  fd 64        ld iyh, iyh
+4d5a  fd 65        ld iyh, iyl
+4d5c  fd 2e 00     ld iyl, $00
+4d5f  fd 2e 7f     ld iyl, $7f
+4d62  fd 2e ff     ld iyl, $ff
+4d65  fd 6f        ld iyl, a
+4d67  fd 68        ld iyl, b
+4d69  fd 69        ld iyl, c
+4d6b  fd 6a        ld iyl, d
+4d6d  fd 6b        ld iyl, e
+4d6f  fd 6c        ld iyl, iyh
+4d71  fd 6d        ld iyl, iyl
+4d73  eb           ex de, hl
+4d74  5e           ld e, (hl)
+4d75  eb           ex de, hl
+4d76  eb           ex de, hl
+4d77  5e           ld e, (hl)
+4d78  eb           ex de, hl
+4d79  13           inc de
+4d7a  eb           ex de, hl
+4d7b  5e           ld e, (hl)
+4d7c  eb           ex de, hl
+4d7d  1b           dec de
+4d7e  6e           ld l, (hl)
+4d7f  6e           ld l, (hl)
+4d80  23           inc hl
+4d81  6e           ld l, (hl)
+4d82  2b           dec hl
+4d83  dd 6e 00     ld l, (ix+0)
+4d86  dd 6e 00     ld l, (ix+0)
+4d89  dd 6e 7e     ld l, (ix+126)
+4d8c  dd 6e 80     ld l, (ix-128)
+4d8f  fd 6e 00     ld l, (iy+0)
+4d92  fd 6e 00     ld l, (iy+0)
+4d95  fd 6e 7e     ld l, (iy+126)
+4d98  fd 6e 80     ld l, (iy-128)
+4d9b  2e 00        ld l, $00
+4d9d  2e 7f        ld l, $7f
+4d9f  2e ff        ld l, $ff
+4da1  6f           ld l, a
+4da2  68           ld l, b
+4da3  69           ld l, c
+4da4  6a           ld l, d
+4da5  6b           ld l, e
+4da6  6c           ld l, h
+4da7  6d           ld l, l
+4da8  ed 4f        ld r, a
+4daa  ed 7b 34 12  ld sp, ($1234)
+4dae  31 34 12     ld sp, $1234
+4db1  f9           ld sp, hl
+4db2  dd f9        ld sp, ix
+4db4  fd f9        ld sp, iy
+4db6  ed a8        ldd
+4db8  02           ld (bc), a
+4db9  0b           dec bc
+4dba  eb           ex de, hl
+4dbb  36 00        ld (hl), $00
+4dbd  eb           ex de, hl
+4dbe  1b           dec de
+4dbf  eb           ex de, hl
+4dc0  36 7f        ld (hl), $7f
+4dc2  eb           ex de, hl
+4dc3  1b           dec de
+4dc4  eb           ex de, hl
+4dc5  36 ff        ld (hl), $ff
+4dc7  eb           ex de, hl
+4dc8  1b           dec de
+4dc9  12           ld (de), a
+4dca  1b           dec de
+4dcb  eb           ex de, hl
+4dcc  70           ld (hl), b
+4dcd  eb           ex de, hl
+4dce  1b           dec de
+4dcf  eb           ex de, hl
+4dd0  71           ld (hl), c
+4dd1  eb           ex de, hl
+4dd2  1b           dec de
+4dd3  eb           ex de, hl
+4dd4  74           ld (hl), h
+4dd5  eb           ex de, hl
+4dd6  1b           dec de
+4dd7  eb           ex de, hl
+4dd8  75           ld (hl), l
+4dd9  eb           ex de, hl
+4dda  1b           dec de
+4ddb  eb           ex de, hl
+4ddc  72           ld (hl), d
+4ddd  eb           ex de, hl
+4dde  1b           dec de
+4ddf  eb           ex de, hl
+4de0  73           ld (hl), e
+4de1  eb           ex de, hl
+4de2  1b           dec de
+4de3  36 00        ld (hl), $00
+4de5  2b           dec hl
+4de6  36 7f        ld (hl), $7f
+4de8  2b           dec hl
+4de9  36 ff        ld (hl), $ff
+4deb  2b           dec hl
+4dec  77           ld (hl), a
+4ded  2b           dec hl
+4dee  70           ld (hl), b
+4def  2b           dec hl
+4df0  71           ld (hl), c
+4df1  2b           dec hl
+4df2  72           ld (hl), d
+4df3  2b           dec hl
+4df4  73           ld (hl), e
+4df5  2b           dec hl
+4df6  74           ld (hl), h
+4df7  2b           dec hl
+4df8  75           ld (hl), l
+4df9  2b           dec hl
+4dfa  0a           ld a, (bc)
+4dfb  0b           dec bc
+4dfc  1a           ld a, (de)
+4dfd  1b           dec de
+4dfe  7e           ld a, (hl)
+4dff  2b           dec hl
+4e00  eb           ex de, hl
+4e01  46           ld b, (hl)
+4e02  eb           ex de, hl
+4e03  1b           dec de
+4e04  46           ld b, (hl)
+4e05  2b           dec hl
+4e06  eb           ex de, hl
+4e07  4e           ld c, (hl)
+4e08  eb           ex de, hl
+4e09  1b           dec de
+4e0a  4e           ld c, (hl)
+4e0b  2b           dec hl
+4e0c  eb           ex de, hl
+4e0d  66           ld h, (hl)
+4e0e  eb           ex de, hl
+4e0f  1b           dec de
+4e10  56           ld d, (hl)
+4e11  2b           dec hl
+4e12  eb           ex de, hl
+4e13  6e           ld l, (hl)
+4e14  eb           ex de, hl
+4e15  1b           dec de
+4e16  5e           ld e, (hl)
+4e17  2b           dec hl
+4e18  eb           ex de, hl
+4e19  56           ld d, (hl)
+4e1a  eb           ex de, hl
+4e1b  1b           dec de
+4e1c  66           ld h, (hl)
+4e1d  2b           dec hl
+4e1e  eb           ex de, hl
+4e1f  5e           ld e, (hl)
+4e20  eb           ex de, hl
+4e21  1b           dec de
+4e22  6e           ld l, (hl)
+4e23  2b           dec hl
+4e24  ed b8        lddr
+4e26  ed a0        ldi
+4e28  02           ld (bc), a
+4e29  03           inc bc
+4e2a  eb           ex de, hl
+4e2b  36 00        ld (hl), $00
+4e2d  eb           ex de, hl
+4e2e  13           inc de
+4e2f  eb           ex de, hl
+4e30  36 7f        ld (hl), $7f
+4e32  eb           ex de, hl
+4e33  13           inc de
+4e34  eb           ex de, hl
+4e35  36 ff        ld (hl), $ff
+4e37  eb           ex de, hl
+4e38  13           inc de
+4e39  12           ld (de), a
+4e3a  13           inc de
+4e3b  eb           ex de, hl
+4e3c  70           ld (hl), b
+4e3d  eb           ex de, hl
+4e3e  13           inc de
+4e3f  eb           ex de, hl
+4e40  71           ld (hl), c
+4e41  eb           ex de, hl
+4e42  13           inc de
+4e43  eb           ex de, hl
+4e44  74           ld (hl), h
+4e45  eb           ex de, hl
+4e46  13           inc de
+4e47  eb           ex de, hl
+4e48  75           ld (hl), l
+4e49  eb           ex de, hl
+4e4a  13           inc de
+4e4b  eb           ex de, hl
+4e4c  72           ld (hl), d
+4e4d  eb           ex de, hl
+4e4e  13           inc de
+4e4f  eb           ex de, hl
+4e50  73           ld (hl), e
+4e51  eb           ex de, hl
+4e52  13           inc de
+4e53  36 00        ld (hl), $00
+4e55  23           inc hl
+4e56  36 7f        ld (hl), $7f
+4e58  23           inc hl
+4e59  36 ff        ld (hl), $ff
+4e5b  23           inc hl
+4e5c  77           ld (hl), a
+4e5d  23           inc hl
+4e5e  70           ld (hl), b
+4e5f  23           inc hl
+4e60  71           ld (hl), c
+4e61  23           inc hl
+4e62  70           ld (hl), b
+4e63  23           inc hl
+4e64  71           ld (hl), c
+4e65  23           inc hl
+4e66  72           ld (hl), d
+4e67  23           inc hl
+4e68  73           ld (hl), e
+4e69  23           inc hl
+4e6a  72           ld (hl), d
+4e6b  23           inc hl
+4e6c  73           ld (hl), e
+4e6d  23           inc hl
+4e6e  74           ld (hl), h
+4e6f  23           inc hl
+4e70  f5           push af
+4e71  7c           ld a, h
+4e72  75           ld (hl), l
+4e73  23           inc hl
+4e74  77           ld (hl), a
+4e75  f1           pop af
+4e76  23           inc hl
+4e77  d5           push de
+4e78  dd e5        push ix
+4e7a  d1           pop de
+4e7b  73           ld (hl), e
+4e7c  23           inc hl
+4e7d  72           ld (hl), d
+4e7e  23           inc hl
+4e7f  d1           pop de
+4e80  d5           push de
+4e81  fd e5        push iy
+4e83  d1           pop de
+4e84  73           ld (hl), e
+4e85  23           inc hl
+4e86  72           ld (hl), d
+4e87  23           inc hl
+4e88  d1           pop de
+4e89  75           ld (hl), l
+4e8a  23           inc hl
+4e8b  0a           ld a, (bc)
+4e8c  03           inc bc
+4e8d  1a           ld a, (de)
+4e8e  13           inc de
+4e8f  7e           ld a, (hl)
+4e90  23           inc hl
+4e91  eb           ex de, hl
+4e92  46           ld b, (hl)
+4e93  eb           ex de, hl
+4e94  13           inc de
+4e95  46           ld b, (hl)
+4e96  23           inc hl
+4e97  4e           ld c, (hl)
+4e98  23           inc hl
+4e99  46           ld b, (hl)
+4e9a  23           inc hl
+4e9b  eb           ex de, hl
+4e9c  4e           ld c, (hl)
+4e9d  eb           ex de, hl
+4e9e  13           inc de
+4e9f  4e           ld c, (hl)
+4ea0  23           inc hl
+4ea1  eb           ex de, hl
+4ea2  66           ld h, (hl)
+4ea3  eb           ex de, hl
+4ea4  13           inc de
+4ea5  56           ld d, (hl)
+4ea6  23           inc hl
+4ea7  5e           ld e, (hl)
+4ea8  23           inc hl
+4ea9  56           ld d, (hl)
+4eaa  23           inc hl
+4eab  eb           ex de, hl
+4eac  6e           ld l, (hl)
+4ead  eb           ex de, hl
+4eae  13           inc de
+4eaf  5e           ld e, (hl)
+4eb0  23           inc hl
+4eb1  eb           ex de, hl
+4eb2  56           ld d, (hl)
+4eb3  eb           ex de, hl
+4eb4  13           inc de
+4eb5  66           ld h, (hl)
+4eb6  23           inc hl
+4eb7  d5           push de
+4eb8  5e           ld e, (hl)
+4eb9  23           inc hl
+4eba  56           ld d, (hl)
+4ebb  23           inc hl
+4ebc  d5           push de
+4ebd  dd e1        pop ix
+4ebf  d1           pop de
+4ec0  d5           push de
+4ec1  5e           ld e, (hl)
+4ec2  23           inc hl
+4ec3  56           ld d, (hl)
+4ec4  23           inc hl
+4ec5  d5           push de
+4ec6  fd e1        pop iy
+4ec8  d1           pop de
+4ec9  eb           ex de, hl
+4eca  5e           ld e, (hl)
+4ecb  eb           ex de, hl
+4ecc  13           inc de
+4ecd  6e           ld l, (hl)
+4ece  23           inc hl
+4ecf  ed b0        ldir
+4ed1  ed 44        neg
+4ed3  ed 44        neg
+4ed5  f5           push af
+4ed6  78           ld a, b
+4ed7  2f           cpl
+4ed8  47           ld b, a
+4ed9  04           inc b
+4eda  f1           pop af
+4edb  f5           push af
+4edc  78           ld a, b
+4edd  2f           cpl
+4ede  47           ld b, a
+4edf  79           ld a, c
+4ee0  2f           cpl
+4ee1  4f           ld c, a
+4ee2  03           inc bc
+4ee3  f1           pop af
+4ee4  f5           push af
+4ee5  79           ld a, c
+4ee6  2f           cpl
+4ee7  4f           ld c, a
+4ee8  0c           inc c
+4ee9  f1           pop af
+4eea  f5           push af
+4eeb  7a           ld a, d
+4eec  2f           cpl
+4eed  57           ld d, a
+4eee  14           inc d
+4eef  f1           pop af
+4ef0  f5           push af
+4ef1  7a           ld a, d
+4ef2  2f           cpl
+4ef3  57           ld d, a
+4ef4  7b           ld a, e
+4ef5  2f           cpl
+4ef6  5f           ld e, a
+4ef7  13           inc de
+4ef8  f1           pop af
+4ef9  f5           push af
+4efa  7b           ld a, e
+4efb  2f           cpl
+4efc  5f           ld e, a
+4efd  1c           inc e
+4efe  f1           pop af
+4eff  f5           push af
+4f00  7c           ld a, h
+4f01  2f           cpl
+4f02  67           ld h, a
+4f03  24           inc h
+4f04  f1           pop af
+4f05  f5           push af
+4f06  7c           ld a, h
+4f07  2f           cpl
+4f08  67           ld h, a
+4f09  7d           ld a, l
+4f0a  2f           cpl
+4f0b  6f           ld l, a
+4f0c  23           inc hl
+4f0d  f1           pop af
+4f0e  f5           push af
+4f0f  dd 7c        ld a, ixh
+4f11  2f           cpl
+4f12  dd 67        ld ixh, a
+4f14  dd 7d        ld a, ixl
+4f16  2f           cpl
+4f17  dd 6f        ld ixl, a
+4f19  dd 23        inc ix
+4f1b  f1           pop af
+4f1c  f5           push af
+4f1d  fd 7c        ld a, iyh
+4f1f  2f           cpl
+4f20  fd 67        ld iyh, a
+4f22  fd 7d        ld a, iyl
+4f24  2f           cpl
+4f25  fd 6f        ld iyl, a
+4f27  fd 23        inc iy
+4f29  f1           pop af
+4f2a  f5           push af
+4f2b  7d           ld a, l
+4f2c  2f           cpl
+4f2d  6f           ld l, a
+4f2e  2c           inc l
+4f2f  f1           pop af
+4f30  00           nop
+4f31  b6           or (hl)
+4f32  b6           or (hl)
+4f33  23           inc hl
+4f34  b6           or (hl)
+4f35  2b           dec hl
+4f36  dd b6 00     or (ix+0)
+4f39  dd b6 00     or (ix+0)
+4f3c  dd b6 7e     or (ix+126)
+4f3f  dd b6 80     or (ix-128)
+4f42  fd b6 00     or (iy+0)
+4f45  fd b6 00     or (iy+0)
+4f48  fd b6 7e     or (iy+126)
+4f4b  fd b6 80     or (iy-128)
+4f4e  f6 00        or $00
+4f50  f6 7f        or $7f
+4f52  f6 ff        or $ff
+4f54  b7           or a
+4f55  b6           or (hl)
+4f56  b6           or (hl)
+4f57  23           inc hl
+4f58  b6           or (hl)
+4f59  2b           dec hl
+4f5a  dd b6 00     or (ix+0)
+4f5d  dd b6 00     or (ix+0)
+4f60  dd b6 7e     or (ix+126)
+4f63  dd b6 80     or (ix-128)
+4f66  fd b6 00     or (iy+0)
+4f69  fd b6 00     or (iy+0)
+4f6c  fd b6 7e     or (iy+126)
+4f6f  fd b6 80     or (iy-128)
+4f72  f6 00        or $00
+4f74  f6 7f        or $7f
+4f76  f6 ff        or $ff
+4f78  b7           or a
+4f79  b0           or b
+4f7a  b1           or c
+4f7b  b2           or d
+4f7c  b3           or e
+4f7d  b4           or h
+4f7e  dd b4        or ixh
+4f80  dd b5        or ixl
+4f82  fd b4        or iyh
+4f84  fd b5        or iyl
+4f86  b5           or l
+4f87  b0           or b
+4f88  b1           or c
+4f89  b2           or d
+4f8a  b3           or e
+4f8b  b4           or h
+4f8c  f5           push af
+4f8d  7c           ld a, h
+4f8e  b0           or b
+4f8f  67           ld h, a
+4f90  7d           ld a, l
+4f91  b1           or c
+4f92  6f           ld l, a
+4f93  f1           pop af
+4f94  f5           push af
+4f95  7c           ld a, h
+4f96  b2           or d
+4f97  67           ld h, a
+4f98  7d           ld a, l
+4f99  b3           or e
+4f9a  6f           ld l, a
+4f9b  f1           pop af
+4f9c  f5           push af
+4f9d  dd 7c        ld a, ixh
+4f9f  b0           or b
+4fa0  dd 67        ld ixh, a
+4fa2  dd 7d        ld a, ixl
+4fa4  b1           or c
+4fa5  dd 6f        ld ixl, a
+4fa7  f1           pop af
+4fa8  f5           push af
+4fa9  dd 7c        ld a, ixh
+4fab  b2           or d
+4fac  dd 67        ld ixh, a
+4fae  dd 7d        ld a, ixl
+4fb0  b3           or e
+4fb1  dd 6f        ld ixl, a
+4fb3  f1           pop af
+4fb4  dd b4        or ixh
+4fb6  dd b5        or ixl
+4fb8  f5           push af
+4fb9  fd 7c        ld a, iyh
+4fbb  b0           or b
+4fbc  fd 67        ld iyh, a
+4fbe  fd 7d        ld a, iyl
+4fc0  b1           or c
+4fc1  fd 6f        ld iyl, a
+4fc3  f1           pop af
+4fc4  f5           push af
+4fc5  fd 7c        ld a, iyh
+4fc7  b2           or d
+4fc8  fd 67        ld iyh, a
+4fca  fd 7d        ld a, iyl
+4fcc  b3           or e
+4fcd  fd 6f        ld iyl, a
+4fcf  f1           pop af
+4fd0  fd b4        or iyh
+4fd2  fd b5        or iyl
+4fd4  b5           or l
+4fd5  ed bb        otdr
+4fd7  ed b3        otir
+4fd9  d3 00        out ($00), a
+4fdb  d3 7f        out ($7f), a
+4fdd  d3 ff        out ($ff), a
+4fdf  ed 79        out (c), a
+4fe1  ed 41        out (c), b
+4fe3  ed 49        out (c), c
+4fe5  ed 51        out (c), d
+4fe7  ed 59        out (c), e
+4fe9  ed 61        out (c), h
+4feb  ed 69        out (c), l
+4fed  ed ab        outd
+4fef  ed a3        outi
+4ff1  f1           pop af
+4ff2  c1           pop bc
+4ff3  d1           pop de
+4ff4  e1           pop hl
+4ff5  dd e1        pop ix
+4ff7  fd e1        pop iy
+4ff9  f5           push af
+4ffa  c5           push bc
+4ffb  d9           exx
+4ffc  c5           push bc
+4ffd  d9           exx
+4ffe  d5           push de
+4fff  d9           exx
+5000  d5           push de
+5001  d9           exx
+5002  e5           push hl
+5003  d9           exx
+5004  e5           push hl
+5005  d9           exx
+5006  dd e5        push ix
+5008  fd e5        push iy
+500a  cb 86        res 0, (hl)
+500c  dd cb 00 86  res 0, (ix+0)
+5010  dd cb 00 86  res 0, (ix+0)
+5014  dd cb 7e 86  res 0, (ix+126)
+5018  dd cb 80 86  res 0, (ix-128)
+501c  fd cb 00 86  res 0, (iy+0)
+5020  fd cb 00 86  res 0, (iy+0)
+5024  fd cb 7e 86  res 0, (iy+126)
+5028  fd cb 80 86  res 0, (iy-128)
+502c  cb 87        res 0, a
+502e  cb 80        res 0, b
+5030  cb 81        res 0, c
+5032  cb 82        res 0, d
+5034  cb 83        res 0, e
+5036  cb 84        res 0, h
+5038  cb 85        res 0, l
+503a  cb 8e        res 1, (hl)
+503c  dd cb 00 8e  res 1, (ix+0)
+5040  dd cb 00 8e  res 1, (ix+0)
+5044  dd cb 7e 8e  res 1, (ix+126)
+5048  dd cb 80 8e  res 1, (ix-128)
+504c  fd cb 00 8e  res 1, (iy+0)
+5050  fd cb 00 8e  res 1, (iy+0)
+5054  fd cb 7e 8e  res 1, (iy+126)
+5058  fd cb 80 8e  res 1, (iy-128)
+505c  cb 8f        res 1, a
+505e  cb 88        res 1, b
+5060  cb 89        res 1, c
+5062  cb 8a        res 1, d
+5064  cb 8b        res 1, e
+5066  cb 8c        res 1, h
+5068  cb 8d        res 1, l
+506a  cb 96        res 2, (hl)
+506c  dd cb 00 96  res 2, (ix+0)
+5070  dd cb 00 96  res 2, (ix+0)
+5074  dd cb 7e 96  res 2, (ix+126)
+5078  dd cb 80 96  res 2, (ix-128)
+507c  fd cb 00 96  res 2, (iy+0)
+5080  fd cb 00 96  res 2, (iy+0)
+5084  fd cb 7e 96  res 2, (iy+126)
+5088  fd cb 80 96  res 2, (iy-128)
+508c  cb 97        res 2, a
+508e  cb 90        res 2, b
+5090  cb 91        res 2, c
+5092  cb 92        res 2, d
+5094  cb 93        res 2, e
+5096  cb 94        res 2, h
+5098  cb 95        res 2, l
+509a  cb 9e        res 3, (hl)
+509c  dd cb 00 9e  res 3, (ix+0)
+50a0  dd cb 00 9e  res 3, (ix+0)
+50a4  dd cb 7e 9e  res 3, (ix+126)
+50a8  dd cb 80 9e  res 3, (ix-128)
+50ac  fd cb 00 9e  res 3, (iy+0)
+50b0  fd cb 00 9e  res 3, (iy+0)
+50b4  fd cb 7e 9e  res 3, (iy+126)
+50b8  fd cb 80 9e  res 3, (iy-128)
+50bc  cb 9f        res 3, a
+50be  cb 98        res 3, b
+50c0  cb 99        res 3, c
+50c2  cb 9a        res 3, d
+50c4  cb 9b        res 3, e
+50c6  cb 9c        res 3, h
+50c8  cb 9d        res 3, l
+50ca  cb a6        res 4, (hl)
+50cc  dd cb 00 a6  res 4, (ix+0)
+50d0  dd cb 00 a6  res 4, (ix+0)
+50d4  dd cb 7e a6  res 4, (ix+126)
+50d8  dd cb 80 a6  res 4, (ix-128)
+50dc  fd cb 00 a6  res 4, (iy+0)
+50e0  fd cb 00 a6  res 4, (iy+0)
+50e4  fd cb 7e a6  res 4, (iy+126)
+50e8  fd cb 80 a6  res 4, (iy-128)
+50ec  cb a7        res 4, a
+50ee  cb a0        res 4, b
+50f0  cb a1        res 4, c
+50f2  cb a2        res 4, d
+50f4  cb a3        res 4, e
+50f6  cb a4        res 4, h
+50f8  cb a5        res 4, l
+50fa  cb ae        res 5, (hl)
+50fc  dd cb 00 ae  res 5, (ix+0)
+5100  dd cb 00 ae  res 5, (ix+0)
+5104  dd cb 7e ae  res 5, (ix+126)
+5108  dd cb 80 ae  res 5, (ix-128)
+510c  fd cb 00 ae  res 5, (iy+0)
+5110  fd cb 00 ae  res 5, (iy+0)
+5114  fd cb 7e ae  res 5, (iy+126)
+5118  fd cb 80 ae  res 5, (iy-128)
+511c  cb af        res 5, a
+511e  cb a8        res 5, b
+5120  cb a9        res 5, c
+5122  cb aa        res 5, d
+5124  cb ab        res 5, e
+5126  cb ac        res 5, h
+5128  cb ad        res 5, l
+512a  cb b6        res 6, (hl)
+512c  dd cb 00 b6  res 6, (ix+0)
+5130  dd cb 00 b6  res 6, (ix+0)
+5134  dd cb 7e b6  res 6, (ix+126)
+5138  dd cb 80 b6  res 6, (ix-128)
+513c  fd cb 00 b6  res 6, (iy+0)
+5140  fd cb 00 b6  res 6, (iy+0)
+5144  fd cb 7e b6  res 6, (iy+126)
+5148  fd cb 80 b6  res 6, (iy-128)
+514c  cb b7        res 6, a
+514e  cb b0        res 6, b
+5150  cb b1        res 6, c
+5152  cb b2        res 6, d
+5154  cb b3        res 6, e
+5156  cb b4        res 6, h
+5158  cb b5        res 6, l
+515a  cb be        res 7, (hl)
+515c  dd cb 00 be  res 7, (ix+0)
+5160  dd cb 00 be  res 7, (ix+0)
+5164  dd cb 7e be  res 7, (ix+126)
+5168  dd cb 80 be  res 7, (ix-128)
+516c  fd cb 00 be  res 7, (iy+0)
+5170  fd cb 00 be  res 7, (iy+0)
+5174  fd cb 7e be  res 7, (iy+126)
+5178  fd cb 80 be  res 7, (iy-128)
+517c  cb bf        res 7, a
+517e  cb b8        res 7, b
+5180  cb b9        res 7, c
+5182  cb ba        res 7, d
+5184  cb bb        res 7, e
+5186  cb bc        res 7, h
+5188  cb bd        res 7, l
+518a  c9           ret
+518b  d8           ret c
+518c  c8           ret z
+518d  d0           ret nc
+518e  28 01        jr z, $5191
+5190  d0           ret nc
+5191  c8           ret z
+5192  d8           ret c
+5193  d8           ret c
+5194  f8           ret m
+5195  d0           ret nc
+5196  c0           ret nz
+5197  e0           ret po
+5198  c0           ret nz
+5199  f0           ret p
+519a  e8           ret pe
+519b  e0           ret po
+519c  e8           ret pe
+519d  c8           ret z
+519e  ed 4d        reti
+51a0  ed 45        retn
+51a2  cb 16        rl (hl)
+51a4  dd cb 00 16  rl (ix+0)
+51a8  dd cb 00 16  rl (ix+0)
+51ac  dd cb 7e 16  rl (ix+126)
+51b0  dd cb 80 16  rl (ix-128)
+51b4  fd cb 00 16  rl (iy+0)
+51b8  fd cb 00 16  rl (iy+0)
+51bc  fd cb 7e 16  rl (iy+126)
+51c0  fd cb 80 16  rl (iy-128)
+51c4  cb 17        rl a
+51c6  cb 10        rl b
+51c8  cb 11        rl c
+51ca  cb 10        rl b
+51cc  cb 11        rl c
+51ce  cb 12        rl d
+51d0  cb 13        rl e
+51d2  cb 12        rl d
+51d4  cb 13        rl e
+51d6  cb 14        rl h
+51d8  cb 15        rl l
+51da  cb 14        rl h
+51dc  cb 15        rl l
+51de  17           rla
+51df  cb 06        rlc (hl)
+51e1  dd cb 00 06  rlc (ix+0)
+51e5  dd cb 00 06  rlc (ix+0)
+51e9  dd cb 7e 06  rlc (ix+126)
+51ed  dd cb 80 06  rlc (ix-128)
+51f1  fd cb 00 06  rlc (iy+0)
+51f5  fd cb 00 06  rlc (iy+0)
+51f9  fd cb 7e 06  rlc (iy+126)
+51fd  fd cb 80 06  rlc (iy-128)
+5201  cb 07        rlc a
+5203  cb 00        rlc b
+5205  cb 01        rlc c
+5207  cb 02        rlc d
+5209  cb 03        rlc e
+520b  cb 04        rlc h
+520d  cb 05        rlc l
+520f  07           rlca
+5210  ed 6f        rld
+5212  cb 1e        rr (hl)
+5214  dd cb 00 1e  rr (ix+0)
+5218  dd cb 00 1e  rr (ix+0)
+521c  dd cb 7e 1e  rr (ix+126)
+5220  dd cb 80 1e  rr (ix-128)
+5224  fd cb 00 1e  rr (iy+0)
+5228  fd cb 00 1e  rr (iy+0)
+522c  fd cb 7e 1e  rr (iy+126)
+5230  fd cb 80 1e  rr (iy-128)
+5234  cb 1f        rr a
+5236  cb 18        rr b
+5238  cb 18        rr b
+523a  cb 19        rr c
+523c  cb 19        rr c
+523e  cb 1a        rr d
+5240  cb 1a        rr d
+5242  cb 1b        rr e
+5244  cb 1b        rr e
+5246  cb 1c        rr h
+5248  cb 1c        rr h
+524a  cb 1d        rr l
+524c  cb 1d        rr l
+524e  1f           rra
+524f  cb 0e        rrc (hl)
+5251  dd cb 00 0e  rrc (ix+0)
+5255  dd cb 00 0e  rrc (ix+0)
+5259  dd cb 7e 0e  rrc (ix+126)
+525d  dd cb 80 0e  rrc (ix-128)
+5261  fd cb 00 0e  rrc (iy+0)
+5265  fd cb 00 0e  rrc (iy+0)
+5269  fd cb 7e 0e  rrc (iy+126)
+526d  fd cb 80 0e  rrc (iy-128)
+5271  cb 0f        rrc a
+5273  cb 08        rrc b
+5275  cb 09        rrc c
+5277  cb 0a        rrc d
+5279  cb 0b        rrc e
+527b  cb 0c        rrc h
+527d  cb 0d        rrc l
+527f  0f           rrca
+5280  ed 67        rrd
+5282  c7           rst $00
+5283  d7           rst $10
+5284  df           rst $18
+5285  e7           rst $20
+5286  ef           rst $28
+5287  f7           rst $30
+5288  ff           rst $38
+5289  cf           rst $08
+528a  9e           sbc a, (hl)
+528b  9e           sbc a, (hl)
+528c  23           inc hl
+528d  9e           sbc a, (hl)
+528e  2b           dec hl
+528f  dd 9e 00     sbc a, (ix+0)
+5292  dd 9e 00     sbc a, (ix+0)
+5295  dd 9e 7e     sbc a, (ix+126)
+5298  dd 9e 80     sbc a, (ix-128)
+529b  fd 9e 00     sbc a, (iy+0)
+529e  fd 9e 00     sbc a, (iy+0)
+52a1  fd 9e 7e     sbc a, (iy+126)
+52a4  fd 9e 80     sbc a, (iy-128)
+52a7  de 00        sbc a, $00
+52a9  de 7f        sbc a, $7f
+52ab  de ff        sbc a, $ff
+52ad  9f           sbc a, a
+52ae  9e           sbc a, (hl)
+52af  9e           sbc a, (hl)
+52b0  23           inc hl
+52b1  9e           sbc a, (hl)
+52b2  2b           dec hl
+52b3  dd 9e 00     sbc a, (ix+0)
+52b6  dd 9e 00     sbc a, (ix+0)
+52b9  dd 9e 7e     sbc a, (ix+126)
+52bc  dd 9e 80     sbc a, (ix-128)
+52bf  fd 9e 00     sbc a, (iy+0)
+52c2  fd 9e 00     sbc a, (iy+0)
+52c5  fd 9e 7e     sbc a, (iy+126)
+52c8  fd 9e 80     sbc a, (iy-128)
+52cb  de 00        sbc a, $00
+52cd  de 7f        sbc a, $7f
+52cf  de ff        sbc a, $ff
+52d1  9f           sbc a, a
+52d2  98           sbc a, b
+52d3  99           sbc a, c
+52d4  9a           sbc a, d
+52d5  9b           sbc a, e
+52d6  9c           sbc a, h
+52d7  dd 9c        sbc a, ixh
+52d9  dd 9d        sbc a, ixl
+52db  fd 9c        sbc a, iyh
+52dd  fd 9d        sbc a, iyl
+52df  9d           sbc a, l
+52e0  98           sbc a, b
+52e1  99           sbc a, c
+52e2  9a           sbc a, d
+52e3  9b           sbc a, e
+52e4  9c           sbc a, h
+52e5  ed 42        sbc hl, bc
+52e7  ed 52        sbc hl, de
+52e9  ed 62        sbc hl, hl
+52eb  ed 72        sbc hl, sp
+52ed  dd 9c        sbc a, ixh
+52ef  dd 9d        sbc a, ixl
+52f1  fd 9c        sbc a, iyh
+52f3  fd 9d        sbc a, iyl
+52f5  9d           sbc a, l
+52f6  37           scf
+52f7  cb c6        set 0, (hl)
+52f9  dd cb 00 c6  set 0, (ix+0)
+52fd  dd cb 00 c6  set 0, (ix+0)
+5301  dd cb 7e c6  set 0, (ix+126)
+5305  dd cb 80 c6  set 0, (ix-128)
+5309  fd cb 00 c6  set 0, (iy+0)
+530d  fd cb 00 c6  set 0, (iy+0)
+5311  fd cb 7e c6  set 0, (iy+126)
+5315  fd cb 80 c6  set 0, (iy-128)
+5319  cb c7        set 0, a
+531b  cb c0        set 0, b
+531d  cb c1        set 0, c
+531f  cb c2        set 0, d
+5321  cb c3        set 0, e
+5323  cb c4        set 0, h
+5325  cb c5        set 0, l
+5327  cb ce        set 1, (hl)
+5329  dd cb 00 ce  set 1, (ix+0)
+532d  dd cb 00 ce  set 1, (ix+0)
+5331  dd cb 7e ce  set 1, (ix+126)
+5335  dd cb 80 ce  set 1, (ix-128)
+5339  fd cb 00 ce  set 1, (iy+0)
+533d  fd cb 00 ce  set 1, (iy+0)
+5341  fd cb 7e ce  set 1, (iy+126)
+5345  fd cb 80 ce  set 1, (iy-128)
+5349  cb cf        set 1, a
+534b  cb c8        set 1, b
+534d  cb c9        set 1, c
+534f  cb ca        set 1, d
+5351  cb cb        set 1, e
+5353  cb cc        set 1, h
+5355  cb cd        set 1, l
+5357  cb d6        set 2, (hl)
+5359  dd cb 00 d6  set 2, (ix+0)
+535d  dd cb 00 d6  set 2, (ix+0)
+5361  dd cb 7e d6  set 2, (ix+126)
+5365  dd cb 80 d6  set 2, (ix-128)
+5369  fd cb 00 d6  set 2, (iy+0)
+536d  fd cb 00 d6  set 2, (iy+0)
+5371  fd cb 7e d6  set 2, (iy+126)
+5375  fd cb 80 d6  set 2, (iy-128)
+5379  cb d7        set 2, a
+537b  cb d0        set 2, b
+537d  cb d1        set 2, c
+537f  cb d2        set 2, d
+5381  cb d3        set 2, e
+5383  cb d4        set 2, h
+5385  cb d5        set 2, l
+5387  cb de        set 3, (hl)
+5389  dd cb 00 de  set 3, (ix+0)
+538d  dd cb 00 de  set 3, (ix+0)
+5391  dd cb 7e de  set 3, (ix+126)
+5395  dd cb 80 de  set 3, (ix-128)
+5399  fd cb 00 de  set 3, (iy+0)
+539d  fd cb 00 de  set 3, (iy+0)
+53a1  fd cb 7e de  set 3, (iy+126)
+53a5  fd cb 80 de  set 3, (iy-128)
+53a9  cb df        set 3, a
+53ab  cb d8        set 3, b
+53ad  cb d9        set 3, c
+53af  cb da        set 3, d
+53b1  cb db        set 3, e
+53b3  cb dc        set 3, h
+53b5  cb dd        set 3, l
+53b7  cb e6        set 4, (hl)
+53b9  dd cb 00 e6  set 4, (ix+0)
+53bd  dd cb 00 e6  set 4, (ix+0)
+53c1  dd cb 7e e6  set 4, (ix+126)
+53c5  dd cb 80 e6  set 4, (ix-128)
+53c9  fd cb 00 e6  set 4, (iy+0)
+53cd  fd cb 00 e6  set 4, (iy+0)
+53d1  fd cb 7e e6  set 4, (iy+126)
+53d5  fd cb 80 e6  set 4, (iy-128)
+53d9  cb e7        set 4, a
+53db  cb e0        set 4, b
+53dd  cb e1        set 4, c
+53df  cb e2        set 4, d
+53e1  cb e3        set 4, e
+53e3  cb e4        set 4, h
+53e5  cb e5        set 4, l
+53e7  cb ee        set 5, (hl)
+53e9  dd cb 00 ee  set 5, (ix+0)
+53ed  dd cb 00 ee  set 5, (ix+0)
+53f1  dd cb 7e ee  set 5, (ix+126)
+53f5  dd cb 80 ee  set 5, (ix-128)
+53f9  fd cb 00 ee  set 5, (iy+0)
+53fd  fd cb 00 ee  set 5, (iy+0)
+5401  fd cb 7e ee  set 5, (iy+126)
+5405  fd cb 80 ee  set 5, (iy-128)
+5409  cb ef        set 5, a
+540b  cb e8        set 5, b
+540d  cb e9        set 5, c
+540f  cb ea        set 5, d
+5411  cb eb        set 5, e
+5413  cb ec        set 5, h
+5415  cb ed        set 5, l
+5417  cb f6        set 6, (hl)
+5419  dd cb 00 f6  set 6, (ix+0)
+541d  dd cb 00 f6  set 6, (ix+0)
+5421  dd cb 7e f6  set 6, (ix+126)
+5425  dd cb 80 f6  set 6, (ix-128)
+5429  fd cb 00 f6  set 6, (iy+0)
+542d  fd cb 00 f6  set 6, (iy+0)
+5431  fd cb 7e f6  set 6, (iy+126)
+5435  fd cb 80 f6  set 6, (iy-128)
+5439  cb f7        set 6, a
+543b  cb f0        set 6, b
+543d  cb f1        set 6, c
+543f  cb f2        set 6, d
+5441  cb f3        set 6, e
+5443  cb f4        set 6, h
+5445  cb f5        set 6, l
+5447  cb fe        set 7, (hl)
+5449  dd cb 00 fe  set 7, (ix+0)
+544d  dd cb 00 fe  set 7, (ix+0)
+5451  dd cb 7e fe  set 7, (ix+126)
+5455  dd cb 80 fe  set 7, (ix-128)
+5459  fd cb 00 fe  set 7, (iy+0)
+545d  fd cb 00 fe  set 7, (iy+0)
+5461  fd cb 7e fe  set 7, (iy+126)
+5465  fd cb 80 fe  set 7, (iy-128)
+5469  cb ff        set 7, a
+546b  cb f8        set 7, b
+546d  cb f9        set 7, c
+546f  cb fa        set 7, d
+5471  cb fb        set 7, e
+5473  cb fc        set 7, h
+5475  cb fd        set 7, l
+5477  cb 26        sla (hl)
+5479  dd cb 00 26  sla (ix+0)
+547d  dd cb 00 26  sla (ix+0)
+5481  dd cb 7e 26  sla (ix+126)
+5485  dd cb 80 26  sla (ix-128)
+5489  fd cb 00 26  sla (iy+0)
+548d  fd cb 00 26  sla (iy+0)
+5491  fd cb 7e 26  sla (iy+126)
+5495  fd cb 80 26  sla (iy-128)
+5499  cb 27        sla a
+549b  cb 20        sla b
+549d  cb 21        sla c
+549f  cb 22        sla d
+54a1  cb 23        sla e
+54a3  cb 24        sla h
+54a5  cb 25        sla l
+54a7  cb 36        sll (hl)
+54a9  dd cb 00 36  sll (ix+0)
+54ad  dd cb 00 36  sll (ix+0)
+54b1  dd cb 7e 36  sll (ix+126)
+54b5  dd cb 80 36  sll (ix-128)
+54b9  fd cb 00 36  sll (iy+0)
+54bd  fd cb 00 36  sll (iy+0)
+54c1  fd cb 7e 36  sll (iy+126)
+54c5  fd cb 80 36  sll (iy-128)
+54c9  cb 37        sll a
+54cb  cb 30        sll b
+54cd  cb 31        sll c
+54cf  cb 32        sll d
+54d1  cb 33        sll e
+54d3  cb 34        sll h
+54d5  cb 35        sll l
+54d7  cb 36        sll (hl)
+54d9  dd cb 00 36  sll (ix+0)
+54dd  dd cb 00 36  sll (ix+0)
+54e1  dd cb 7e 36  sll (ix+126)
+54e5  dd cb 80 36  sll (ix-128)
+54e9  fd cb 00 36  sll (iy+0)
+54ed  fd cb 00 36  sll (iy+0)
+54f1  fd cb 7e 36  sll (iy+126)
+54f5  fd cb 80 36  sll (iy-128)
+54f9  cb 37        sll a
+54fb  cb 30        sll b
+54fd  cb 31        sll c
+54ff  cb 32        sll d
+5501  cb 33        sll e
+5503  cb 34        sll h
+5505  cb 35        sll l
+5507  cb 36        sll (hl)
+5509  dd cb 00 36  sll (ix+0)
+550d  dd cb 00 36  sll (ix+0)
+5511  dd cb 7e 36  sll (ix+126)
+5515  dd cb 80 36  sll (ix-128)
+5519  fd cb 00 36  sll (iy+0)
+551d  fd cb 00 36  sll (iy+0)
+5521  fd cb 7e 36  sll (iy+126)
+5525  fd cb 80 36  sll (iy-128)
+5529  cb 37        sll a
+552b  cb 30        sll b
+552d  cb 31        sll c
+552f  cb 32        sll d
+5531  cb 33        sll e
+5533  cb 34        sll h
+5535  cb 35        sll l
+5537  cb 2e        sra (hl)
+5539  dd cb 00 2e  sra (ix+0)
+553d  dd cb 00 2e  sra (ix+0)
+5541  dd cb 7e 2e  sra (ix+126)
+5545  dd cb 80 2e  sra (ix-128)
+5549  fd cb 00 2e  sra (iy+0)
+554d  fd cb 00 2e  sra (iy+0)
+5551  fd cb 7e 2e  sra (iy+126)
+5555  fd cb 80 2e  sra (iy-128)
+5559  cb 2f        sra a
+555b  cb 28        sra b
+555d  cb 28        sra b
+555f  cb 19        rr c
+5561  cb 29        sra c
+5563  cb 2a        sra d
+5565  cb 2a        sra d
+5567  cb 1b        rr e
+5569  cb 2b        sra e
+556b  cb 2c        sra h
+556d  cb 2c        sra h
+556f  cb 1d        rr l
+5571  cb 2d        sra l
+5573  cb 3e        srl (hl)
+5575  dd cb 00 3e  srl (ix+0)
+5579  dd cb 00 3e  srl (ix+0)
+557d  dd cb 7e 3e  srl (ix+126)
+5581  dd cb 80 3e  srl (ix-128)
+5585  fd cb 00 3e  srl (iy+0)
+5589  fd cb 00 3e  srl (iy+0)
+558d  fd cb 7e 3e  srl (iy+126)
+5591  fd cb 80 3e  srl (iy-128)
+5595  cb 3f        srl a
+5597  cb 38        srl b
+5599  cb 39        srl c
+559b  cb 3a        srl d
+559d  cb 3b        srl e
+559f  cb 3c        srl h
+55a1  cb 3d        srl l
+55a3  96           sub (hl)
+55a4  96           sub (hl)
+55a5  23           inc hl
+55a6  96           sub (hl)
+55a7  2b           dec hl
+55a8  dd 96 00     sub (ix+0)
+55ab  dd 96 00     sub (ix+0)
+55ae  dd 96 7e     sub (ix+126)
+55b1  dd 96 80     sub (ix-128)
+55b4  fd 96 00     sub (iy+0)
+55b7  fd 96 00     sub (iy+0)
+55ba  fd 96 7e     sub (iy+126)
+55bd  fd 96 80     sub (iy-128)
+55c0  d6 00        sub $00
+55c2  d6 7f        sub $7f
+55c4  d6 ff        sub $ff
+55c6  97           sub a
+55c7  96           sub (hl)
+55c8  96           sub (hl)
+55c9  23           inc hl
+55ca  96           sub (hl)
+55cb  2b           dec hl
+55cc  dd 96 00     sub (ix+0)
+55cf  dd 96 00     sub (ix+0)
+55d2  dd 96 7e     sub (ix+126)
+55d5  dd 96 80     sub (ix-128)
+55d8  fd 96 00     sub (iy+0)
+55db  fd 96 00     sub (iy+0)
+55de  fd 96 7e     sub (iy+126)
+55e1  fd 96 80     sub (iy-128)
+55e4  d6 00        sub $00
+55e6  d6 7f        sub $7f
+55e8  d6 ff        sub $ff
+55ea  97           sub a
+55eb  90           sub b
+55ec  91           sub c
+55ed  92           sub d
+55ee  93           sub e
+55ef  94           sub h
+55f0  dd 94        sub ixh
+55f2  dd 95        sub ixl
+55f4  fd 94        sub iyh
+55f6  fd 95        sub iyl
+55f8  95           sub l
+55f9  90           sub b
+55fa  91           sub c
+55fb  92           sub d
+55fc  93           sub e
+55fd  94           sub h
+55fe  dd 94        sub ixh
+5600  dd 95        sub ixl
+5602  fd 94        sub iyh
+5604  fd 95        sub iyl
+5606  95           sub l
+5607  ae           xor (hl)
+5608  ae           xor (hl)
+5609  23           inc hl
+560a  ae           xor (hl)
+560b  2b           dec hl
+560c  dd ae 00     xor (ix+0)
+560f  dd ae 00     xor (ix+0)
+5612  dd ae 7e     xor (ix+126)
+5615  dd ae 80     xor (ix-128)
+5618  fd ae 00     xor (iy+0)
+561b  fd ae 00     xor (iy+0)
+561e  fd ae 7e     xor (iy+126)
+5621  fd ae 80     xor (iy-128)
+5624  ee 00        xor $00
+5626  ee 7f        xor $7f
+5628  ee ff        xor $ff
+562a  af           xor a
+562b  ae           xor (hl)
+562c  ae           xor (hl)
+562d  23           inc hl
+562e  ae           xor (hl)
+562f  2b           dec hl
+5630  dd ae 00     xor (ix+0)
+5633  dd ae 00     xor (ix+0)
+5636  dd ae 7e     xor (ix+126)
+5639  dd ae 80     xor (ix-128)
+563c  fd ae 00     xor (iy+0)
+563f  fd ae 00     xor (iy+0)
+5642  fd ae 7e     xor (iy+126)
+5645  fd ae 80     xor (iy-128)
+5648  ee 00        xor $00
+564a  ee 7f        xor $7f
+564c  ee ff        xor $ff
+564e  af           xor a
+564f  a8           xor b
+5650  a9           xor c
+5651  aa           xor d
+5652  ab           xor e
+5653  ac           xor h
+5654  dd ac        xor ixh
+5656  dd ad        xor ixl
+5658  fd ac        xor iyh
+565a  fd ad        xor iyl
+565c  ad           xor l
+565d  a8           xor b
+565e  a9           xor c
+565f  aa           xor d
+5660  ab           xor e
+5661  ac           xor h
+5662  f5           push af
+5663  7c           ld a, h
+5664  a8           xor b
+5665  67           ld h, a
+5666  7d           ld a, l
+5667  a9           xor c
+5668  6f           ld l, a
+5669  f1           pop af
+566a  f5           push af
+566b  7c           ld a, h
+566c  aa           xor d
+566d  67           ld h, a
+566e  7d           ld a, l
+566f  ab           xor e
+5670  6f           ld l, a
+5671  f1           pop af
+5672  f5           push af
+5673  dd 7c        ld a, ixh
+5675  a8           xor b
+5676  dd 67        ld ixh, a
+5678  dd 7d        ld a, ixl
+567a  a9           xor c
+567b  dd 6f        ld ixl, a
+567d  f1           pop af
+567e  f5           push af
+567f  dd 7c        ld a, ixh
+5681  aa           xor d
+5682  dd 67        ld ixh, a
+5684  dd 7d        ld a, ixl
+5686  ab           xor e
+5687  dd 6f        ld ixl, a
+5689  f1           pop af
+568a  dd ac        xor ixh
+568c  dd ad        xor ixl
+568e  f5           push af
+568f  fd 7c        ld a, iyh
+5691  a8           xor b
+5692  fd 67        ld iyh, a
+5694  fd 7d        ld a, iyl
+5696  a9           xor c
+5697  fd 6f        ld iyl, a
+5699  f1           pop af
+569a  f5           push af
+569b  fd 7c        ld a, iyh
+569d  aa           xor d
+569e  fd 67        ld iyh, a
+56a0  fd 7d        ld a, iyl
+56a2  ab           xor e
+56a3  fd 6f        ld iyl, a
+56a5  f1           pop af
+56a6  fd ac        xor iyh
+56a8  fd ad        xor iyl
+56aa  ad           xor l
+56ab  c9           ret
+56ac  76     newline         
+56ad         DISPLAY
+56ad  76 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+56bd  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+56cd  00 76 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+56dd  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+56ed  00 00 76 00 00 00 00 00 00 00 00 00 00 00 00 00 
+56fd  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+570d  00 00 00 76 00 00 00 00 00 00 00 00 00 00 00 00 
+571d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+572d  00 00 00 00 76 00 00 00 00 00 00 00 00 00 00 00 
+573d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+574d  00 00 00 00 00 76 00 00 00 00 00 00 00 00 00 00 
+575d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+576d  00 00 00 00 00 00 76 00 00 00 00 00 00 00 00 00 
+577d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+578d  00 00 00 00 00 00 00 76 00 00 00 00 00 00 00 00 
+579d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+57ad  00 00 00 00 00 00 00 00 76 00 00 00 00 00 00 00 
+57bd  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+57cd  00 00 00 00 00 00 00 00 00 76 00 00 00 00 00 00 
+57dd  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+57ed  00 00 00 00 00 00 00 00 00 00 76 00 00 00 00 00 
+57fd  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+580d  00 00 00 00 00 00 00 00 00 00 00 76 00 00 00 00 
+581d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+582d  00 00 00 00 00 00 00 00 00 00 00 00 76 00 00 00 
+583d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+584d  00 00 00 00 00 00 00 00 00 00 00 00 00 76 00 00 
+585d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+586d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 76 00 
+587d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+588d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 76 
+589d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+58ad  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+58bd  76 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+58cd  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+58dd  00 76 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+58ed  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+58fd  00 00 76 00 00 00 00 00 00 00 00 00 00 00 00 00 
+590d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+591d  00 00 00 76 00 00 00 00 00 00 00 00 00 00 00 00 
+592d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+593d  00 00 00 00 76 00 00 00 00 00 00 00 00 00 00 00 
+594d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+595d  00 00 00 00 00 76 00 00 00 00 00 00 00 00 00 00 
+596d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+597d  00 00 00 00 00 00 76 00 00 00 00 00 00 00 00 00 
+598d  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+599d  00 00 00 00 00 00 00 76 00 00 00 00 00 00 00 00 
+59ad  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+59bd  00 00 00 00 00 00 00 00 76 
+59c6         VARIABLES
+59c6  80 
