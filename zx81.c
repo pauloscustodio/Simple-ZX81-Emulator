@@ -206,11 +206,17 @@ static void consume_events(void) {
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
         case SDL_KEYDOWN:
-            in_pause = false; // exit pause on any key press
-            kbd_handle_sdl_event(&event);
+            // exit pause on any key press
+            in_pause = false; 
 
             // key pressed, reset the corresponding bit in the keyboard state
-            if (event.key.keysym.sym == SDLK_F6) {
+            kbd_handle_sdl_event(&event);
+
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
+                write_state(DUMP_NAME, &z80, memory);
+                do_exit = true;
+            }
+            else if (event.key.keysym.sym == SDLK_F6) {
                 write_state(DUMP_NAME, &z80, memory);
             }
             else if (event.key.keysym.sym == SDLK_F7) {
