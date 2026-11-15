@@ -17,8 +17,8 @@ endif
 # compile options
 #------------------------------------------------------------------------------
 CFLAGS 	:= -O3 -MMD -Wall -Werror \
-			$(filter-out -Dmain=SDL_main,$(shell pkg-config --cflags sdl))
-LDFLAGS := 	$(filter-out -lSDLmain,$(shell pkg-config --libs sdl))
+			$(filter-out -Dmain=SDL_main,$(shell pkg-config --cflags sdl2))
+LDFLAGS := 	$(filter-out -lSDL2main,$(shell pkg-config --libs sdl2))
 
 INSTALL ?= install
 

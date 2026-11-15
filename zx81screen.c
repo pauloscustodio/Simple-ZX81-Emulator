@@ -12,6 +12,13 @@
 #include <SDL.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
+#include <stdio.h>
+
+// SDL2 display objects
+static SDL_Window* window = NULL;
+static SDL_Renderer* renderer = NULL;
+static SDL_Texture* screen_texture = NULL;
 
 // the screen surface
 static SDL_Surface* screen = NULL;
@@ -24,6 +31,7 @@ static WORD last_charset_addr = 0;
 
 // last contents of the display file
 static BYTE last_screen[NUM_ROWS][NUM_COLS];
+static bool screen_dirty = true;
 
 void zx81screen_free(void) {
     if (charset) {
@@ -31,10 +39,27 @@ void zx81screen_free(void) {
     }
     charset = NULL;
 
+    if (screen_texture) {
+        SDL_DestroyTexture(screen_texture);
+    }
+    screen_texture = NULL;
+
     if (screen) {
         SDL_FreeSurface(screen);
     }
     screen = NULL;
+
+    if (renderer) {
+        SDL_DestroyRenderer(renderer);
+    }
+    renderer = NULL;
+
+    if (window) {
+        SDL_DestroyWindow(window);
+    }
+    window = NULL;
+
+    SDL_Quit();
 }
 
 void zx81screen_init(void) {
@@ -43,17 +68,38 @@ void zx81screen_init(void) {
         die("Error: SDL_Init failed: %s\n", SDL_GetError());
     }
 
-    SDL_WM_SetCaption("Simple ZX81 Emulator", "zx81");
+    window = SDL_CreateWindow("Simple ZX81 Emulator", SDL_WINDOWPOS_UNDEFINED,
+                              SDL_WINDOWPOS_UNDEFINED, 512, 384, 0);
+    if (window == NULL) {
+        die("Error: Unable to create window: %s\n", SDL_GetError());
+    }
 
-    // create our 512x384 screen; the bpp will be the same as the desktop
-    screen = SDL_SetVideoMode(512, 384, 0, SDL_SWSURFACE);
+    renderer = SDL_CreateRenderer(window, -1,
+                                  SDL_RENDERER_ACCELERATED);
+    if (renderer == NULL) {
+        printf("Warning: Unable to create accelerated renderer: %s\n", SDL_GetError());
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    }
+    if (renderer == NULL) {
+        die("Error: Unable to create renderer: %s\n", SDL_GetError());
+    }
+
+    screen = SDL_CreateRGBSurfaceWithFormat(0, 512, 384, 32,
+                                            SDL_PIXELFORMAT_ARGB8888);
     if (screen == NULL) {
-        die("Error: Unable to set 512x384 video: %s\n", SDL_GetError());
+        die("Error: Unable to create screen surface: %s\n", SDL_GetError());
+    }
+
+    screen_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
+                                       SDL_TEXTUREACCESS_STREAMING, 512, 384);
+    if (screen_texture == NULL) {
+        die("Error: Unable to create screen texture: %s\n", SDL_GetError());
     }
 
     // initialize the last_screen array to 0xff
     // so that the first update will redraw the entire screen
     memset(last_screen, 0xff, sizeof(last_screen));
+    screen_dirty = true;
 
     atexit(zx81screen_free);
 }
@@ -151,11 +197,11 @@ static void zx81screen_update_charset(WORD charset_addr) {
         }
     }
 
-    // convert the rgb surface to a surface the same format of the screen
+    // convert the rgb surface to a known format used by the screen surface
     if (charset) {
         SDL_FreeSurface(charset);
     }
-    charset = SDL_DisplayFormat(charset_rgb);
+    charset = SDL_ConvertSurfaceFormat(charset_rgb, SDL_PIXELFORMAT_ARGB8888, 0);
     if (charset == NULL) {
         SDL_FreeSurface(charset_rgb);
         die("Error: Unable to convert charset surface: %s\n", SDL_GetError());
@@ -198,6 +244,7 @@ static void zx81screen_update_display(WORD display_addr) {
 
             if (last_screen[row][col] != b) {
                 last_screen[row][col] = b;
+                screen_dirty = true;
 
                 // blit the character from the charset to the screen
                 source.x = b * 16;
@@ -211,7 +258,14 @@ static void zx81screen_update_display(WORD display_addr) {
         dest.y += 16;
     }
 
-    SDL_UpdateRect(screen, 0, 0, 0, 0);
+    if (screen_dirty) {
+        SDL_UpdateTexture(screen_texture, NULL, screen->pixels, screen->pitch);
+        SDL_RenderClear(renderer);
+        SDL_RenderCopy(renderer, screen_texture, NULL, NULL);
+        SDL_RenderPresent(renderer);
+
+        screen_dirty = false;
+    }
 }
 
 void zx81screen_update(WORD charset_addr, WORD display_addr) {
@@ -222,6 +276,7 @@ void zx81screen_update(WORD charset_addr, WORD display_addr) {
         // initialize the last_screen array to 0xff
         // so that the next update will redraw the entire screen
         memset(last_screen, 0xff, sizeof(last_screen));
+        screen_dirty = true;
     }
 
     if (display_addr != 0) {
