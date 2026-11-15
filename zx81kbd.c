@@ -299,26 +299,30 @@ void kbd_handle_sdl_event(const SDL_Event* event) {
         if (key == 0) {
             break;
         }
-#ifdef AUTHENTIC_BEHAVIOR
-        // key rollover not possible
-        keydown(key);
-#else
-        // key rollover possible
+
+#ifdef KEYBOARD_ROLLOVER
+        // with key rollover but slugish for games
         queue_push(&kbd_queue, key);
+#else
+        // without rollover but more responsive for games
+        keydown(key);
 #endif
         break;
     }
 
-    case SDL_KEYUP:
-#ifdef AUTHENTIC_BEHAVIOR
-    {
+    case SDL_KEYUP: {
         kbd_state_t key = sdlk2kbd(sym, shifted);
-        if (key != 0) {
-            keyup(key);
+        if (key == 0) {
+            break;
         }
-    }
+
+#ifdef KEYBOARD_ROLLOVER
+        // do nothing, keyup is handled in the queue_tick() function
+#else
+        keyup(key);
 #endif
-    break;
+        break;
+    }
     }
 }
 

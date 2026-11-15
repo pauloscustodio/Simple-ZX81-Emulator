@@ -30,7 +30,7 @@ old_font:
 		PRINT CHR$(I);
 	NEXT I
 	
-	FOR I=1 TO 10
+	FOR I=1 TO 5
 		RAND USR &new_font
 		PAUSE 50
 		RAND USR &old_font

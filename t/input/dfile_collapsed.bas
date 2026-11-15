@@ -24,7 +24,7 @@
 #DFILE="                       LINE 24"
 #DFILE_COLLAPSED=1
 
-    PAUSE 5*50
+    PAUSE 3*50
     RAND USR 8191
 
 #AUTOSTART=1
