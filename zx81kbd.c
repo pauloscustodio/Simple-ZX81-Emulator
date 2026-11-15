@@ -232,20 +232,34 @@ void kbd_handle_sdl_event(const SDL_Event* event) {
     switch (event->type) {
     case SDL_KEYDOWN:
         if (shifted) {
+#ifdef AUTHENTIC_BEHAVIOR
+            // key rollover not possible
             keydown(sdlk2kbd_shift[sym]);
+#else
+            // key rollover possible
+            queue_push(&kbd_queue, sdlk2kbd_shift[sym]);
+#endif
         }
         else {
+#ifdef AUTHENTIC_BEHAVIOR
+            // key rollover not possible
             keydown(sdlk2kbd[sym]);
+#else
+            // key rollover possible
+            queue_push(&kbd_queue, sdlk2kbd[sym]);
+#endif
         }
         break;
 
     case SDL_KEYUP:
+#ifdef AUTHENTIC_BEHAVIOR
         if (shifted) {
             keyup(sdlk2kbd_shift[event->key.keysym.sym]);
         }
         else {
             keyup(sdlk2kbd[event->key.keysym.sym]);
         }
+#endif
         break;
     }
 }

@@ -30,6 +30,8 @@ Released under GPL.
 
 # Features
 - Simple save (F6) and restore (F7) memory and Z80 state to the file zx81.dump.
+- ESCAPE key saves a dump to the file zx81.dump and exits the emulator. 
+  The dump can be used as command line argument to continue where you were.
 - -t option traces Z80 execution.
 - -s slows down to original ZX81 speed, except if FAST mode.
 - Load a file.p or file.dump on startup.
