@@ -188,6 +188,10 @@ static void run_frame(void) {
     frames |= 0x8000; // bit 15 must be set
     POKEW(FRAMES, frames);
 
+    // read keyboard state
+    WORD last_k = keyboard_scan();
+    POKEW(LAST_K, last_k);
+
     // if slow mode is requested, wait until the frame time has passed
     if (slow) {
         Uint32 elapsed = SDL_GetTicks() - start_sdl_ticks;
@@ -207,7 +211,7 @@ static void consume_events(void) {
         switch (event.type) {
         case SDL_KEYDOWN:
             // exit pause on any key press
-            in_pause = false; 
+            in_pause = false;
 
             // key pressed, reset the corresponding bit in the keyboard state
             kbd_handle_sdl_event(&event);

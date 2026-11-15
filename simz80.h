@@ -36,8 +36,8 @@ typedef unsigned int	FASTREG;
 typedef unsigned long	FASTREG;
 #endif
 
-/* FASTWORK needs to be wider than 16 bits and efficient for the host
-   architecture */
+/* FASTWORK needs to be wider than 16 bits and efficient for the
+   host architecture */
 #if UINT_MAX > 65535
 typedef unsigned int	FASTWORK;
 #else
@@ -69,11 +69,11 @@ struct z80 {
 
 typedef struct z80 Z80;
 
-extern void z80_step(Z80* z80);
-extern BYTE z80_fetch(Z80* z80, WORD a);
-extern BYTE z80_read(Z80* z80, WORD a);
-extern void z80_write(Z80* z80, WORD a, BYTE b);
-extern BYTE z80_in(Z80* z80, WORD a);
-extern void z80_out(Z80* z80, WORD a, BYTE b);
+void z80_step(Z80* z80);
+BYTE z80_fetch(Z80* z80, WORD a);
+BYTE z80_read(Z80* z80, WORD a);
+void z80_write(Z80* z80, WORD a, BYTE b);
+BYTE z80_in(Z80* z80, WORD a);
+void z80_out(Z80* z80, WORD a, BYTE b);
 
 #endif /* _SIMZ80_H */

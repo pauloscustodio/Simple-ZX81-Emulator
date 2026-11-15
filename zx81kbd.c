@@ -9,6 +9,8 @@
 #include "zx81kbd.h"
 #include <SDL.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 
 //-----------------------------------------------------------------------------
@@ -83,6 +85,25 @@ static kbd_state_t queue_pop(kbd_queue_t* q) {
     q->head = (q->head + 1) % KBD_QUEUE_SIZE;
     q->count--;
     return kbd;
+}
+
+// call regularly to update the keyboard queue and matrix state
+static void queue_tick(void) {
+    kbd_read_count++;
+    if (kbd_read_count >= KBD_READ_COUNT) {
+        kbd_read_count = 0;
+        kbd_state = !kbd_state;
+
+        if (kbd_state == true && !queue_is_empty(&kbd_queue)) {
+            // pop a key from the keyboard queue
+            key_pressed = queue_pop(&kbd_queue);
+            keydown(key_pressed);
+        }
+        else if (kbd_state == false && key_pressed) {
+            keyup(key_pressed);
+            key_pressed = 0;
+        }
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -165,40 +186,42 @@ void kbd_init(void) {
 }
 
 //-----------------------------------------------------------------------------
+static BYTE kbd_in(WORD addr) {
+    BYTE row = (BYTE)((addr >> 8) & 0xFF);
+    // Note: matrix is 1 for key pressed, ROM is 0 for key pressed
+    switch (row) {
+    case 0xFE:
+        return (BYTE)(~matrix & 0xff);
+    case 0xFD:
+        return (BYTE)((~matrix >> 8) & 0xff);
+    case 0xFB:
+        return (BYTE)((~matrix >> 16) & 0xff);
+    case 0xF7:
+        return (BYTE)((~matrix >> 24) & 0xff);
+    case 0xEF:
+        return (BYTE)((~matrix >> 32) & 0xff);
+    case 0xDF:
+        return (BYTE)((~matrix >> 40) & 0xff);
+    case 0xBF:
+        return (BYTE)((~matrix >> 48) & 0xff);
+    case 0x7F:
+        return (BYTE)((~matrix >> 56) & 0xff);
+    default:
+        return 0xff;
+    }
+}
+
+//-----------------------------------------------------------------------------
 BYTE kbd_input_isr(Z80* z80, WORD addr) {
-    WORD row = addr >> 8;   // get the keyboard row
-
     // first dispatch keys from the keyboard queue
-    if (addr == 0xfefe) {           // start of new keyboard read
-        kbd_read_count++;
-        if (kbd_read_count >= KBD_READ_COUNT) {
-            kbd_read_count = 0;
-            kbd_state = !kbd_state;
-
-            if (kbd_state == true && !queue_is_empty(&kbd_queue)) {
-                // pop a key from the keyboard queue
-                key_pressed = queue_pop(&kbd_queue);
-                keydown(key_pressed);
-            }
-            else if (kbd_state == false && key_pressed) {
-                keyup(key_pressed);
-                key_pressed = 0;
-            }
-        }
+    // run on the first read for a keyboard scan
+    // and on 0x7ffe for a break key check
+    if (addr == 0xfefe || addr == 0x7ffe) {
+        queue_tick();
     }
 
     // then dispatch keys from the keyboard matrix
-    for (int i = 0; i < 8; i++) {
-        // check the first zeroed bit to select the row
-        if ((row & 1) == 0) {
-            // return the keyboard state for the row
-            BYTE state = (~(matrix >> (i * 8))) & 0xFF;
-            return state;
-        }
-        row >>= 1;
-    }
-
-    return 0xFF; // no key pressed
+    return kbd_in(addr);
 }
 
 //-----------------------------------------------------------------------------
@@ -230,4 +253,50 @@ void kbd_handle_sdl_event(const SDL_Event* event) {
 //-----------------------------------------------------------------------------
 void kbd_push_key(kbd_state_t key) {
     queue_push(&kbd_queue, key);
+}
+
+// C translation of the ZX81 KEYBOARD scanning routine
+WORD keyboard_scan(void) {
+    // one frame has passed, update the keyboard queue and matrix state
+    queue_tick();
+
+    // now read the keyboard matrix using the ZX81 keyboard scanning routine
+    BYTE h = 0xFF;
+    BYTE l = 0xFF;
+    BYTE row = 0xFE;
+
+    BYTE a = kbd_in(0xFEFE);
+    a |= 0x01;       /* ignore SHIFT initially */
+
+    for (;;) {
+        BYTE d = a | 0xE0;
+
+        if ((~a & 0x1F) == 0) {
+            l &= 0xFF;
+        }
+        else {
+            l &= row;
+        }
+
+        h &= d;
+
+        int done = (row & 0x80) == 0;
+
+        row = (BYTE)((row << 1) | (row >> 7));
+        a = kbd_in(((WORD)row << 8) | 0xFE);
+
+        if (done) {
+            break;
+        }
+    }
+
+    /* incorporate SHIFT key */
+    if (a & 0x01) {
+        h = (BYTE)((h << 1) | 1);
+    }
+    else {
+        h = (BYTE)(h << 1);
+    }
+
+    return ((WORD)h << 8) | l;
 }

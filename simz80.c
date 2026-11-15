@@ -65,7 +65,7 @@ static const unsigned char partab[256] = {
      } while (0)
 
 #define Input(a)     (z80_in(z80, a))
-#define Output(a, v) (z80_out(z80, (a), (v)))
+#define Output(a, v) (z80_out(z80, (a), (v) & 0xff))
 
 #define POP(x)	do {					    \
 	FASTREG y = z80_read(z80, SP++);	    \
@@ -73,8 +73,8 @@ static const unsigned char partab[256] = {
 } while (0)
 
 #define PUSH(x) do {					    \
-	z80_write(z80, --SP, (x) >> 8);		    \
-	z80_write(z80, --SP, x);			    \
+	z80_write(z80, --SP, ((x) >> 8) & 0xff);\
+	z80_write(z80, --SP, (x) & 0xff);		\
 } while (0)
 
 #define JPC(cond) (PC = (cond) ? GetWORD(PC) : PC+2)
