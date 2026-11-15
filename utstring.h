@@ -32,6 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <limits.h>
 
 #ifdef __GNUC__
 #define UTSTRING_UNUSED __attribute__((__unused__))
@@ -53,6 +54,10 @@ typedef struct {
     size_t n; /* allocated capacity */
     size_t i; /* index of first unused byte */
 } UT_string;
+
+UTSTRING_UNUSED static long _utstring_size_to_long(size_t v) {
+    return (v > (size_t)LONG_MAX) ? LONG_MAX : (long)v;
+}
 
 #define utstring_reserve(s,amt)                            \
 do {                                                       \
@@ -179,17 +184,18 @@ UTSTRING_UNUSED static void _utstring_BuildTable(
     size_t P_NeedleLen,
     long* P_KMP_Table) {
     long i, j;
+    long needle_len = _utstring_size_to_long(P_NeedleLen);
 
     i = 0;
     j = i - 1;
     P_KMP_Table[i] = j;
-    while (i < (long) P_NeedleLen) {
+    while (i < needle_len) {
         while ( (j > -1) && (P_Needle[i] != P_Needle[j]) ) {
             j = P_KMP_Table[j];
         }
         i++;
         j++;
-        if (i < (long) P_NeedleLen) {
+        if (i < needle_len) {
             if (P_Needle[i] == P_Needle[j]) {
                 P_KMP_Table[i] = P_KMP_Table[j];
             }
@@ -212,12 +218,17 @@ UTSTRING_UNUSED static void _utstring_BuildTableR(
     size_t P_NeedleLen,
     long* P_KMP_Table) {
     long i, j;
+    long needle_len = _utstring_size_to_long(P_NeedleLen);
 
-    i = P_NeedleLen - 1;
+    if (needle_len <= 0) {
+        return;
+    }
+
+    i = needle_len - 1;
     j = i + 1;
     P_KMP_Table[i + 1] = j;
     while (i >= 0) {
-        while ( (j < (long) P_NeedleLen) && (P_Needle[i] != P_Needle[j]) ) {
+        while ( (j < needle_len) && (P_Needle[i] != P_Needle[j]) ) {
             j = P_KMP_Table[j + 1];
         }
         i--;
@@ -248,17 +259,18 @@ UTSTRING_UNUSED static long _utstring_find(
     const long* P_KMP_Table) {
     long i, j;
     long V_FindPosition = -1;
+    long haystack_len = _utstring_size_to_long(P_HaystackLen);
+    long needle_len = _utstring_size_to_long(P_NeedleLen);
 
     /* Search from left to right. */
     i = j = 0;
-    while ( (j < (int)P_HaystackLen)
-            && (((P_HaystackLen - j) + i) >= P_NeedleLen) ) {
+    while ((j < haystack_len) && (((haystack_len - j) + i) >= needle_len)) {
         while ( (i > -1) && (P_Needle[i] != P_Haystack[j]) ) {
             i = P_KMP_Table[i];
         }
         i++;
         j++;
-        if (i >= (int)P_NeedleLen) {
+        if (i >= needle_len) {
             /* Found. */
             V_FindPosition = j - i;
             break;
@@ -278,12 +290,14 @@ UTSTRING_UNUSED static long _utstring_findR(
     const long* P_KMP_Table) {
     long i, j;
     long V_FindPosition = -1;
+    long haystack_len = _utstring_size_to_long(P_HaystackLen);
+    long needle_len = _utstring_size_to_long(P_NeedleLen);
 
     /* Search from right to left. */
-    j = (P_HaystackLen - 1);
-    i = (P_NeedleLen - 1);
+    j = haystack_len - 1;
+    i = needle_len - 1;
     while ( (j >= 0) && (j >= i) ) {
-        while ( (i < (int)P_NeedleLen) && (P_Needle[i] != P_Haystack[j]) ) {
+        while ( (i < needle_len) && (P_Needle[i] != P_Haystack[j]) ) {
             i = P_KMP_Table[i + 1];
         }
         i--;
@@ -307,23 +321,25 @@ UTSTRING_UNUSED static long utstring_find(
     size_t P_NeedleLen) {
     long V_StartPosition;
     long V_HaystackLen;
+    long V_StringLen = _utstring_size_to_long(s->i);
+    long V_NeedleLen = _utstring_size_to_long(P_NeedleLen);
     long* V_KMP_Table;
     long V_FindPosition = -1;
 
     if (P_StartPosition < 0) {
-        V_StartPosition = s->i + P_StartPosition;
+        V_StartPosition = V_StringLen + P_StartPosition;
     }
     else {
         V_StartPosition = P_StartPosition;
     }
-    V_HaystackLen = s->i - V_StartPosition;
-    if ( (V_HaystackLen >= (long) P_NeedleLen) && (P_NeedleLen > 0) ) {
+    V_HaystackLen = V_StringLen - V_StartPosition;
+    if ( (V_HaystackLen >= V_NeedleLen) && (P_NeedleLen > 0) ) {
         V_KMP_Table = (long*)malloc(sizeof(long) * (P_NeedleLen + 1));
         if (V_KMP_Table != NULL) {
             _utstring_BuildTable(P_Needle, P_NeedleLen, V_KMP_Table);
 
             V_FindPosition = _utstring_find(s->d + V_StartPosition,
-                                            V_HaystackLen,
+                                            (size_t)V_HaystackLen,
                                             P_Needle,
                                             P_NeedleLen,
                                             V_KMP_Table);
@@ -347,23 +363,25 @@ UTSTRING_UNUSED static long utstring_findR(
     size_t P_NeedleLen) {
     long V_StartPosition;
     long V_HaystackLen;
+    long V_StringLen = _utstring_size_to_long(s->i);
+    long V_NeedleLen = _utstring_size_to_long(P_NeedleLen);
     long* V_KMP_Table;
     long V_FindPosition = -1;
 
     if (P_StartPosition < 0) {
-        V_StartPosition = s->i + P_StartPosition;
+        V_StartPosition = V_StringLen + P_StartPosition;
     }
     else {
         V_StartPosition = P_StartPosition;
     }
     V_HaystackLen = V_StartPosition + 1;
-    if ( (V_HaystackLen >= (long) P_NeedleLen) && (P_NeedleLen > 0) ) {
+    if ( (V_HaystackLen >= V_NeedleLen) && (P_NeedleLen > 0) ) {
         V_KMP_Table = (long*)malloc(sizeof(long) * (P_NeedleLen + 1));
         if (V_KMP_Table != NULL) {
             _utstring_BuildTableR(P_Needle, P_NeedleLen, V_KMP_Table);
 
             V_FindPosition = _utstring_findR(s->d,
-                                             V_HaystackLen,
+                                             (size_t)V_HaystackLen,
                                              P_Needle,
                                              P_NeedleLen,
                                              V_KMP_Table);
