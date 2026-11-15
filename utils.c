@@ -88,3 +88,21 @@ char* str_tolower(char* str) {
     }
     return str;
 }
+
+int strn_case_cmp(const char* s1, const char* s2, size_t n) {
+    for (size_t i = 0; i < n; i++) {
+        unsigned char c1 = (unsigned char)s1[i];
+        unsigned char c2 = (unsigned char)s2[i];
+        int lc1 = tolower(c1);
+        int lc2 = tolower(c2);
+
+        if (lc1 < lc2) {
+            return -1;
+        }
+        if (lc1 > lc2) {
+            return 1;
+        }
+    }
+
+    return 0;
+}

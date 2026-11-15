@@ -11,9 +11,9 @@
 #include <stdint.h>
 #include <SDL.h>
 
-// keyboard queue size and number of reads a key is kept pressed
-#define KBD_QUEUE_SIZE 256
-#define KBD_READ_COUNT 50
+// keyboard queue size time for each key press
+#define KBD_QUEUE_SIZE  256
+#define KBD_READ_MS     50
 
 // bit mask with 1 at each selected column of the 8 keyboard rows
 typedef uint64_t kbd_state_t;
@@ -168,3 +168,6 @@ void kbd_push_key(kbd_state_t key);
 // check the queyboard state and return the same as
 // the ZX81 keyboard scanning routine KEYBOARD
 WORD keyboard_scan(void);
+
+// receive pasted text, tokenize it and push the tokens to the keyboard queue
+void basic_paste(const char* text);

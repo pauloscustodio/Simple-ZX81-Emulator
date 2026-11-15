@@ -246,6 +246,11 @@ static void exit_usage(void) {
 }
 
 int main(int argc, char* argv[]) {
+    // avoid that the windows subsystem buffers stdout and stderr,
+    // which causes the output to be delayed
+    setbuf(stdout, NULL);
+    setbuf(stderr, NULL);
+
     const char* filename = NULL;
     bool dump_prog_flag = false;
 

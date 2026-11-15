@@ -25,3 +25,4 @@ void xfread(void* ptr, size_t size, size_t count, FILE* stream);
 void xfwrite(const void* ptr, size_t size, size_t count, FILE* stream);
 bool str_ends_with(const char* str, const char* end);
 char* str_tolower(char* str);
+int strn_case_cmp(const char* s1, const char* s2, size_t n);
