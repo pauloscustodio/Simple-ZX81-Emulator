@@ -1,5 +1,7 @@
 **/.vs/
 **/x64/
+**/Debug/
+**/Release/
 *.bak
 *.d
 *.exe
