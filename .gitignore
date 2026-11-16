@@ -12,3 +12,4 @@
 .tidy-stamp
 *.p
 *.dump
+**/Debug/

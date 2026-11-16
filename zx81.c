@@ -152,6 +152,10 @@ static void run_frame(void) {
             copy();
             z80.pc = RET_ADDR;
         }
+        else if (z80.pc == DISPLAY_6 || z80.pc == SLOW_DISP) {
+            // signal the keyboard queue that we are idle
+            kbd_set_idle();
+        }
 
         // handle PAUSE
         if (in_pause) {

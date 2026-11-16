@@ -171,3 +171,6 @@ WORD keyboard_scan(void);
 
 // receive pasted text, tokenize it and push the tokens to the keyboard queue
 void basic_paste(const char* text);
+
+// signal the keyboard queue that we are idle
+void kbd_set_idle(void);

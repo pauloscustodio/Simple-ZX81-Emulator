@@ -23,6 +23,132 @@
 static kbd_state_t matrix = 0;
 static kbd_state_t shift = 0;
 
+static const char* decode_key(kbd_state_t kbd) {
+    static char buffer[64];
+    buffer[0] = '\0';
+    if (kbd & K_SHIFT) {
+        strcat(buffer, "SHIFT+");
+    }
+    if (kbd & K_Z) {
+        strcat(buffer, "Z");
+    }
+    if (kbd & K_X) {
+        strcat(buffer, "X");
+    }
+    if (kbd & K_C) {
+        strcat(buffer, "C");
+    }
+    if (kbd & K_V) {
+        strcat(buffer, "V");
+    }
+    if (kbd & K_A) {
+        strcat(buffer, "A");
+    }
+    if (kbd & K_S) {
+        strcat(buffer, "S");
+    }
+    if (kbd & K_D) {
+        strcat(buffer, "D");
+    }
+    if (kbd & K_F) {
+        strcat(buffer, "F");
+    }
+    if (kbd & K_G) {
+        strcat(buffer, "G");
+    }
+    if (kbd & K_Q) {
+        strcat(buffer, "Q");
+    }
+    if (kbd & K_W) {
+        strcat(buffer, "W");
+    }
+    if (kbd & K_E) {
+        strcat(buffer, "E");
+    }
+    if (kbd & K_R) {
+        strcat(buffer, "R");
+    }
+    if (kbd & K_T) {
+        strcat(buffer, "T");
+    }
+    if (kbd & K_1) {
+        strcat(buffer, "1");
+    }
+    if (kbd & K_2) {
+        strcat(buffer, "2");
+    }
+    if (kbd & K_3) {
+        strcat(buffer, "3");
+    }
+    if (kbd & K_4) {
+        strcat(buffer, "4");
+    }
+    if (kbd & K_5) {
+        strcat(buffer, "5");
+    }
+    if (kbd & K_0) {
+        strcat(buffer, "0");
+    }
+    if (kbd & K_9) {
+        strcat(buffer, "9");
+    }
+    if (kbd & K_8) {
+        strcat(buffer, "8");
+    }
+    if (kbd & K_7) {
+        strcat(buffer, "7");
+    }
+    if (kbd & K_6) {
+        strcat(buffer, "6");
+    }
+    if (kbd & K_P) {
+        strcat(buffer, "P");
+    }
+    if (kbd & K_O) {
+        strcat(buffer, "O");
+    }
+    if (kbd & K_I) {
+        strcat(buffer, "I");
+    }
+    if (kbd & K_U) {
+        strcat(buffer, "U");
+    }
+    if (kbd & K_Y) {
+        strcat(buffer, "Y");
+    }
+    if (kbd & K_RETURN) {
+        strcat(buffer, "RETURN");
+    }
+    if (kbd & K_L) {
+        strcat(buffer, "L");
+    }
+    if (kbd & K_K) {
+        strcat(buffer, "K");
+    }
+    if (kbd & K_J) {
+        strcat(buffer, "J");
+    }
+    if (kbd & K_H) {
+        strcat(buffer, "H");
+    }
+    if (kbd & K_SPACE) {
+        strcat(buffer, "SPACE");
+    }
+    if (kbd & K_PERIOD) {
+        strcat(buffer, "PERIOD");
+    }
+    if (kbd & K_M) {
+        strcat(buffer, "M");
+    }
+    if (kbd & K_N) {
+        strcat(buffer, "N");
+    }
+    if (kbd & K_B) {
+        strcat(buffer, "B");
+    }
+    return  buffer;
+}
+
 static void clear_matrix(void) {
     matrix = 0;
     shift = 0;
@@ -33,6 +159,7 @@ static void keydown(kbd_state_t kbd) {
     if ((kbd & K_SHIFT) != 0) {
         shift = K_SHIFT;
     }
+    printf("Key down: %s\n", decode_key(kbd));
 }
 
 static void keyup(kbd_state_t kbd) {
@@ -40,6 +167,7 @@ static void keyup(kbd_state_t kbd) {
     if ((kbd & K_SHIFT) != 0) {
         shift = 0;
     }
+    printf("Key up:   %s\n", decode_key(kbd));
 }
 
 //-----------------------------------------------------------------------------
@@ -62,6 +190,8 @@ static bool kbd_state = false;
 
 // last key injected into the keyboard matrix
 static kbd_state_t key_pressed = 0;
+
+static bool os_is_idle = false;
 
 static void queue_init(kbd_queue_t* q) {
     if (q->data != NULL) {
@@ -115,7 +245,7 @@ static kbd_state_t queue_pop(kbd_queue_t* q) {
 // call regularly to update the keyboard queue and matrix state
 static void queue_tick(void) {
     Uint32 kbd_current_ms = SDL_GetTicks();
-    if (kbd_current_ms - kbd_last_event_ms >= KBD_READ_MS / 2) {
+    if (os_is_idle && kbd_current_ms - kbd_last_event_ms >= KBD_READ_MS / 2) {
         kbd_last_event_ms = kbd_current_ms;
         kbd_state = !kbd_state;
 
@@ -128,6 +258,7 @@ static void queue_tick(void) {
             keyup(key_pressed);
             key_pressed = 0;
         }
+        os_is_idle = false;
     }
 }
 
@@ -810,4 +941,9 @@ void basic_paste(const char* text) {
     if (mode == GR_MODE) {
         kbd_push_key(K_GRAPHICS); // return to KL_MODE after pasting
     }
+}
+
+void kbd_set_idle(void) {
+    printf("Keyboard is idle\n");
+    os_is_idle = true;
 }
