@@ -58,12 +58,10 @@ my $ignore_end = 0;
 # TestFor - tests current for loop to see if it should continue in
 # loop or break out (returns 1 for continue, 0 for stop)
 ##############################################################################
-sub TestFor
-{
-    my ($val, $compare, $end) = @_;
-    return Filepp::If(("$val $compare $end"));
+sub TestFor {
+    my ( $val, $compare, $end ) = @_;
+    return Filepp::If( ("$val $compare $end") );
 }
-
 
 ##############################################################################
 # for keyword, input:
@@ -73,41 +71,47 @@ sub TestFor
 #   ops
 # endfor
 ##############################################################################
-sub For
-{
+sub For {
     my $input = shift;
-    
+
     # split up line
-    my ($macro, $start, $compare, $end, $inc) = split(/\s+/, $input);
+    my ( $macro, $start, $compare, $end, $inc ) = split( /\s+/, $input );
 
     # check if $start is a macro
     $start = Filepp::RunProcessors("$start");
 
-    Filepp::Debug("For: $macro = $start, $macro $compare $end, $macro += $inc\n");
-    
+    Filepp::Debug(
+        "For: $macro = $start, $macro $compare $end, $macro += $inc\n");
+
     # define the macro to have the starting value
     Filepp::Define("$macro $start");
 
     my $line = 0;
-    if(Filepp::Ifdef("__LINE__")) {
-	$line = Filepp::ReplaceDefines("__LINE__");
+    if ( Filepp::Ifdef("__LINE__") ) {
+        $line = Filepp::ReplaceDefines("__LINE__");
     }
+
     # add data structure to current for list
-    my @ThisFor = ($macro, $compare, $end, $inc, $line);
-    push(@Forloops, \@ThisFor);
+    my @ThisFor = ( $macro, $compare, $end, $inc, $line );
+    push( @Forloops, \@ThisFor );
 
     # for loop ok, set up data structure and go
-    if(TestFor($start, $compare, $end)) {
-	Filepp::Debug("For: $macro loop started with value $start");
+    if ( TestFor( $start, $compare, $end ) ) {
+        Filepp::Debug("For: $macro loop started with value $start");
+
         # in a valid for loop, make sure all endfor's are treated as valid
-	$ignore_end = 0;
-	# grab all input up to corresponding endfor keyword
-	Grab::StartGrab("for", "endfor");
-	# in for loop - return 1 to Parse
-	return 1;
+        $ignore_end = 0;
+
+        # grab all input up to corresponding endfor keyword
+        Grab::StartGrab( "for", "endfor" );
+
+        # in for loop - return 1 to Parse
+        return 1;
     }
+
     # have not entered loop, be ready for excess endfor's
     $ignore_end = 1;
+
     # for loop comparison failed, skip to endfor - return 0 to Parse
     Filepp::Debug("For: $macro loop not entered");
     return 0;
@@ -116,56 +120,59 @@ sub For
 ##############################################################################
 # add for keyword - also an ifword
 ##############################################################################
-Filepp::AddKeyword("for", "For::For");
+Filepp::AddKeyword( "for", "For::For" );
 Filepp::AddIfword("for");
-
 
 ##############################################################################
 # endfor keyword
 # no input, used to terminate forloop
 ##############################################################################
-sub EndFor
-{
+sub EndFor {
+
     # check endfor is at a valid position - otherwise ignore it
     # (filepp will give an error if it is out of place)
-    if($#Forloops < 0) { return 1; }
-    
+    if ( $#Forloops < 0 ) { return 1; }
+
     # pop current for loop info off top of list
-    my @ThisFor = @{pop(@Forloops)};
-    my ($macro, $compare, $end, $inc, $line) = @ThisFor;
+    my @ThisFor = @{ pop(@Forloops) };
+    my ( $macro, $compare, $end, $inc, $line ) = @ThisFor;
 
     # get grabbed input from grab moudule
     my @Input = Grab::GetInput();
+
     # get line number (add 1 coz first_line is for #for keyword)
     my $first_line = Grab::GetInputLine() + 1;
-    my $real_line = Filepp::ReplaceDefines("__LINE__");
-    
+    my $real_line  = Filepp::ReplaceDefines("__LINE__");
+
     my $loop = 1;
+
     # loop as many times as required
-    while($loop) {
-	# fix line number
-	my $line = $first_line;
+    while ($loop) {
 
-	# parse all input between start and end of loop
-	my $input;
-	foreach $input (@Input) {
-	    Filepp::Redefine("__LINE__", $line++);
-	    Filepp::ProcessLine($input);
-	}
-	
-	# get macro val and increment it
-	my $val = Filepp::RunProcessors($macro);
-	$val += Filepp::RunProcessors("$inc");
-	Filepp::Define("$macro $val");
+        # fix line number
+        my $line = $first_line;
 
-	# test if current forloop should continue
-	if(TestFor($val, $compare, $end)) {
-	    Filepp::Debug("For: $macro loop continuing with value $val");
-	}
-	else { $loop = 0; }
+        # parse all input between start and end of loop
+        my $input;
+        foreach $input (@Input) {
+            Filepp::Redefine( "__LINE__", $line++ );
+            Filepp::ProcessLine($input);
+        }
+
+        # get macro val and increment it
+        my $val = Filepp::RunProcessors($macro);
+        $val += Filepp::RunProcessors("$inc");
+        Filepp::Define("$macro $val");
+
+        # test if current forloop should continue
+        if ( TestFor( $val, $compare, $end ) ) {
+            Filepp::Debug("For: $macro loop continuing with value $val");
+        }
+        else { $loop = 0; }
     }
 
-    Filepp::Redefine("__LINE__", $real_line);
+    Filepp::Redefine( "__LINE__", $real_line );
+
     # end of loop, return 1 to Parse so it moves on
     Filepp::Debug("For: $macro loop end");
     return 1;
@@ -174,7 +181,7 @@ sub EndFor
 ##############################################################################
 # add for keyword - also an endif word
 ##############################################################################
-Filepp::AddKeyword("endfor", "For::EndFor");
+Filepp::AddKeyword( "endfor", "For::EndFor" );
 Filepp::AddEndifword("endfor");
 
 return 1;

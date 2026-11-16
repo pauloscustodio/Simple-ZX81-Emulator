@@ -48,55 +48,57 @@ my $string;
 #         string  - the input string which may contain comments to be removed
 # outputs:
 #         output  - the string with the comment removed
-sub RemoveComments
-{
+sub RemoveComments {
     my $comment = shift;
     $string = shift;
     my $output = "";
 
-    if($string !~ /$comment/m) {
-	return $string;
+    if ( $string !~ /$comment/m ) {
+        return $string;
     }
-    
+
     my $line = $string;
-    foreach $string (split(/\n/, $line)) {
-	my $search = 1;
-	
-	while($search) {
-	    # check for comment in string
-	    if($string =~ /$comment/) {
-		# keep everything before first comment
-		$output = $output.$`;
-		# set string to everything after comment
-		$string = $';   # one more quote for emacs '	    
-		# make note of removed part of string
-		my $removed = $&;
-		
-		# check comment is not enclosed in quotes eg: "#",
-		# count number of '"' in string and if odd then comment in quotes
-		my @Count = ($output =~ /[^\\]\"/g);
-		if($#Count % 2 != 0) { # if true comment is NOT in quotes
-		    $search = 0;
-		}
-		# put comment back onto string
-		else { $output = $output.$removed; }
-	    }
-	    else {
-		$output = $output.$string;
-		$search = 0;
-	    }
-	}
-	
-	# put newline back
-	$output = $output."\n";
+    foreach $string ( split( /\n/, $line ) ) {
+        my $search = 1;
+
+        while ($search) {
+
+            # check for comment in string
+            if ( $string =~ /$comment/ ) {
+
+                # keep everything before first comment
+                $output = $output . $`;
+
+                # set string to everything after comment
+                $string = $';    # one more quote for emacs '
+                                 # make note of removed part of string
+                my $removed = $&;
+
+               # check comment is not enclosed in quotes eg: "#",
+               # count number of '"' in string and if odd then comment in quotes
+                my @Count = ( $output =~ /[^\\]\"/g );
+                if ( $#Count % 2 != 0 ) {    # if true comment is NOT in quotes
+                    $search = 0;
+                }
+
+                # put comment back onto string
+                else { $output = $output . $removed; }
+            }
+            else {
+                $output = $output . $string;
+                $search = 0;
+            }
+        }
+
+        # put newline back
+        $output = $output . "\n";
     }
-    
+
     return $output;
 }
 
 # return whatever is left of the last line processed after comment removal
-sub GetLineEnd
-{
+sub GetLineEnd {
     return $string;
 }
 

@@ -38,30 +38,26 @@ use strict;
 my $VERSION = '1.0.0';
 
 # macros which get defined once when filepp starts
-my @StaticMacros = (  "__DATE__",
-		      "__TIME__",
-		      "__VERSION__");
-# macros which change during processing
-my @DynamicMacros = ( "__BASE_FILE__",
-		      "__FILE__");
+my @StaticMacros = ( "__DATE__", "__TIME__", "__VERSION__" );
 
+# macros which change during processing
+my @DynamicMacros = ( "__BASE_FILE__", "__FILE__" );
 
 ########################################################################
 # Function which checks all macros in list begin and end with "
 ########################################################################
-sub UpdateMacros
-{
+sub UpdateMacros {
     my @Macros = @_;
     my $macro;
     my $defn;
     foreach $macro (@Macros) {
-	if(Filepp::Ifdef($macro)) {
-	    $defn = Filepp::ReplaceDefines($macro);
-	    if($defn !~ /\A\".*\"\Z/) {
-		Filepp::Debug("cmacros: quoting macro $macro");
-		Filepp::Define($macro." \"".$defn."\"");
-	    }
-	}
+        if ( Filepp::Ifdef($macro) ) {
+            $defn = Filepp::ReplaceDefines($macro);
+            if ( $defn !~ /\A\".*\"\Z/ ) {
+                Filepp::Debug("cmacros: quoting macro $macro");
+                Filepp::Define( $macro . " \"" . $defn . "\"" );
+            }
+        }
     }
 }
 
@@ -75,14 +71,14 @@ UpdateMacros(@DynamicMacros);
 # This function adds cmacros style information whenever the current file
 # being processed changes
 ########################################################################
-sub CheckMacros
-{
+sub CheckMacros {
+
     # take in current line and pass it on unaltered
     my $input = shift;
     UpdateMacros(@DynamicMacros);
     return $input;
 }
-Filepp::AddProcessor("Cmacros::CheckMacros", 1);
+Filepp::AddProcessor( "Cmacros::CheckMacros", 1 );
 
 return 1;
 

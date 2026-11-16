@@ -40,16 +40,17 @@ use strict;
 my $VERSION = '1.1.0';
 
 ########################################################################
-# AddFunction(macro, function) 
+# AddFunction(macro, function)
 # adds a function to list, inputs:
 # macro:    macro which will call function
 # function: function to call when macro found
 ########################################################################
 sub AddFunction {
-    my ($macro, $function) = @_;
-    Filepp::Define($macro."(...)");
-    Filepp::SetDefineFuncs($macro, $function);
-    Filepp::Debug("Function: added function macro $macro which calls $function");
+    my ( $macro, $function ) = @_;
+    Filepp::Define( $macro . "(...)" );
+    Filepp::SetDefineFuncs( $macro, $function );
+    Filepp::Debug(
+        "Function: added function macro $macro which calls $function");
 }
 
 ########################################################################
@@ -58,19 +59,17 @@ sub AddFunction {
 ########################################################################
 sub Function {
     my $input = shift;
-    my ($macro, $function) = split(/\s+/, $input, 2);
-    AddFunction($macro, $function);
+    my ( $macro, $function ) = split( /\s+/, $input, 2 );
+    AddFunction( $macro, $function );
 }
-Filepp::AddKeyword("function", "Function::Function");
-
+Filepp::AddKeyword( "function", "Function::Function" );
 
 ##############################################################################
 # RemoveFunction(macro)
 # macro is deleted from list, all occurrences of macro found in
 # document are ignored.
 ##############################################################################
-sub RemoveFunction
-{
+sub RemoveFunction {
     my $macro = shift;
     Filepp::Undef($macro);
     Filepp::Debug("Function: removed function macro $macro");
@@ -82,10 +81,10 @@ sub RemoveFunction
 ########################################################################
 sub Rmfunction {
     my $input = shift;
-    my ($macro) = split(/\s+/, $input, 1);
+    my ($macro) = split( /\s+/, $input, 1 );
     RemoveFunction($macro);
 }
-Filepp::AddKeyword("rmfunction", "Function::Rmfunction");
+Filepp::AddKeyword( "rmfunction", "Function::Rmfunction" );
 
 return 1;
 

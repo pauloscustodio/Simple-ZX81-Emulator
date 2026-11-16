@@ -36,8 +36,7 @@ use strict;
 # version number of module
 my $VERSION = '1.0.0';
 
-sub ToLower
-{
+sub ToLower {
     my $string = shift;
     $string =~ s/([A-Z])/\L$1\E/g;
     return $string;

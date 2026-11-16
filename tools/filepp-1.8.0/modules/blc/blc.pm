@@ -48,32 +48,34 @@ my $VERSION = '1.1.0';
 # continuation character is at end of line or if there are more ('s on
 # a line than )'s (not including \( and \) )
 ##############################################################################
-sub ParseLineEnd
-{
+sub ParseLineEnd {
     my $thisline = shift;
-    my $more = 0;
+    my $more     = 0;
 
     # check for normal style line continuation
-    ($more, $thisline) = Filepp::ParseLineEnd($thisline);
+    ( $more, $thisline ) = Filepp::ParseLineEnd($thisline);
 
     # if line not being continued already, check to see if it should be
-    if($more == 0) {
-	# check if end of line has more open brackets than close brackets
- 	my @Open  = ($thisline =~ /(?=[^\\]\()/g);
- 	my @Close = ($thisline =~ /(?=[^\\]\))/g);
-	if($#Open > $#Close) {
-	    $more = 1;
-	    # remove newline and replace with single space
-	    $thisline =~ s/\n\Z/\ /;
-	}
-	# if line has ended - deal with escaped brackets
-	else {
-	    # replace '\(' and '\)' with '(' and ')'
-	    $thisline =~ s/\\\(/\(/g;
-	    $thisline =~ s/\\\)/\)/g;
-	}	
+    if ( $more == 0 ) {
+
+        # check if end of line has more open brackets than close brackets
+        my @Open  = ( $thisline =~ /(?=[^\\]\()/g );
+        my @Close = ( $thisline =~ /(?=[^\\]\))/g );
+        if ( $#Open > $#Close ) {
+            $more = 1;
+
+            # remove newline and replace with single space
+            $thisline =~ s/\n\Z/\ /;
+        }
+
+        # if line has ended - deal with escaped brackets
+        else {
+            # replace '\(' and '\)' with '(' and ')'
+            $thisline =~ s/\\\(/\(/g;
+            $thisline =~ s/\\\)/\)/g;
+        }
     }
-    return ($more, $thisline);
+    return ( $more, $thisline );
 }
 
 ##############################################################################

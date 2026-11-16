@@ -49,87 +49,87 @@ my $firstline = "";
 # in the macro are evaluated when the macro is called rather than
 # when the macro is defined.
 ########################################################################
-sub Bigfunc
-{
+sub Bigfunc {
     $firstline = shift;
-    
+
     # check there are brackets () in the function name
-    if($firstline !~ /\(/) {
-	Filepp::Error("bigfunc: macro must have brackets [use macro() for 0 arguments]");
-      }
-    
+    if ( $firstline !~ /\(/ ) {
+        Filepp::Error(
+            "bigfunc: macro must have brackets [use macro() for 0 arguments]");
+    }
+
     # grab all input until endbigfunc
-    Grab::StartGrab("bigfunc", "endbigfunc");
+    Grab::StartGrab( "bigfunc", "endbigfunc" );
 }
-Filepp::AddKeyword("bigfunc", "Bigfunc::Bigfunc");
+Filepp::AddKeyword( "bigfunc", "Bigfunc::Bigfunc" );
 
 ########################################################################
 # EndBigfunc keyword
 ########################################################################
-sub EndBigfunc
-{
+sub EndBigfunc {
+
     # check endbigfunc is after a bigfunc
-    if($firstline eq "") {
-	Filepp::Error("endbigfunc found without preceding bigfunc");
+    if ( $firstline eq "" ) {
+        Filepp::Error("endbigfunc found without preceding bigfunc");
     }
+
     # get input from grab module
-    my @Input = Grab::GetInput();
-    my $macrodefn = join("", $firstline, "\n", @Input);
+    my @Input     = Grab::GetInput();
+    my $macrodefn = join( "", $firstline, "\n", @Input );
+
     # reset firstline
     $firstline = "";
-    
+
     # define the macro temporarily (gets redefined as a function later)
     Filepp::Define($macrodefn);
 
     # get the defined macro back
-    my ($macro, $junk) = split(/\(/, $macrodefn, 2);
-    my ($defn, $args) = Filepp::GetDefine($macro);
-    
+    my ( $macro, $junk ) = split( /\(/, $macrodefn, 2 );
+    my ( $defn,  $args ) = Filepp::GetDefine($macro);
+
     # store args if any given
-    if(defined($args)) { $DefineArgs{$macro} = $args; }
+    if ( defined($args) ) { $DefineArgs{$macro} = $args; }
 
     # define the macro defn pair
     $Defines{$macro} = $defn;
-    
-    # add a function which will call this macro
-    Function::AddFunction($macro, "Bigfunc::Run");
-}
-Filepp::AddKeyword("endbigfunc", "Bigfunc::EndBigfunc");
 
+    # add a function which will call this macro
+    Function::AddFunction( $macro, "Bigfunc::Run" );
+}
+Filepp::AddKeyword( "endbigfunc", "Bigfunc::EndBigfunc" );
 
 ########################################################################
 # Function to parse the bigfunc
 ########################################################################
-sub Run
-{
-    my $macro = Filepp::FunctionMacro();
-    my @Argvals = @_;
-    my @Argnames = split(/\,/, $DefineArgs{$macro});
-    
+sub Run {
+    my $macro    = Filepp::FunctionMacro();
+    my @Argvals  = @_;
+    my @Argnames = split( /\,/, $DefineArgs{$macro} );
+
     my $parseline = Filepp::GetParseLineEnd();
+
     # split macro into single lines
-    my @Input = split(/\n/, $Defines{$macro});
+    my @Input  = split( /\n/, $Defines{$macro} );
     my $output = "";
-    my $i = 0;
-    my %Dummy = ();
-    
+    my $i      = 0;
+    my %Dummy  = ();
+
     # process all lines in macro
-    while($i <= $#Input)  {
-	my $tail = "";
-	my $string;
-    
-	# replace any arguments
-	($string, $tail) = Filepp::ArgReplacer(\@Argvals, \@Argnames,
-					       $macro, $Input[$i], $tail,
-					       %Dummy);
-	$Input[$i] = $string.$tail;
-	# run processing chain before here to catch up
-	$output .= Filepp::RunProcessors($Input[$i++]."\n", 1);
+    while ( $i <= $#Input ) {
+        my $tail = "";
+        my $string;
+
+        # replace any arguments
+        ( $string, $tail ) = Filepp::ArgReplacer( \@Argvals, \@Argnames,
+            $macro, $Input[$i], $tail, %Dummy );
+        $Input[$i] = $string . $tail;
+
+        # run processing chain before here to catch up
+        $output .= Filepp::RunProcessors( $Input[ $i++ ] . "\n", 1 );
     }
-    
+
     return $output;
 }
-
 
 return 1;
 ########################################################################

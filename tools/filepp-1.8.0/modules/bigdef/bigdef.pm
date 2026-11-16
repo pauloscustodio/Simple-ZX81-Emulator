@@ -44,50 +44,51 @@ my $currentdef = "";
 # bigdef processor, when in a big define this eats all input (after processing
 # for other keywords)
 ##############################################################################
-sub Processor
-{
+sub Processor {
     my $input = shift;
-    $currentdef = $currentdef.$input;
+    $currentdef = $currentdef . $input;
     return "";
 }
-
 
 ##############################################################################
 # bigdef keyword - starts a bigdef
 # same syntax as #define, only does not terminate until a #endbigdef is found
 ##############################################################################
-sub Bigdef
-{
+sub Bigdef {
     my $input = shift;
+
     # check not already in a bigdef
-    if($currentdef ne "") {
-      Filepp::Error("Nested bigdef's are not allowed");
+    if ( $currentdef ne "" ) {
+        Filepp::Error("Nested bigdef's are not allowed");
     }
+
     # start macro definition
-    $currentdef = $input."\n";
+    $currentdef = $input . "\n";
+
     # add processor - make it first in the list so all other processors are
     # ignored, this prevents any macro's in the bigdef being processed twice
-    Filepp::AddProcessorAfter("Bigdef::Processor", "ParseKeywords", 1);
+    Filepp::AddProcessorAfter( "Bigdef::Processor", "ParseKeywords", 1 );
 }
 
 ##############################################################################
 # add bigdef keyword
 ##############################################################################
-Filepp::AddKeyword("bigdef", "Bigdef::Bigdef");
-
+Filepp::AddKeyword( "bigdef", "Bigdef::Bigdef" );
 
 ##############################################################################
 # endbigdef keyword
 # no input, used to finish bigdef
 ##############################################################################
-sub Endbigdef
-{
+sub Endbigdef {
+
     # check in bigdef
-    if($currentdef eq "") {
-      Filepp::Error("endbigdef found without preceding bigdef");
+    if ( $currentdef eq "" ) {
+        Filepp::Error("endbigdef found without preceding bigdef");
     }
+
     # remove processor
     Filepp::RemoveProcessor("Bigdef::Processor");
+
     # define macro
     Filepp::Define($currentdef);
     $currentdef = "";
@@ -96,7 +97,7 @@ sub Endbigdef
 ##############################################################################
 # add bigdef keyword
 ##############################################################################
-Filepp::AddKeyword("endbigdef", "Bigdef::Endbigdef");
+Filepp::AddKeyword( "endbigdef", "Bigdef::Endbigdef" );
 
 return 1;
 

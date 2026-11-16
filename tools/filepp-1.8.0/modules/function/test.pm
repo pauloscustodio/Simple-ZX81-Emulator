@@ -35,25 +35,22 @@ use strict;
 
 require "function.pm";
 
-sub ToUpper
-{
+sub ToUpper {
     my $string = shift;
     return uc($string);
 }
 
-sub ToLower
-{
+sub ToLower {
     my $string = shift;
     return lc($string);
 }
-Function::AddFunction("tolower", "Test::ToLower");
+Function::AddFunction( "tolower", "Test::ToLower" );
 
-sub MultiInputs
-{
+sub MultiInputs {
     my $arg;
     my $output = "Multiple inputs: ";
     foreach $arg (@_) {
-	$output = $output."<$arg> ";
+        $output = $output . "<$arg> ";
     }
     return $output;
 }

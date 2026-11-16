@@ -70,20 +70,20 @@ my %Entries = ();
 # list of space separated fields - each field is the name of a column in
 #                                  the table
 ########################################################################
-sub Table
-{
+sub Table {
     my $input = shift;
-    my ($name, $separator, @Fields) = split(/\s+/, $input);
-    
+    my ( $name, $separator, @Fields ) = split( /\s+/, $input );
+
     print("Table name: \"$name\"\n");
     print("Table separator: \"$separator\"\n");
     my $field;
     foreach $field (@Fields) {
-	print("Field: \"$field\"\n");
+        print("Field: \"$field\"\n");
     }
 
     # enter new table into tables
     $Tables{$name} = \@Fields;
+
     # enter separator
     $Separators{$name} = $separator;
 }
@@ -91,8 +91,7 @@ sub Table
 ########################################################################
 # Add the table keyword
 ########################################################################
-Filepp::AddKeyword("table", \&Table);
-
+Filepp::AddKeyword( "table", \&Table );
 
 ########################################################################
 # Insert keyword, adds an entry to a table,
@@ -103,79 +102,75 @@ Filepp::AddKeyword("table", \&Table);
 # list of space separated fields - each field is the name of a column in
 #                                  the table
 ########################################################################
-sub Insert
-{
+sub Insert {
     my $input = shift;
-    my ($table, $entry) = split(/\s+/, $input, 2);
+    my ( $table, $entry ) = split( /\s+/, $input, 2 );
 
     # check the table exists
-    if(!exists($Tables{$table})) {
-      Filepp::Warning("Table $table not found");
-	return;
+    if ( !exists( $Tables{$table} ) ) {
+        Filepp::Warning("Table $table not found");
+        return;
     }
-    
+
     # split up entry and add it to table
-    my $numfields = @{$Tables{$table}};
-    my @Entry = split(/$Separators{$table}/, $entry, $numfields);
+    my $numfields = @{ $Tables{$table} };
+    my @Entry     = split( /$Separators{$table}/, $entry, $numfields );
 
     # pad with blanks if needed
-    while($#Entry < $numfields-1) { push(@Entry, ""); }
+    while ( $#Entry < $numfields - 1 ) { push( @Entry, "" ); }
 
     # add to hash
-    $ {$Entries{$table}} {$Entry[0]} = \@Entry;
+    ${ $Entries{$table} }{ $Entry[0] } = \@Entry;
 }
 
 ########################################################################
 # Add the insert keyword
 ########################################################################
-Filepp::AddKeyword("insert", \&Insert);
-
+Filepp::AddKeyword( "insert", \&Insert );
 
 ########################################################################
 # Select keyword, prints a table,
 # takes inputs (as one space separated string) :
 # tablename   - name of table
 ########################################################################
-sub Select
-{
-    my ($items, $tables, $conditions);
+sub Select {
+    my ( $items, $tables, $conditions );
     my $input = shift;
-    ($items, $input) = split(/\s+FROM\s+/, $input, 2);
-    ($tables, $conditions) = split(/\s+WHERE\s+/, $input, 2);
+    ( $items,  $input )      = split( /\s+FROM\s+/,  $input, 2 );
+    ( $tables, $conditions ) = split( /\s+WHERE\s+/, $input, 2 );
     print("items <$items>, tables <$tables>, conditions <$conditions>\n");
 
-    my @Items = split(/\s*,\s*/, $items);
+    my @Items = split( /\s*,\s*/, $items );
     foreach $items (@Items) {
-	print("item: <$items>\n");
-    }    
-    my @Tables = split(/\s*,\s*/, $tables);
-    foreach $tables (@Tables) {
-	print("table: <$tables>\n");
+        print("item: <$items>\n");
     }
-    my @Conditions = split(/\s*,\s*/, $conditions);
+    my @Tables = split( /\s*,\s*/, $tables );
+    foreach $tables (@Tables) {
+        print("table: <$tables>\n");
+    }
+    my @Conditions = split( /\s*,\s*/, $conditions );
     foreach $conditions (@Conditions) {
-	print("condition: <$conditions>\n");
-    }    
+        print("condition: <$conditions>\n");
+    }
 }
 
 ########################################################################
 # Add the select keyword
 ########################################################################
-Filepp::AddKeyword("select", \&Select);
+Filepp::AddKeyword( "select", \&Select );
 
 ########################################################################
 # List a whole table
 ########################################################################
-sub List
-{
+sub List {
     my $table = shift;
     my $field;
     print("Table:\t");
-    foreach $field (@{$Tables{$table}}) { print("$field\t"); }
+    foreach $field ( @{ $Tables{$table} } ) { print("$field\t"); }
     print("\n");
-    my @Fields = sort( keys( %{$Entries{$table}} ) );
+    my @Fields = sort( keys( %{ $Entries{$table} } ) );
     foreach $field (@Fields) {
-	my @Entry = @{  ${ $Entries{$table}}{$field}  };
+        my @Entry = @{ ${ $Entries{$table} }{$field} };
         my $entry;
         print("\n");
         foreach $entry (@Entry) { print("Entry: $entry\n"); }
@@ -185,8 +180,7 @@ sub List
 ########################################################################
 # Add the list keyword
 ########################################################################
-Filepp::AddKeyword("list", \&List);
-
+Filepp::AddKeyword( "list", \&List );
 
 return 1;
 

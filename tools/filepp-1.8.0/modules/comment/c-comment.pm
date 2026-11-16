@@ -41,63 +41,70 @@ my $VERSION = '1.2.0';
 require "comment.pm";
 
 # remove all comments from string
-sub RemoveComments
-{
+sub RemoveComments {
     my $string = shift;
 
     # remove all C++ style comments
-    $string = Comment::RemoveComments("//", $string);
-    
+    $string = Comment::RemoveComments( "//", $string );
+
     # remove all C comments
-    my $newstring = Comment::RemoveComments("/\\*", $string);
-    while($string =~ /\S/ && $newstring ne $string) {
-	# remove newline that may have been added by RemoveComments
-	if($newstring =~ /\n$/) { chomp($newstring); }
-	# start of comment has been removed - find closing */
-	# get rest of string and check for end of comment in this line
-	$string = Comment::GetLineEnd();
-	
-	if($string =~ /\*\//) {
-	    # get rest of line
-	    my $line = $'; # one more quote for emacs '
-	    $string = $newstring.$line;
-	}
-	# multi-line comment
-	else {
-	    # find line with end of comment
-	    $string = Filepp::GetNextLine();
-	    my $newlines = 1;
-	    while($string && $string !~ /\*\//) {
-		$string = Filepp::GetNextLine();
-		$newlines++;
-	    }	    
-	    if($string) {
-		# get rest of line following end of comment
-		$string = $newstring.substr($string, index($string, "*/")+2);
-	    }
-	    else {
-		$string = $newstring;
-	    }
-	    # make number of lines in output equal to number of lines in input
-	    while($newlines-- > 0) {
-		if($newstring =~ /\S/) { $string = $string."\n"; }
-		else { $string = "\n".$string; }
-	    }
-	}
-	# check for more comments on this line
-	$newstring = Comment::RemoveComments("/\\*", $string);
+    my $newstring = Comment::RemoveComments( "/\\*", $string );
+    while ( $string =~ /\S/ && $newstring ne $string ) {
+
+        # remove newline that may have been added by RemoveComments
+        if ( $newstring =~ /\n$/ ) { chomp($newstring); }
+
+        # start of comment has been removed - find closing */
+        # get rest of string and check for end of comment in this line
+        $string = Comment::GetLineEnd();
+
+        if ( $string =~ /\*\// ) {
+
+            # get rest of line
+            my $line = $';    # one more quote for emacs '
+            $string = $newstring . $line;
+        }
+
+        # multi-line comment
+        else {
+            # find line with end of comment
+            $string = Filepp::GetNextLine();
+            my $newlines = 1;
+            while ( $string && $string !~ /\*\// ) {
+                $string = Filepp::GetNextLine();
+                $newlines++;
+            }
+            if ($string) {
+
+                # get rest of line following end of comment
+                $string =
+                    $newstring . substr( $string, index( $string, "*/" ) + 2 );
+            }
+            else {
+                $string = $newstring;
+            }
+
+            # make number of lines in output equal to number of lines in input
+            while ( $newlines-- > 0 ) {
+                if   ( $newstring =~ /\S/ ) { $string = $string . "\n"; }
+                else                        { $string = "\n" . $string; }
+            }
+        }
+
+        # check for more comments on this line
+        $newstring = Comment::RemoveComments( "/\\*", $string );
     }
-    
+
     return $string;
 }
-if(Filepp::Ifdef("REMOVE_C_COMMENTS_FIRST")) {
+if ( Filepp::Ifdef("REMOVE_C_COMMENTS_FIRST") ) {
     Filepp::Undef("REMOVE_C_COMMENTS_FIRST");
-    Filepp::AddProcessor("CComment::RemoveComments", 1);
+    Filepp::AddProcessor( "CComment::RemoveComments", 1 );
 }
 else {
     Filepp::AddProcessor("CComment::RemoveComments");
 }
-    
+
 return 1;
 
 ########################################################################

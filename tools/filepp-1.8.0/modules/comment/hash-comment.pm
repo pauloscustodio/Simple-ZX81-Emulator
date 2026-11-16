@@ -41,14 +41,13 @@ my $VERSION = '1.2.0';
 require "comment.pm";
 
 # remove all comments from string
-sub RemoveComments
-{
+sub RemoveComments {
     my $string = shift;
-    return Comment::RemoveComments("#", $string);
+    return Comment::RemoveComments( "#", $string );
 }
-if(Filepp::Ifdef("REMOVE_HASH_COMMENTS_FIRST")) {
+if ( Filepp::Ifdef("REMOVE_HASH_COMMENTS_FIRST") ) {
     Filepp::Undef("REMOVE_HASH_COMMENTS_FIRST");
-    Filepp::AddProcessor("HashComment::RemoveComments", 1);
+    Filepp::AddProcessor( "HashComment::RemoveComments", 1 );
 }
 else {
     Filepp::AddProcessor("HashComment::RemoveComments");

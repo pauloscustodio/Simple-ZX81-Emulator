@@ -48,161 +48,147 @@ Filepp::Define("M_E 2.7182818284590452354");
 # Add all input, usage: - ANY NUMBER OF INPUTS
 # Add(a, b, ....)
 ########################################################################
-sub Add
-{
+sub Add {
     my $sum = 0;
     my $arg;
     foreach $arg (@_) { $sum += $arg; }
     return $sum;
 }
-Function::AddFunction("add", "Maths::Add");
+Function::AddFunction( "add", "Maths::Add" );
 
 ########################################################################
 # Multiply all inputs, usage: - ANY NUMBER OF INPUTS
 # Mul(a, b, ....)
 ########################################################################
-sub Mul
-{
+sub Mul {
     my $mul = 1;
     my $arg;
     foreach $arg (@_) { $mul *= $arg; }
     return $mul;
 }
-Function::AddFunction("mul", "Maths::Mul");
+Function::AddFunction( "mul", "Maths::Mul" );
 
 ########################################################################
 # Subtract b from a, usage: - TWO INPUTS ONLY
 # Sub(a, b)
 ########################################################################
-sub Sub
-{
-    my ($a, $b) = @_;
+sub Sub {
+    my ( $a, $b ) = @_;
     return $a - $b;
 }
-Function::AddFunction("sub", "Maths::Sub");
+Function::AddFunction( "sub", "Maths::Sub" );
 
 ########################################################################
 # Divide a/b, usage: - TWO INPUTS ONLY
 # Div(a, b)
 ########################################################################
-sub Div
-{
-    my ($a, $b) = @_;
+sub Div {
+    my ( $a, $b ) = @_;
     return $a / $b;
 }
-Function::AddFunction("div", "Maths::Div");
+Function::AddFunction( "div", "Maths::Div" );
 
 ########################################################################
 # Abs(a) - returns the absoulte value of a
 # Abs(a, b)
 ########################################################################
-sub Abs
-{
+sub Abs {
     my $a = shift;
     return abs($a);
 }
-Function::AddFunction("abs", "Maths::Abs");
+Function::AddFunction( "abs", "Maths::Abs" );
 
 ########################################################################
 # Atan2 arctangent of a/b, usage: - TWO INPUTS ONLY
 # Atan2(a, b)
 ########################################################################
-sub Atan2
-{
-    my ($a, $b) = @_;
-    return atan2($a, $b);
+sub Atan2 {
+    my ( $a, $b ) = @_;
+    return atan2( $a, $b );
 }
-Function::AddFunction("atan2", "Maths::Atan2");
+Function::AddFunction( "atan2", "Maths::Atan2" );
 
 ########################################################################
 # Cos(a) - returns the cosine value of a
 # Cos(a)
 ########################################################################
-sub Cos
-{
+sub Cos {
     my $a = shift;
     return cos($a);
 }
-Function::AddFunction("cos", "Maths::Cos");
+Function::AddFunction( "cos", "Maths::Cos" );
 
 ########################################################################
 # Exp(a) - returns the exponential value of a
 # Exp(a)
 ########################################################################
-sub Exp
-{
+sub Exp {
     my $a = shift;
     return exp($a);
 }
-Function::AddFunction("exp", "Maths::Exp");
+Function::AddFunction( "exp", "Maths::Exp" );
 
 ########################################################################
 # Int(a) - returns the integer value of a
 # Int(a)
 ########################################################################
-sub Int
-{
+sub Int {
     my $a = shift;
     return int($a);
 }
-Function::AddFunction("int", "Maths::Int");
+Function::AddFunction( "int", "Maths::Int" );
 
 ########################################################################
 # Log(a) - returns the logarithm value of a
 # Log(a)
 ########################################################################
-sub Log
-{
+sub Log {
     my $a = shift;
     return log($a);
 }
-Function::AddFunction("log", "Maths::Log");
+Function::AddFunction( "log", "Maths::Log" );
 
 ########################################################################
 # Rand(a) - returns a random fractional number in range 0 to a,
 # if a is ommitted, number is in range 0 to 1
 # Rand(a)
 ########################################################################
-sub Rand
-{
-    if($_[0]) { return rand($_[0]); }
+sub Rand {
+    if ( $_[0] ) { return rand( $_[0] ); }
     return rand();
 }
-Function::AddFunction("rand", "Maths::Rand");
+Function::AddFunction( "rand", "Maths::Rand" );
 
 ########################################################################
 # Sin(a) - returns the sine value of a
 # Sin(a)
 ########################################################################
-sub Sin
-{
+sub Sin {
     my $a = shift;
     return sin($a);
 }
-Function::AddFunction("sin", "Maths::Sin");
+Function::AddFunction( "sin", "Maths::Sin" );
 
 ########################################################################
 # Sqrt(a) - returns the square root value of a
 # Sqrt(a)
 ########################################################################
-sub Sqrt
-{
+sub Sqrt {
     my $a = shift;
     return sqrt($a);
 }
-Function::AddFunction("sqrt", "Maths::Sqrt");
+Function::AddFunction( "sqrt", "Maths::Sqrt" );
 
 ########################################################################
 # Srand(a) - seeds random number generator with a
 # Srand(a)
 ########################################################################
-sub Srand
-{
-    if($_[0]) { srand($_[0]); }
-    else { srand(); }
+sub Srand {
+    if   ( $_[0] ) { srand( $_[0] ); }
+    else           { srand(); }
     return "";
 }
-Function::AddFunction("srand", "Maths::Srand");
+Function::AddFunction( "srand", "Maths::Srand" );
 
 return 1;
 ########################################################################

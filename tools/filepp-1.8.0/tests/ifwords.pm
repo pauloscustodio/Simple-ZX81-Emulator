@@ -1,8 +1,8 @@
-AddKeyword("testif", "Filepp::If");
+AddKeyword( "testif", "Filepp::If" );
 AddIfword("testif");
-AddKeyword("testelse", "Filepp::Else");
+AddKeyword( "testelse", "Filepp::Else" );
 AddElseword("testelse");
-AddKeyword("testendif", "Filepp::Endif");
+AddKeyword( "testendif", "Filepp::Endif" );
 AddEndifword("testendif");
 
 RemoveIfword("if");
