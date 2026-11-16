@@ -80,6 +80,10 @@ Inside the emulated ZX81 environment:
 
 This emulator focuses on the default text-based ZX81 screen and quick program execution. It does not aim to reproduce the full hardware display system in every detail.
 
+## Technology
+
+ANSI C + SDL2
+
 ## Further work
 
 See the issue tracker for planned improvements and extensions:
