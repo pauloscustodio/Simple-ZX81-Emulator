@@ -1,54 +1,87 @@
-# Simple - but understandable ZX81 emulator from:
+# Simple ZX81 Emulator
+
+A lightweight ZX81 emulator designed for fast startup and for use as a test backend in BASIC and decompilation workflows.
+
+## Project intent and origin
+
+This project is based on the ZX81 emulation approach described in:
 
 https://leiradel.github.io/2011/06/11/How-to-Emulate.html
 
-Released under GPL. 
+It was later adapted and simplified for a practical goal: run a ZX81 program quickly, without the overhead and extra hardware features of a full-blown emulator such as EightyOne.
 
-- Some alteration Dec. 2025 - P. Sieg
-- New development started Nov. 2026 by Paulo Custodio.
-  Objective is to have a zx81 emulator that starts immediately and that
-  I can use as test backend for my ZX81 decompiler https://github.com/pauloscustodio/zx81-decompile
-  Today I'm using EightyOne, but it has too many features I don't need and takes
-  about 20 seconds to start the emulated program.
-- Improvements out of scope: hardware emulation of the display system, so only
-  the default text based screen can be emulated. 
+The current development focus is intentionally narrow:
 
-# Command line
+- fast startup and low overhead
+- easy automation with BASIC files and state dumps
+- sufficient compatibility for ZX81 text-mode programs and decompiler testing
+- no attempt to emulate every hardware quirk of the original display system
 
-    zx81 [-d] [-s] [-t] [file.p|file.dump|file.bas]
+## License
 
-- with the '-d' option dumps the loaded program.
-- with the '-s' option runs at clock speed, except when in FAST mode.
-- with the '-t' option the emulator dumps a trace of Z80 execution to stdout.
-- with a file.p argument, that file is loaded on startup, as if LOAD "file" was typed.
-- with a file.dump argument, the memory and Z80 state are read from the file.
-- with a file.bas argument pastes the file as keystrokes to the emulator
+This project is released under the GNU General Public License, version 2 or later (GPL-2.0-or-later), as indicated in the source headers and project files.
 
-# Emulator hooks
+## Command-line usage
 
-- USR 8191 : exits the emulator
-- USR 8190 : dumps memory and Z80 state to the file zx81.dump
+```bash
+zx81 [-d] [-s] [-t] [file.p|file.dump|file.bas]
+```
 
-# Features
-- Simple save (F6) and restore (F7) memory and Z80 state to the file zx81.dump.
-- ESCAPE key saves a dump to the file zx81.dump and exits the emulator. 
-  The dump can be used as command line argument to continue where you were.
-- -t option traces Z80 execution.
-- -s slows down to original ZX81 speed, except if FAST mode.
-- Load a file.p or file.dump on startup.
-- SAVE "X" in BASIC creates a file x.p.
-- LOAD "X" in BASIC reads a file x.p.
-- PAUSE in BASIC pauses for the given amount of frames.
-- LPRINT, LLIST and COPY append output to a "zx81.txt" file.
-- Redefine the font when register I is changed.
-- Supports CHR$128: when I is odd, I & 0xFE is the page of the character 
-  bitmaps, and 128 bitmaps are read (1k). The top 64 characters need to 
-  be inverted because the CHR$128 hardware inverts them again.
-- Dump memory with the -d option.
-- Paste text into the emulator by Ctrl-V, tokenizing the input for 
-  the BASIC editor.
-- Copy the screen image from the emulator by Ctrl-C, text can be pasted
-  outside the emulator.
+Options:
 
-# Possible further extensions
+- `-d`: dump the loaded `.p` program to stdout after loading it.
+- `-s`: run at normal ZX81 speed when the emulator is not in FAST mode.
+- `-t`: trace Z80 execution to stdout.
+- `file.p`: load a BASIC program file on startup, as if `LOAD "file"` had been typed.
+- `file.dump`: restore emulator state from a saved dump.
+- `file.bas`: paste the file as keystrokes into the BASIC editor.
+
+Examples:
+
+```bash
+zx81 hello.p
+zx81 -d hello.p
+zx81 -t program.p
+zx81 saved.dump
+zx81 input.bas
+```
+
+## Commands during usage
+
+When the emulator is running, these host-side controls are available:
+
+- `F6`: save emulator state to `zx81.dump`
+- `F7`: restore emulator state from `zx81.dump`
+- `Esc`: save the current state to `zx81.dump` and exit immediately
+- `Ctrl+C`: copy the screen image to the clipboard
+- `Ctrl+V`: paste clipboard text into the emulator as BASIC input
+
+Inside the emulated ZX81 environment:
+
+- `USR 8191`: exit the emulator
+- `USR 8190`: dump memory and CPU state to `zx81.dump`
+
+## Features
+
+- very fast startup compared with heavier desktop emulators
+- BASIC program loading from `.p` files and state restoration from `.dump` files
+- save/restore snapshots using `F6` and `F7`
+- `SAVE "X"` writes a `.p` file
+- `LOAD "X"` reads a `.p` file
+- `PAUSE` supports timed frame delays
+- `LPRINT`, `LLIST`, and `COPY` write output to `zx81.txt`
+- optional trace mode with `-t` for Z80 debugging
+- optional slow-mode emulation with `-s`
+- dynamic font handling when register `I` changes
+- CHR$128 support for alternate character pages
+- basic clipboard integration for copying and pasting text
+
+## Scope and limitations
+
+This emulator focuses on the default text-based ZX81 screen and quick program execution. It does not aim to reproduce the full hardware display system in every detail.
+
+## Further work
+
+See the issue tracker for planned improvements and extensions:
+
 https://github.com/pauloscustodio/Simple-ZX81-Emulator/issues/
