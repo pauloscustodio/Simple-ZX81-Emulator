@@ -28,13 +28,15 @@
 Z80 z80;
 BYTE memory[MEMSIZE] = { 0 };
 bool do_exit = false;
-bool in_pause = false;
-Uint32 pause_start = 0;     // SDL ticks (in ms) when the pause started
-Uint32 pause_duration = 0;
-bool slow_mode = false;     // true to run at clock speed
+bool init_finished = false;
+Uint32 init_finished_ms = 0;
 
 // static variables
 static bool trace = false;
+static bool in_pause = false;
+static Uint32 pause_start = 0;     // SDL ticks (in ms) when the pause started
+static Uint32 pause_duration = 0;
+static bool slow_mode = false;     // true to run at clock speed
 
 // fetches an opcode from memory
 BYTE z80_fetch(Z80* z80, WORD a) {
@@ -113,48 +115,62 @@ static void run_frame(void) {
     Uint32 start_sdl_ticks = SDL_GetTicks();
     while ((uint64_t)(z80.ticks - start_ticks) < cycles_per_frame) {
         // hooks
-        if (z80.pc == EXIT_HOOK) {      // EXIT routine
+        if (z80.pc == EXIT_HOOK) {
+            // EXIT routine
             do_exit = true;
             return;
         }
-        else if (z80.pc == DUMP_HOOK) { // dump memory and z80 state to a file
+        else if (z80.pc == DUMP_HOOK) {
+            // dump memory and z80 state to a file
             write_state(DUMP_NAME, &z80, memory);
         }
-        else if (z80.pc == NEXT_PROG) { // LOAD routine after file name was parsed
+        else if (z80.pc == NEXT_PROG) {
+            // LOAD routine after file name was parsed
             next_prog_hook(&z80);
         }
-        else if (z80.pc == SAVE1) {     // SAVE routine after file name was parsed
+        else if (z80.pc == SAVE1) {
+            // SAVE routine after file name was parsed
             save_prog_hook(&z80);
         }
-        else if (z80.pc == PAUSE1) {    // PAUSE routine after delay parsed
+        else if (z80.pc == PAUSE1) {
+            // PAUSE routine after delay parsed
             WORD bc = z80.regs[z80.regs_sel].bc;    // delay
             in_pause = true;
             pause_start = SDL_GetTicks();
             pause_duration = bc * 1000 / REFRESH_HZ;
             z80.pc = RET_ADDR;
         }
-        else if (z80.pc == FAST) {      // FAST routine
+        else if (z80.pc == FAST) {
+            // FAST routine
             POKE(CDFLAG, PEEK(CDFLAG) & ~0x40);
             z80.pc = RET_ADDR;
         }
-        else if (z80.pc == SLOW) {      // SLOW routine
+        else if (z80.pc == SLOW) {
+            // SLOW routine
             POKE(CDFLAG, PEEK(CDFLAG) | 0x40);
             z80.pc = RET_ADDR;
         }
         else if ((z80.pc == PRINT_A ||
                   z80.pc == PRINT_CH ||
                   z80.pc == PRINT_SP) &&
-                 (PEEK(FLAGS) & 2) != 0) {	// print to printer
+                 (PEEK(FLAGS) & 2) != 0) {
+            // print to printer
             lprint_char((z80.af[z80.af_sel]) >> 8);
             z80.pc = RET_ADDR;
         }
         else if (z80.pc == COPY) {
+            // dump screen to printer
             copy();
             z80.pc = RET_ADDR;
         }
-        else if (z80.pc == DISPLAY_6 || z80.pc == SLOW_DISP) {
-            // signal the keyboard queue that we are idle
-            kbd_set_idle();
+        else if (!init_finished &&
+                 (z80.pc == DISPLAY_6 || z80.pc == SLOW_DISP)) {
+            // signal the zx81 finished initializing and timestamp when
+            init_finished = true;
+            init_finished_ms = SDL_GetTicks();
+#ifdef DEBUG_KEYBOARD
+            printf("Initialization finished\n");
+#endif
         }
 
         // handle PAUSE
@@ -193,8 +209,7 @@ static void run_frame(void) {
     POKEW(FRAMES, frames);
 
     // read keyboard state
-    WORD last_k = keyboard_scan();
-    POKEW(LAST_K, last_k);
+    keyboard_scan();
 
     // if slow mode is requested, wait until the frame time has passed
     if (slow) {
@@ -219,17 +234,6 @@ static void consume_events(void) {
 
             // key pressed, reset the corresponding bit in the keyboard state
             kbd_handle_sdl_event(&event);
-
-            if (event.key.keysym.sym == SDLK_ESCAPE) {
-                write_state(DUMP_NAME, &z80, memory);
-                do_exit = true;
-            }
-            else if (event.key.keysym.sym == SDLK_F6) {
-                write_state(DUMP_NAME, &z80, memory);
-            }
-            else if (event.key.keysym.sym == SDLK_F7) {
-                read_state(DUMP_NAME, &z80, memory);
-            }
             break;
 
         case SDL_KEYUP:
@@ -307,6 +311,9 @@ int main(int argc, char* argv[]) {
         }
         else if (str_ends_with(filename, ".dump")) {
             read_state(filename, &z80, memory);
+        }
+        else if (str_ends_with(filename, ".bas")) {
+            basic_paste_file(filename);
         }
         else {
             die("Error: Invalid file extension: %s\n", filename);

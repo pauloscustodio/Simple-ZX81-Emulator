@@ -17,6 +17,7 @@
 
 void die(const char* msg, ...);
 void* xmalloc(size_t size);
+void* xrealloc(void* ptr, size_t size);
 char* xstrdup(const char* str);
 int xstat(const char* path, struct stat* buf);
 FILE* xfopen(const char* path, const char* mode);

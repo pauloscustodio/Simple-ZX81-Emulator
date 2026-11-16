@@ -29,6 +29,14 @@ void* xmalloc(size_t size) {
     return p;
 }
 
+void* xrealloc(void* ptr, size_t size) {
+    void* p = realloc(ptr, size);
+    if (!p) {
+        die("Error: Out of memory\n");
+    }
+    return p;
+}
+
 char* xstrdup(const char* str) {
     char* p = strdup(str);
     if (!p) {

@@ -9,8 +9,9 @@
 #include "utstring.h"
 #include "zx81.h"
 #include "zx81kbd.h"
-#include <ctype.h>
+#include "zx81load.h"
 #include <SDL.h>
+#include <ctype.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -23,6 +24,7 @@
 static kbd_state_t matrix = 0;
 static kbd_state_t shift = 0;
 
+#ifdef DEBUG_KEYBOARD
 static const char* decode_key(kbd_state_t kbd) {
     static char buffer[64];
     buffer[0] = '\0';
@@ -148,6 +150,7 @@ static const char* decode_key(kbd_state_t kbd) {
     }
     return  buffer;
 }
+#endif
 
 static void clear_matrix(void) {
     matrix = 0;
@@ -159,7 +162,9 @@ static void keydown(kbd_state_t kbd) {
     if ((kbd & K_SHIFT) != 0) {
         shift = K_SHIFT;
     }
+#ifdef DEBUG_KEYBOARD
     printf("Key down: %s\n", decode_key(kbd));
+#endif
 }
 
 static void keyup(kbd_state_t kbd) {
@@ -167,7 +172,9 @@ static void keyup(kbd_state_t kbd) {
     if ((kbd & K_SHIFT) != 0) {
         shift = 0;
     }
+#ifdef DEBUG_KEYBOARD
     printf("Key up:   %s\n", decode_key(kbd));
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -190,8 +197,6 @@ static bool kbd_state = false;
 
 // last key injected into the keyboard matrix
 static kbd_state_t key_pressed = 0;
-
-static bool os_is_idle = false;
 
 static void queue_init(kbd_queue_t* q) {
     if (q->data != NULL) {
@@ -245,7 +250,9 @@ static kbd_state_t queue_pop(kbd_queue_t* q) {
 // call regularly to update the keyboard queue and matrix state
 static void queue_tick(void) {
     Uint32 kbd_current_ms = SDL_GetTicks();
-    if (os_is_idle && kbd_current_ms - kbd_last_event_ms >= KBD_READ_MS / 2) {
+    if (init_finished &&
+            kbd_current_ms - init_finished_ms > KBD_READ_MS &&
+            kbd_current_ms - kbd_last_event_ms > KBD_READ_MS) {
         kbd_last_event_ms = kbd_current_ms;
         kbd_state = !kbd_state;
 
@@ -258,7 +265,6 @@ static void queue_tick(void) {
             keyup(key_pressed);
             key_pressed = 0;
         }
-        os_is_idle = false;
     }
 }
 
@@ -449,23 +455,34 @@ void kbd_handle_sdl_event(const SDL_Event* event) {
 
     switch (event->type) {
     case SDL_KEYDOWN: {
-        // Paste
         if (control && event->key.keysym.sym == SDLK_v) {
             // Paste
             char* text = SDL_GetClipboardText();
             if (text) {
-                basic_paste(text);
+                basic_paste_text(text);
                 SDL_free(text);
             }
             break;
         }
-        /*
-        if (control && event->key.keysym.sym == SDLK_v)
-        {
-            printf("paste\n");
+
+        if (event->key.keysym.sym == SDLK_ESCAPE) {
+            // dump state and exit
+            write_state(DUMP_NAME, &z80, memory);
+            do_exit = true;
             break;
         }
-        */
+
+        if (event->key.keysym.sym == SDLK_F6) {
+            // dump state to file
+            write_state(DUMP_NAME, &z80, memory);
+            break;
+        }
+
+        if (event->key.keysym.sym == SDLK_F7) {
+            // load state from file
+            read_state(DUMP_NAME, &z80, memory);
+            break;
+        }
 
         // other keys
         kbd_state_t key = sdlk2kbd(sym, shifted);
@@ -505,7 +522,7 @@ void kbd_push_key(kbd_state_t key) {
 }
 
 // C translation of the ZX81 KEYBOARD scanning routine
-WORD keyboard_scan(void) {
+static WORD rom_keyboard(void) {
     // one frame has passed, update the keyboard queue and matrix state
     queue_tick();
 
@@ -548,6 +565,16 @@ WORD keyboard_scan(void) {
     }
 
     return ((WORD)h << 8) | l;
+}
+
+void keyboard_scan(void) {
+    // only scan the keyboard if there are no pending events in the queue
+    // avoid key losses during paste, as a 0xffff LAST_K is written over the
+    // LAST_K from the pushed key
+    if (queue_is_empty(&kbd_queue)) {
+        WORD last_k = rom_keyboard();
+        POKEW(LAST_K, last_k);
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -883,7 +910,7 @@ static void push_one_token(const char** p, int* mode, bool allow_keywords) {
     kbd_push_key(kw_map->key);
 }
 
-void basic_paste(const char* text) {
+void basic_paste_text(const char* text) {
     const char* p = text;
     int mode = KL_MODE;
     while (*p != '\0') {
@@ -943,7 +970,44 @@ void basic_paste(const char* text) {
     }
 }
 
-void kbd_set_idle(void) {
-    printf("Keyboard is idle\n");
-    os_is_idle = true;
+void basic_paste_file(const char* filename) {
+    FILE* fp = fopen(filename, "r");
+    if (fp == NULL) {
+        fprintf(stderr, "Error: open file %s failed\n", filename);
+        return;
+    }
+
+    size_t capacity = 256;
+    size_t length = 0;
+    char* buffer = xmalloc(capacity);
+    int c;
+
+    if (buffer == NULL) {
+        fclose(fp);
+        return;
+    }
+
+    while ((c = fgetc(fp)) != EOF) {
+        if (length + 2 > capacity) {
+            capacity *= 2;
+            buffer = xrealloc(buffer, capacity);
+        }
+
+        buffer[length++] = (char)c;
+
+        if (c == '\n') {
+            buffer[length] = '\0';
+            basic_paste_text(buffer);
+            length = 0;
+        }
+    }
+
+    // Process the last line if it has no trailing newline.
+    if (length > 0) {
+        buffer[length] = '\0';
+        basic_paste_text(buffer);
+    }
+
+    free(buffer);
+    fclose(fp);
 }

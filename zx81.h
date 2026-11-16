@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include <SDL.h>
+#undef main   // keep our own main(); we don't need SDLmain.lib's WinMain shim
+
 #include "simz80.h"
 #include <stdbool.h>
 
@@ -102,6 +105,8 @@
 extern Z80 z80;          		// the z80 state
 extern BYTE memory[];           // the memory
 extern bool do_exit;            // true to exit the emulator
+extern bool init_finished;      // true when initialization of the ROM finished
+extern Uint32 init_finished_ms; // when it was finished
 
 // memory access macros
 #define PEEK(x) memory[x]

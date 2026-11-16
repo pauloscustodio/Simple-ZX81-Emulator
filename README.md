@@ -15,13 +15,14 @@ Released under GPL.
 
 # Command line
 
-    zx81 [-d] [-s] [-t] [file.p|file.dump]
+    zx81 [-d] [-s] [-t] [file.p|file.dump|file.bas]
 
-= with the '-d' option dumps the loaded program.
+- with the '-d' option dumps the loaded program.
 - with the '-s' option runs at clock speed, except when in FAST mode.
 - with the '-t' option the emulator dumps a trace of Z80 execution to stdout.
 - with a file.p argument, that file is loaded on startup, as if LOAD "file" was typed.
 - with a file.dump argument, the memory and Z80 state are read from the file.
+- with a file.bas argument pastes the file as keystrokes to the emulator
 
 # Emulator hooks
 
@@ -44,6 +45,8 @@ Released under GPL.
   bitmaps, and 128 bitmaps are read (1k). The top 64 characters need to 
   be inverted because the CHR$128 hardware inverts them again.
 - Dump memory with the -d option.
+- Paste text into the emulator by Ctrl-V, tokenizing the input for 
+  the BASIC editor.
 
 # Possible further extensions
 https://github.com/pauloscustodio/Simple-ZX81-Emulator/issues/
