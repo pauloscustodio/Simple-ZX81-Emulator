@@ -149,7 +149,7 @@ getopt_top:
     }
     /* Otherwise we're looking at an option */
     else {
-        char* opt_ptr = NULL;
+        const char* opt_ptr = NULL;
 
         /* Grab the option */
         c = argv[argv_index][opt_offset++];
