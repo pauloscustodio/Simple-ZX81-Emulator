@@ -12,3 +12,4 @@
 void zx81screen_init(void);
 void zx81screen_update(WORD charset_addr, WORD display_addr);
 void zx81screen_free(void);
+char* get_screen_image(void);   // user must free

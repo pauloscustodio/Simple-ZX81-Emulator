@@ -47,6 +47,8 @@ Released under GPL.
 - Dump memory with the -d option.
 - Paste text into the emulator by Ctrl-V, tokenizing the input for 
   the BASIC editor.
+- Copy the screen image from the emulator by Ctrl-C, text can be pasted
+  outside the emulator.
 
 # Possible further extensions
 https://github.com/pauloscustodio/Simple-ZX81-Emulator/issues/

@@ -10,6 +10,7 @@
 #include "zx81.h"
 #include "zx81kbd.h"
 #include "zx81load.h"
+#include "zx81screen.h"
 #include <SDL.h>
 #include <ctype.h>
 #include <stdbool.h>
@@ -455,6 +456,14 @@ void kbd_handle_sdl_event(const SDL_Event* event) {
 
     switch (event->type) {
     case SDL_KEYDOWN: {
+        if (control && event->key.keysym.sym == SDLK_c) {
+            // Copy
+            char* image = get_screen_image();
+            SDL_SetClipboardText(image);
+            free(image);
+            break;
+        }
+
         if (control && event->key.keysym.sym == SDLK_v) {
             // Paste
             char* text = SDL_GetClipboardText();
@@ -979,7 +988,7 @@ void basic_paste_file(const char* filename) {
 
     size_t capacity = 256;
     size_t length = 0;
-    char* buffer = xmalloc(capacity);
+    char* buffer = (char*)xmalloc(capacity);
     int c;
 
     if (buffer == NULL) {
@@ -990,7 +999,7 @@ void basic_paste_file(const char* filename) {
     while ((c = fgetc(fp)) != EOF) {
         if (length + 2 > capacity) {
             capacity *= 2;
-            buffer = xrealloc(buffer, capacity);
+            buffer = (char*)xrealloc(buffer, capacity);
         }
 
         buffer[length++] = (char)c;

@@ -7,13 +7,15 @@
 
 #include "simz80.h"
 #include "utils.h"
+#include "utstring.h"
 #include "zx81.h"
+#include "zx81chars.h"
 #include "zx81screen.h"
 #include <SDL.h>
-#include <stdlib.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // SDL2 display objects
 static SDL_Window* window = NULL;
@@ -282,4 +284,24 @@ void zx81screen_update(WORD charset_addr, WORD display_addr) {
     if (display_addr != 0) {
         zx81screen_update_display(display_addr);
     }
+}
+
+char* get_screen_image(void) {
+    UT_string* image;
+    utstring_new(image);
+
+    WORD addr = PEEKW(D_FILE) + 1;
+    for (int row = 0; row < NUM_ROWS; row++) {
+        for (int col = 0; col < NUM_COLS + 1; col++) {
+            BYTE ch = PEEK(addr++);
+            utstring_printf(image, "%s", zx81chars[ch]);
+            if (ch == 0x76) {
+                break;
+            }
+        }
+    }
+
+    char* out = xstrdup(utstring_body(image));
+    utstring_free(image);
+    return out;
 }

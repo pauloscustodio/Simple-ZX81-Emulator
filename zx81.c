@@ -105,14 +105,17 @@ static void setup_emulation(void) {
 }
 
 static void run_frame(void) {
+    // measure the total elapsed time to synchronize frame time in SLOW
+    Uint32 start_sdl_ticks = SDL_GetTicks();
+
     // execute one video-frame time of z80 instructions
     bool cpu_slow = (PEEK(CDFLAG) & 0x40) != 0;
     bool slow = slow_mode && cpu_slow;
     uint64_t cycles_per_frame = slow ?
-                                CYCLES_PER_FRAME_SLOW : CYCLES_PER_FRAME_FAST;
+                                CYCLES_PER_FRAME_SLOW :
+                                CYCLES_PER_FRAME_FAST;
 
     uint64_t start_ticks = z80.ticks;
-    Uint32 start_sdl_ticks = SDL_GetTicks();
     while ((uint64_t)(z80.ticks - start_ticks) < cycles_per_frame) {
         // hooks
         if (z80.pc == EXIT_HOOK) {

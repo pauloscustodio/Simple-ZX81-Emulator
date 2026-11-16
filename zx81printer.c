@@ -9,6 +9,7 @@
 #include "zx81.h"
 #include "zx81chars.h"
 #include "zx81printer.h"
+#include "zx81screen.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -40,14 +41,7 @@ void lprint_char(BYTE ch) {
 
 void copy() {
     lprint_open();
-    WORD addr = PEEKW(D_FILE) + 1;
-    for (int row = 0; row < NUM_ROWS; row++) {
-        for (int col = 0; col < NUM_COLS + 1; col++) {
-            BYTE ch = PEEK(addr++);
-            lprint_char(ch);
-            if (ch == 0x76) {
-                break;
-            }
-        }
-    }
+    char* image = get_screen_image();
+    fprintf(printer_file, "%s", image);
+    free(image);
 }

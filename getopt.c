@@ -90,7 +90,7 @@ static int permute_argv_once() {
 }
 
 
-int getopt(int argc, char** argv, char* optstr) {
+int getopt(int argc, char** argv, const char* optstr) {
     int c = 0;
 
     /* If we have new argv, reinitialize */
